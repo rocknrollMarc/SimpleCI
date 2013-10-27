@@ -1,4 +1,4 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.api
 
 abstract class Task {
     protected String type

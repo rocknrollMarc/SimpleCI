@@ -1,6 +1,7 @@
 package com.directmyfile.ci.tasks
 
 import com.directmyfile.ci.*
+import com.directmyfile.ci.api.Task
 
 class MakeTask extends Task {
     @Override

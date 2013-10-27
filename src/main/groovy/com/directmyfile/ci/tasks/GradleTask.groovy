@@ -2,7 +2,7 @@ package com.directmyfile.ci.tasks
 
 import com.directmyfile.ci.CI
 import com.directmyfile.ci.Job
-import com.directmyfile.ci.Task
+import com.directmyfile.ci.api.Task
 
 class GradleTask extends Task {
     @Override

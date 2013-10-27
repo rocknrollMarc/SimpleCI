@@ -2,7 +2,7 @@ package com.directmyfile.ci.tasks
 
 import com.directmyfile.ci.CI
 import com.directmyfile.ci.Job
-import com.directmyfile.ci.Task
+import com.directmyfile.ci.api.Task
 
 class CommandTask extends Task {
 
@@ -23,19 +23,20 @@ class CommandTask extends Task {
         }
 
         def command = config['command'] as String
-        def procBuild = new ProcessBuilder().command(command.tokenize(' '))
-        procBuild.directory(job.buildDir)
-        procBuild.redirectErrorStream(true)
-        def proc = procBuild.start()
-        def log = new PrintStream(job.logFile.newOutputStream())
-        proc.in.eachLine {
+        def builder = new ProcessBuilder().command(command.tokenize(' '))
+        builder.directory(job.buildDir)
+        builder.redirectErrorStream(true)
+        def proc = builder.start()
+        def log = job.logFile.newPrintWriter()
+        proc.inputStream.eachLine {
             log.println(it)
             log.flush()
         }
-        log.println("Process Exited with Status ${proc.waitFor()}")
+        def exitCode = proc.waitFor()
+        log.println("Process Exited with Status ${exitCode}")
         log.flush()
         log.close()
 
-        return proc.exitValue()==0
+        return exitCode==0
     }
 }

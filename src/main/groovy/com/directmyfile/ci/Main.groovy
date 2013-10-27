@@ -1,7 +1,10 @@
 package com.directmyfile.ci
 
+import org.apache.log4j.BasicConfigurator
+
 class Main {
     static void main(String[] args) {
+        BasicConfigurator.configure()
         def ci = new CI()
         ci.start()
         def reader = System.in.newReader()

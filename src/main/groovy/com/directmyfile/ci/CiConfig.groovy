@@ -1,21 +1,22 @@
 package com.directmyfile.ci
 
-import groovy.util.ConfigSlurper
-
 class CiConfig {
-   CI ci
-   def cs = new ConfigSlurper()
+    private CI ci
 
-   CiConfig(CI ci) {
-       this.ci = ci
-   }
+    CiConfig(CI ci) {
+        this.ci = ci
+    }
 
-   void load() {
-       def configFile = new File(ci.configRoot, "config.groovy")
-       if (!configFile.exists()) configFile.createNewFile()
-       def config = cs.parse(configFile.toURI().toURL())
-       ci.port = config.get('web.port', 8080)
+    void load() {
+        def configFile = new File(ci.configRoot, "config.groovy")
+        Script configScript
+        if (!configFile.exists()) {
+            configFile.write(this.class.classLoader.getResourceAsStream("defaultConfig.groovy").text)
+        }
+        configScript = Utils.parseConfig(configFile)
 
-       config.writeTo(configFile.newWriter())
-   }
+        ci.port = configScript.getProperty("webPort") as int
+        ci.sql.setURL(configScript.getProperty("sqlUrl") as String)
+        ci.sql.setAuth(username: configScript.getProperty("sqlUsername") as String, password: configScript.getProperty("sqlPassword") as String)
+    }
 }

@@ -1,5 +1,7 @@
 package com.directmyfile.ci
 
+import com.directmyfile.ci.api.Task
+
 class TaskConfig {
     Task task
     Object params

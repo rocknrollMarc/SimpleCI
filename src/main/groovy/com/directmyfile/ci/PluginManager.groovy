@@ -26,7 +26,7 @@ class PluginManager {
             } else if (it.name.endsWith(".jar")) {
                 loader.addURL(it.toURI().toURL())
             } else if (it.name.endsWith(".js")) {
-		def cx = Context.enter()
+		        def cx = Context.enter()
                 def scope = cx.initStandardObjects()
                 def jsOut = Context.javaToJS(System.out, scope)
                 ScriptableObject.putProperty(scope, "out", jsOut)
