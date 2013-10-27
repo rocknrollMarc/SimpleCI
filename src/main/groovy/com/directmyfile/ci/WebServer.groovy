@@ -80,6 +80,19 @@ class WebServer {
             writeTemplate(it, "jobs.grt")
         }
 
+        matcher.post('/github/:name') {
+            def jobName = it.params['name'] as String
+            it.response.end('')
+
+            if (!ci.jobs.containsKey(jobName)) return
+
+            def job = ci.jobs[jobName]
+
+            println "GitHub Hook executing job ${jobName}"
+
+            ci.runJob(job)
+        }
+
         matcher.noMatch { HttpServerRequest r ->
             writeResource(r, "404.html")
         }
