@@ -6,6 +6,7 @@ import com.directmyfile.ci.tasks.GradleTask
 class CI {
     def server = new WebServer(this)
     def configRoot = new File(".")
+    def pluginManager = new PluginManager(this)
     Map<String, Task> taskTypes = [
             command: new CommandTask(),
             gradle: new GradleTask()
@@ -21,6 +22,7 @@ class CI {
 
     private void init() {
         new File(configRoot, 'logs').mkdirs()
+        pluginManager.loadPlugins()
     }
 
     private def loadJobs() {
