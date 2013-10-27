@@ -8,7 +8,9 @@ class CI {
     def vertx = Vertx.newVertx()
     def server = new WebServer(this)
     def configRoot = new File(".")
+    int port = 0
     def pluginManager = new PluginManager(this)
+    def config = new CiConfig(this)
     Map<String, Task> taskTypes = [
             command: new CommandTask(),
             gradle: new GradleTask(),
@@ -19,11 +21,12 @@ class CI {
 
     def start() {
         init()
-        server.start(8080)
+        server.start(port)
         loadJobs()
     }
 
     private void init() {
+        config.load()
         new File(configRoot, 'logs').mkdirs()
         pluginManager.loadPlugins()
     }
