@@ -4,6 +4,8 @@ class Job {
     BuildConfig buildConfig
     CI ci
 
+    JobStatus status = JobStatus.SUCCESS
+
     Job(CI ci, File file) {
         this.ci = ci
         this.buildConfig = new BuildConfig(file)

@@ -36,6 +36,7 @@ class CI {
 
     void runJob(Job job) {
         def success = true
+        job.status = JobStatus.RUNNING
         println "Running Job: ${job.name}"
 
         job.getSCM().clone(job.buildDir)
@@ -68,8 +69,10 @@ class CI {
 
         if (!success) {
             println 'Job has Failed'
+            job.status = JobStatus.FAILURE
         } else {
             println 'Job has Completed'
+            job.status = JobStatus.SUCCESS
         }
     }
 
