@@ -37,6 +37,19 @@ class WebServer {
             ])
         }
 
+        matcher.get('/log/:job') { HttpServerRequest request ->
+            def jobName = request.params['job'] as String
+            if (!ci.jobs.containsKey(jobName)) { writeResource(request, "404.html") ; return }
+
+            def job = ci.jobs.get(jobName)
+
+            if (!job.logFile.exists()) {
+                writeResource(request, "404.html")
+            } else {
+                request.response.sendFile(job.logFile.absolutePath)
+            }
+        }
+
         matcher.get('/hook/:name') {
             def jobName = it.params['name'] as String
             it.response.end('')
