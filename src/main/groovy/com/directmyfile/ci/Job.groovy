@@ -4,11 +4,18 @@ class Job {
     BuildConfig buildConfig
     CI ci
 
-    JobStatus status = JobStatus.SUCCESS
+    JobStatus status = null
 
     Job(CI ci, File file) {
         this.ci = ci
         this.buildConfig = new BuildConfig(file)
+        this.status = {
+            if(logFile.exists()) {
+                return JobStatus.SUCCESS
+            } else {
+                return JobStatus.NOT_STARTED
+            }
+        }()
         getBuildDir().mkdirs()
     }
 
@@ -55,6 +62,7 @@ class Job {
     def generateArtifactList() {
         def text = []
         def artifactDir = new File(ci.artifactDir, name)
+        if (!artifactDir.exists()) return ""
         artifactDir.eachFile {
             text.add("<tr><td><a href=\"/artifact/${this.name}/${it.name}\">${it.name}</a></tr></td>")
         }

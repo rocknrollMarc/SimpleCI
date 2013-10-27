@@ -6,10 +6,15 @@
     </head>
     <body class="centered matchStrap">
         <h1 class="centered"><% print job.name %></h1>
-        <h2>Logs</h2>
-        <p class="panel <% print job.status.panelClass %>">
-            <% print job.logFile.readLines().join('<br/>') %>
-        </p>
+        <br/>
+        <div class="panel <% print job.status.panelClass %>">
+            <div class="panel-heading">
+                <h2 class="panel-title">Build Log</h2>
+            </div>
+            <div class="panel-content">
+                <% if (job.logFile.exists()) {print job.logFile.readLines().join('<br/>')} else {print "&nbsp;&nbsp;No Log Found"} %>
+            </div>
+        </div>
 
         <table class="table centered table-striped" border="1">
             <% print job.generateArtifactList() %>
