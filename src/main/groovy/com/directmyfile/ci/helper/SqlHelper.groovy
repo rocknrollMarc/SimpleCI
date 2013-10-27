@@ -18,7 +18,6 @@ class SqlHelper {
 
     void init() {
         this.sql = Sql.newInstance(url, auth.username, auth.password)
-        sql.executeUpdate("CREATE TABLE IF NOT EXISTS jobs;")
     }
 
     void setURL(String url) {

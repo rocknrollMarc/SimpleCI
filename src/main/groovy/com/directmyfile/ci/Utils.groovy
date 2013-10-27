@@ -1,8 +1,6 @@
 package com.directmyfile.ci
 
-import groovy.transform.CompileStatic
 import org.codehaus.groovy.control.CompilerConfiguration
-import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 
 class Utils {
@@ -30,7 +28,6 @@ class Utils {
     static Script parseConfig(File file) {
         def cc = new CompilerConfiguration()
         def scc = new SecureASTCustomizer()
-        def staticCompile = new ASTTransformationCustomizer(CompileStatic)
         scc.with {
             closuresAllowed = false
             methodDefinitionAllowed = false
@@ -46,11 +43,16 @@ class Utils {
                     Long,
                     Float.TYPE,
                     Double.TYPE,
-                    Long.TYPE
+                    Long.TYPE,
+                    int,
+                    long,
+                    float,
+                    double,
+                    Object
             ].asImmutable()
         }
 
-        cc.addCompilationCustomizers(staticCompile, scc)
+        cc.addCompilationCustomizers(scc)
 
         return new GroovyShell(cc).parse(file)
     }

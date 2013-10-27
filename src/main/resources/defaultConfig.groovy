@@ -1,4 +1,4 @@
 webPort = 8080
 sqlUrl = "jdbc:mysql://localhost/ci"
-sqlUser = "root"
+sqlUsername = "root"
 sqlPassword = "changeme"
