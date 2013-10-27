@@ -76,6 +76,10 @@ class WebServer {
             request.response.sendFile(artifactFile.absolutePath)
         }
 
+        matcher.get('/jobs') { HttpServerRequest it ->
+            writeTemplate(it, "jobs.grt")
+        }
+
         matcher.noMatch { HttpServerRequest r ->
             writeResource(r, "404.html")
         }
