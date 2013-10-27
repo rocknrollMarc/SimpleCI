@@ -104,7 +104,8 @@ class WebServer {
     }
 
     private def writeResource(HttpServerRequest r, String path) {
-        def stream = this.class.classLoader.getResourceAsStream("simpleci/" + path)
+        
+        def stream = getStream(path)
 
         if (stream==null) {
             writeResource(r, "404.html")
@@ -116,7 +117,7 @@ class WebServer {
     private void writeTemplate(HttpServerRequest request, String path, Map binding) {
         binding.put("ci", ci)
         binding.put("request", request)
-        def stream = this.class.classLoader.getResourceAsStream("simpleci/" + path)
+        def stream = getStream(path)
 
         if (stream==null) {
             writeResource(request, "404.html")
@@ -127,6 +128,19 @@ class WebServer {
         def out = new StringWriter()
         templateEngine.createTemplate(text).make(binding).writeTo(out)
         request.response.end(out.toString())
+    }
+
+    private def getStream(String path) {
+        def dir = new File(ci.configRoot, "www")
+        InputStream stream = null
+        if (!dir.exists()) {
+            stream = this.class.classLoader.getResourceAsStream("simpleci/" + path)
+        } else {
+            def file = new File(dir, path)
+            if (!file.exists()) return null
+            stream = file.newInputStream()
+        }
+        return stream
     }
 
     private void writeTemplate(HttpServerRequest request, String path) {

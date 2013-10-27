@@ -15,7 +15,7 @@ class GradleTask extends Task {
 
         def tasks = config['tasks'] as List<String>
 
-        new CommandTask().execute([
+        return new CommandTask().execute([
                 ci: ci,
                 job: job,
                 command: "gradle ${tasks.join(' ')}"

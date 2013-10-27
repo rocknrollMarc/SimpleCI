@@ -16,6 +16,8 @@ class PluginManager {
 
         pluginsDir.mkdirs()
 
+        shell.setVariable("ci", ci)
+
         pluginsDir.eachFileRecurse {
             if (it.isDirectory()) return
 
