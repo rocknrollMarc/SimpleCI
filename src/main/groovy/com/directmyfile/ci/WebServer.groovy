@@ -4,16 +4,17 @@ import groovy.text.SimpleTemplateEngine
 import org.vertx.groovy.core.Vertx
 import org.vertx.groovy.core.http.HttpServerRequest
 import org.vertx.groovy.core.http.RouteMatcher
+import org.vertx.groovy.core.http.HttpServer
 
 class WebServer {
-    def vertx = Vertx.newVertx()
-    def server = vertx.createHttpServer()
+    HttpServer server
     CI ci
 
     def templateEngine = new SimpleTemplateEngine()
 
     WebServer(CI ci) {
         this.ci = ci
+        server = ci.vertx.createHttpServer()
     }
 
     def start(int port) {
@@ -28,6 +29,10 @@ class WebServer {
 
         matcher.get('/css/:file') { HttpServerRequest r ->
             writeResource(r, "css/${r.params['file']}")
+        }
+
+        matcher.get('/js/:file') { HttpServerRequest r ->
+            writeResource(r, "js/${r.params['file']}")
         }
 
         matcher.get('/job/:name') { HttpServerRequest r ->

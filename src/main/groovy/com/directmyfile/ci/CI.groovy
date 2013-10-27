@@ -3,7 +3,10 @@ package com.directmyfile.ci
 import com.directmyfile.ci.tasks.CommandTask
 import com.directmyfile.ci.tasks.GradleTask
 
+import org.vertx.groovy.core.Vertx
+
 class CI {
+    def vertx = Vertx.newVertx()
     def server = new WebServer(this)
     def configRoot = new File(".")
     def pluginManager = new PluginManager(this)
