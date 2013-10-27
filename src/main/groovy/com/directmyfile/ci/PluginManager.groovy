@@ -15,7 +15,7 @@ class PluginManager {
         pluginsDir.mkdirs()
 
         pluginsDir.eachFileRecurse {
-            if (!it.isDirectory()) return
+            if (it.isDirectory()) return
 
             if (it.name.endsWith(".groovy")) {
                 shell.evaluate(it)
