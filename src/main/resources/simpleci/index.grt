@@ -12,7 +12,7 @@
             <%
             import com.directmyfile.ci.Job
 
-            ci.jobs.each { job ->
+            ci.jobs.values().each { job ->
                 println("<tr><td><a href=\"job/${job.name}\">${job.name}</a></td></tr>")
             }
             %>
