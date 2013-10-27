@@ -7,6 +7,7 @@ dependencies {
    compile 'org.codehaus.groovy:groovy-all:2.1.8'
    compile 'io.vertx:vertx-core:2.0.2-final'
    compile 'io.vertx:lang-groovy:2.0.0-final'
+   compile 'org.mozilla:rhino:1.7R4'
 }
 
 jar {
