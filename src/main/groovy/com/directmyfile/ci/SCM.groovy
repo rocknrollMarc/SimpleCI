@@ -11,7 +11,13 @@ class SCM {
 
     boolean clone(File file) {
         if (type=='git') {
-            def proc = "git clone ${url} ${file.getAbsolutePath()}".execute()
+            def command
+            if (new File(file, '.git').exists()) {
+                command = "git pull --all"
+            } else {
+                command = "git clone ${url} ${file.getAbsolutePath()}"
+            }
+            def proc = new ProcessBuilder(command.tokenize(' ')).directory(file).start()
             def exit = proc.waitFor()
             return exit==0
         } else {

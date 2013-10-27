@@ -1,12 +1,14 @@
 package com.directmyfile.ci
 
 import com.directmyfile.ci.tasks.CommandTask
+import com.directmyfile.ci.tasks.GradleTask
 
 class CI {
     def server = new WebServer(this)
     def configRoot = new File(".")
     Map<String, Task> taskTypes = [
-            command: new CommandTask()
+            command: new CommandTask(),
+            gradle: new GradleTask()
     ]
 
     Map<String, Job> jobs = [:]

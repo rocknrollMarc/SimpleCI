@@ -49,4 +49,13 @@ class Job {
     def getLogFile() {
         return new File(ci.configRoot, "logs/${name}.log")
     }
+
+    def generateArtifactList() {
+        def text = []
+        def artifactDir = new File(ci.artifactDir, name)
+        artifactDir.eachFile {
+            text.add("<tr><td><a href=\"/artifact/${this.name}/${it.name}\">${it.name}</a></tr></td>")
+        }
+        return text.join('\n')
+    }
 }

@@ -23,13 +23,19 @@ class CommandTask extends Task {
         }
 
         def command = config['command'] as String
-        def proc = command.execute([], job.buildDir)
-        def exitCode = proc.waitFor()
-        // Write Logs
-        job.logFile.write(proc.inputStream.readLines().join('\n'))
+        def procBuild = new ProcessBuilder().command(command.tokenize(' '))
+        procBuild.directory(job.buildDir)
+        procBuild.redirectErrorStream(true)
+        def proc = procBuild.start()
+        def log = new PrintStream(job.logFile.newOutputStream())
+        proc.in.eachLine {
+            log.println(it)
+            log.flush()
+        }
+        log.println("Process Exited with Status ${proc.waitFor()}")
+        log.flush()
+        log.close()
 
-        job.logFile.append("\nProcess Exited with Status ${exitCode}")
-
-        return exitCode==0
+        return proc.exitValue()==0
     }
 }

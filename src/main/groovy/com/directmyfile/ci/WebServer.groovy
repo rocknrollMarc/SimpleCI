@@ -62,6 +62,10 @@ class WebServer {
 
             request.response.sendFile(artifactFile.absolutePath)
         }
+
+        matcher.noMatch { HttpServerRequest r ->
+            writeResource(r, "404.html")
+        }
     }
 
     private def writeResource(HttpServerRequest r, String path) {
