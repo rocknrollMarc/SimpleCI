@@ -1,7 +1,6 @@
 package com.directmyfile.ci
 
-import com.directmyfile.ci.tasks.CommandTask
-import com.directmyfile.ci.tasks.GradleTask
+import com.directmyfile.ci.tasks.*
 
 import org.vertx.groovy.core.Vertx
 
@@ -12,7 +11,8 @@ class CI {
     def pluginManager = new PluginManager(this)
     Map<String, Task> taskTypes = [
             command: new CommandTask(),
-            gradle: new GradleTask()
+            gradle: new GradleTask(),
+            make: new MakeTask()
     ]
 
     Map<String, Job> jobs = [:]
