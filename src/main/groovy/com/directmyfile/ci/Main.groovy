@@ -19,6 +19,12 @@ class Main {
                 } else {
                     ci.runJob(job)
                 }
+            } else if (split[0]=='restart') {
+                ci.server.server.close()
+                ci = null
+                System.gc()
+                ci = new CI()
+                ci.start()
             }
         }
     }
