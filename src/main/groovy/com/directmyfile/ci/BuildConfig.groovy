@@ -1,5 +1,6 @@
 package com.directmyfile.ci
 
+import com.directmyfile.ci.exception.JobConfigurationException
 import groovy.json.JsonSlurper
 
 class BuildConfig {
@@ -7,6 +8,11 @@ class BuildConfig {
     private def json
 
     BuildConfig(File file) {
+
+        if (!file.exists()) {
+            throw new JobConfigurationException("No Such Job Configuration File: ${file.absolutePath}")
+        }
+
         this.json = new JsonSlurper().parse(file.newReader())
     }
 

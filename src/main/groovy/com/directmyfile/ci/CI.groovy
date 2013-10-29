@@ -12,18 +12,10 @@ import com.directmyfile.ci.tasks.CommandTask
 import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
 import com.directmyfile.ci.web.VertxManager
-import org.apache.log4j.BasicConfigurator
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
+import groovy.util.logging.Log4j
 
+@Log4j('logger')
 class CI {
-
-    def logger = {
-        BasicConfigurator.configure()
-        def logger = Logger.getLogger(this.class.name)
-        logger.setLevel(Level.INFO)
-        return logger
-    }()
 
     def configRoot = new File(".")
     int port = 0

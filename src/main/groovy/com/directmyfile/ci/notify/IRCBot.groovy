@@ -17,17 +17,8 @@ class IRCBot {
 
         def ciConfig = ci.config
 
-        def enabled = ciConfig.getProperty("enableIRC", false) as boolean
-
-        if (enabled) {
-            println "Loading IRC Bot"
-        } else {
-            return
-        }
-
-        this.bot = new NanoBot()
-
         def cfg = ciConfig.getProperty("ircConfig", [
+                enabled: false,
                 host: "irc.esper.net",
                 port: 6667,
                 nickname: "SimpleCI",
@@ -36,6 +27,14 @@ class IRCBot {
                         "#DirectMyFile"
                 ]
         ])
+
+        if (cfg['enabled']) {
+            println "Loading IRC Bot"
+        } else {
+            return
+        }
+
+        this.bot = new NanoBot()
 
         bot.setServer(cfg['host'])
         bot.setPort(cfg['port'])
@@ -76,16 +75,16 @@ class IRCBot {
             def cmd = it['command'] as String
             def args = it['args'] as String[]
 
-            if (cmd=='listJobs') {
+            if (cmd == 'listJobs') {
                 msg(channel, "> ${ci.jobs.keySet().join(', ')}")
-            } else if (cmd=='build') {
-                if (args.length!=1) {
+            } else if (cmd == 'build') {
+                if (args.length != 1) {
                     msg(channel, '> Usage: !build JOB')
                     return
                 }
                 def jobName = args[0]
                 def job = ci.jobs[jobName]
-                if (job==null) {
+                if (job == null) {
                     msg(channel, "> No Such Job: ${jobName}")
                     return
                 }
