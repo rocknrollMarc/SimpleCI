@@ -1,6 +1,6 @@
 package com.directmyfile.ci.api
 
-import com.directmyfile.ci.Job
+import com.directmyfile.ci.jobs.Job
 
 abstract class SCM {
     abstract void clone(Job job);

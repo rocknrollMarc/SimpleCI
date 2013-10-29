@@ -22,7 +22,7 @@
 </div>
 <table class="centered table table-bordered" border="1">
     <%
-    import com.directmyfile.ci.Job
+    import com.directmyfile.ci.jobs.Job
 
     ci.jobs.values().each { job ->
     println("<tr><td><a href=\"job/${job.name}\">${job.name}</a></td></tr>")

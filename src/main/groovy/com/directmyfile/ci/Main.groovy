@@ -1,10 +1,11 @@
 package com.directmyfile.ci
-
-import org.apache.log4j.BasicConfigurator
+import org.apache.log4j.Level
+import org.apache.log4j.Logger
 
 class Main {
     static void main(String[] args) {
-        BasicConfigurator.configure()
+        Logger.getRootLogger().setLevel(Level.INFO)
+
         def ci = new CI()
         ci.start()
         def reader = System.in.newReader()
@@ -23,7 +24,7 @@ class Main {
                     ci.runJob(job)
                 }
             } else if (split[0]=='restart') {
-                ci.server.server.close()
+                ci.vertxManager.stopWebServer()
                 ci = null
                 System.gc()
                 ci = new CI()

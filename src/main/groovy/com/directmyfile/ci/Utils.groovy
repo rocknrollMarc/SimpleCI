@@ -48,7 +48,10 @@ class Utils {
                     long,
                     float,
                     double,
-                    Object
+                    Object,
+                    Boolean.TYPE,
+                    Boolean,
+                    boolean
             ].asImmutable()
         }
 

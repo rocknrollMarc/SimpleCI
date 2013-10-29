@@ -1,25 +1,32 @@
 package com.directmyfile.ci
 
-class CiConfig {
+import com.directmyfile.ci.config.GConfig
+
+class CiConfig extends GConfig {
     private CI ci
 
     CiConfig(CI ci) {
+        super(new File(ci.configRoot, "config.groovy"))
         this.ci = ci
+
+        setDefaultConfig(this.class.classLoader.getResourceAsStream("defaultConfig.groovy").text)
     }
 
+    @Override
     void load() {
-        def configFile = new File(ci.configRoot, "config.groovy")
-        if (!configFile.exists()) {
-            configFile.write(this.class.classLoader.getResourceAsStream("defaultConfig.groovy").text)
-        }
-        def configScript = Utils.parseConfig(configFile)
+        super.load()
+        def web = getProperty("web", [
+                port: 8080
+        ])
 
-        configScript.run()
+        ci.port = web['port'] as int
 
-        def config = configScript.binding
-
-        ci.port = config.getVariable("webPort") as int
-        ci.sql.setURL(config.getVariable("sqlUrl") as String)
-        ci.sql.setAuth(username: config.getVariable("sqlUsername") as String, password: config.getVariable("sqlPassword") as String)
+        ci.sql.setConfig(getProperty("sql", [
+                host: "localhost",
+                port: "3306",
+                username: "root",
+                password: "changeme",
+                database: "ci"
+        ]) as Map)
     }
 }

@@ -1,22 +1,22 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.jobs
+import com.directmyfile.ci.BuildConfig
+import com.directmyfile.ci.CI
+import com.directmyfile.ci.SCMConfig
+import com.directmyfile.ci.TaskConfig
 
 class Job {
     BuildConfig buildConfig
     CI ci
 
-    JobStatus status = null
+    private JobStatus status
+
+    int id
 
     Job(CI ci, File file) {
         this.ci = ci
         this.buildConfig = new BuildConfig(file)
-        this.status = {
-            if(logFile.exists()) {
-                return JobStatus.SUCCESS
-            } else {
-                return JobStatus.NOT_STARTED
-            }
-        }()
         getBuildDir().mkdirs()
+
     }
 
     def getName() {
@@ -67,5 +67,18 @@ class Job {
             text.add("<tr><td><a href=\"/artifact/${this.name}/${it.name}\">${it.name}</a></tr></td>")
         }
         return text.join('\n')
+    }
+
+    void setStatus(JobStatus status) {
+        this.status = status
+        ci.sql.sql.executeUpdate("UPDATE `jobs` SET  `status` =  '${status.intValue()}' WHERE  `jobs`.`id` = ${id};")
+    }
+
+    JobStatus getStatus() {
+        return status
+    }
+
+    void forceStatus(JobStatus status) {
+        this.status = status
     }
 }

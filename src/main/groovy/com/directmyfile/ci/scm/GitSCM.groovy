@@ -1,6 +1,6 @@
 package com.directmyfile.ci.scm
 
-import com.directmyfile.ci.Job
+import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.Utils
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.exception.ToolException

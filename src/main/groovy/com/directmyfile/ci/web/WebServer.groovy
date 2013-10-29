@@ -1,10 +1,10 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.web
 
+import com.directmyfile.ci.CI
 import groovy.text.SimpleTemplateEngine
-import org.vertx.groovy.core.Vertx
+import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
 import org.vertx.groovy.core.http.RouteMatcher
-import org.vertx.groovy.core.http.HttpServer
 
 class WebServer {
     HttpServer server
@@ -14,7 +14,7 @@ class WebServer {
 
     WebServer(CI ci) {
         this.ci = ci
-        server = ci.vertx.createHttpServer()
+        server = ci.vertxManager.vertx.createHttpServer()
     }
 
     def start(int port) {
@@ -123,7 +123,7 @@ class WebServer {
             writeResource(request, "404.html")
         }
 
-        def text = stream.readLines().join('\n')
+        def text = stream.text
 
         def out = new StringWriter()
         templateEngine.createTemplate(text).make(binding).writeTo(out)

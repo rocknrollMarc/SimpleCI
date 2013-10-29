@@ -1,31 +1,28 @@
 package com.directmyfile.ci.helper
-
 import com.directmyfile.ci.CI
 import groovy.sql.Sql
 
 class SqlHelper {
-    private String url
     private CI ci
     private Sql sql
-    private def auth = [
-            username: "",
-            password: ""
-    ]
+    private Map config
 
     SqlHelper(CI ci) {
         this.ci = ci
     }
 
     void init() {
-        this.sql = Sql.newInstance(url, auth.username, auth.password)
+        def url = "jdbc:mysql://${config['host']}:${config['port']}/${config['database']}"
+        this.sql = Sql.newInstance(url, config['username'] as String, config['password'] as String)
+
+        println("Connected to Database")
     }
 
-    void setURL(String url) {
-        this.url = url
+    void setConfig(Map config) {
+        this.config = config
     }
 
-    void setAuth(Map<String, String> authInfo) {
-        this.auth = authInfo
-        println("Password: ${authInfo['password']}")
+    Sql getSql() {
+        return sql
     }
 }
