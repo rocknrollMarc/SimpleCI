@@ -7,11 +7,11 @@ web = [
 ]
 
 sql = [
-    host: "localhost",
-    port: "3306",
-    username: "root",
-    password: "changeme",
-    database: "ci"
+        host: "localhost",
+        port: "3306",
+        username: "root",
+        password: "changeme",
+        database: "ci"
 ]
 
 irc = [
@@ -25,4 +25,8 @@ irc = [
         ],
         commandPrefix: "!",
         admins: []
+]
+
+git = [
+        since: "2.weeks"
 ]
