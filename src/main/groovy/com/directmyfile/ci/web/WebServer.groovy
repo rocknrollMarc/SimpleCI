@@ -98,6 +98,27 @@ class WebServer {
             ci.runJob(job)
         }
 
+        matcher.get('/changes/:name') { HttpServerRequest r ->
+            def jobName = r.params['name'] as String
+
+            if (!ci.jobs.containsKey(jobName)) {
+                writeResource(r, "404.html")
+                return
+            }
+
+            def job = ci.jobs[jobName]
+
+            def changelog = ci.scmTypes[job.SCM.type].changelog(job).entries
+
+            def out = ""
+
+            for (entry in changelog) {
+                out = "${out}${entry.revision}: ${entry.message}\n"
+            }
+
+            r.response.end(out)
+        }
+
         matcher.noMatch { HttpServerRequest r ->
             writeResource(r, "404.html")
         }

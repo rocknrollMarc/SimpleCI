@@ -17,7 +17,7 @@ class IRCBot {
 
         def ciConfig = ci.config
 
-        def cfg = ciConfig.getProperty("ircConfig", [
+        def cfg = ciConfig.getProperty("irc", [
                 enabled: false,
                 host: "irc.esper.net",
                 port: 6667,
@@ -25,7 +25,8 @@ class IRCBot {
                 username: "SimpleCI",
                 channels: [
                         "#DirectMyFile"
-                ]
+                ],
+                commandPrefix: "!"
         ])
 
         if (cfg['enabled']) {
@@ -40,9 +41,11 @@ class IRCBot {
         bot.setPort(cfg['port'])
         bot.setNickname(cfg['nickname'])
         bot.setUserName(cfg['username'])
+        bot.setCommandPrefix(cfg['commandPrefix'])
         bot.enableCommandEvent()
 
-        def channels = cfg['channels']
+        def channels = cfg['channels'] as List<String>
+        def admins = cfg['admins'] as List<String>
 
         bot.on('ready') {
             channels.each {
@@ -70,10 +73,11 @@ class IRCBot {
             }
         }
 
-        bot.on('command') {
+        bot.on('command') { Map it ->
             def channel = it['channel'] as String
             def cmd = it['command'] as String
             def args = it['args'] as String[]
+            def user = it['user'] as String
 
             if (cmd == 'listJobs') {
                 msg(channel, "> ${ci.jobs.keySet().join(', ')}")
@@ -89,6 +93,14 @@ class IRCBot {
                     return
                 }
                 ci.runJob(job)
+            } else if (cmd == 'loadJobs') {
+                if (!admins.contains(user)) {
+                    msg(channel, "> You must be an admin to use this command.")
+                    return
+                }
+                msg(channel, "> Reloading Jobs")
+                ci.loadJobs()
+                msg(channel, "> Jobs Reloaded: CI has ${ci.jobs.size()} jobs")
             }
         }
 

@@ -1,3 +1,7 @@
+ci = [
+        queueSize: 4
+]
+
 web = [
         port: 8080
 ]
@@ -18,5 +22,7 @@ irc = [
         username: "SimpleCI",
         channels: [
                 "#DirectMyFile"
-        ]
+        ],
+        commandPrefix: "!",
+        admins: []
 ]

@@ -3,6 +3,7 @@ import com.directmyfile.ci.BuildConfig
 import com.directmyfile.ci.CI
 import com.directmyfile.ci.SCMConfig
 import com.directmyfile.ci.TaskConfig
+import com.directmyfile.ci.scm.Changelog
 
 class Job {
     BuildConfig buildConfig
@@ -80,5 +81,9 @@ class Job {
 
     void forceStatus(JobStatus status) {
         this.status = status
+    }
+
+    Changelog getChangelog() {
+        return ci.scmTypes[SCM.type].changelog(this)
     }
 }

@@ -29,4 +29,10 @@ class CiConfig extends GConfig {
                 database: "ci"
         ]) as Map)
     }
+
+    Map ciSection() {
+        return getProperty("ci", [
+                queueSize: 2
+        ]) as Map
+    }
 }

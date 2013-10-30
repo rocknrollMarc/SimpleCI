@@ -14,6 +14,8 @@ import com.directmyfile.ci.tasks.MakeTask
 import com.directmyfile.ci.web.VertxManager
 import groovy.util.logging.Log4j
 
+import java.util.concurrent.LinkedBlockingQueue
+
 @Log4j('logger')
 class CI {
 
@@ -35,6 +37,8 @@ class CI {
             git: new GitSCM()
     ]
 
+    LinkedBlockingQueue<Job> jobQueue
+
     Map<String, Job> jobs = [:]
 
     def vertxManager = new VertxManager(this)
@@ -50,17 +54,28 @@ class CI {
 
     private void init() {
         config.load()
+        jobQueue = new LinkedBlockingQueue<Job>(config.ciSection()['queueSize'] as int)
         sql.init()
         new File(configRoot, 'logs').mkdirs()
         pluginManager.loadPlugins()
+
+        eventBus.publish("ci/init", [
+                time: System.currentTimeMillis()
+        ])
+
     }
 
-    private def loadJobs() {
+    void loadJobs() {
         def jobRoot = new File(configRoot, "jobs")
+
         sql.sql.dataSet("jobs").rows().each {
             def jobCfg = new File(jobRoot, "${it['name']}.json")
 
-            def job = new Job(this, new File(jobRoot, "${it['name']}.json"))
+            if (!jobCfg.exists()) {
+                throw new JobConfigurationException("Job File: ${jobCfg.absolutePath} does not exist!")
+            }
+
+            def job = new Job(this, jobCfg)
             jobs[job.name] = job
             job.id = it['id'] as int
             job.forceStatus(JobStatus.parse(it['status'] as int))
@@ -84,6 +99,7 @@ class CI {
 
     void runJob(Job job) {
         Thread.start("Builder[${job.name}]") {
+            jobQueue.put(job)
 
             eventBus.publish("ci/job-running", [
                     jobName: job.name
@@ -144,6 +160,8 @@ class CI {
                 println 'Job has Completed'
                 job.status = JobStatus.SUCCESS
             }
+
+            jobQueue.remove(job)
 
             eventBus.publish("ci/job-done", [
                     jobName: job.name,

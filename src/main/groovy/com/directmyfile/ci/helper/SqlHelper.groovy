@@ -1,4 +1,5 @@
 package com.directmyfile.ci.helper
+
 import com.directmyfile.ci.CI
 import groovy.sql.Sql
 
@@ -23,6 +24,7 @@ class SqlHelper {
     }
 
     Sql getSql() {
+        if (sql.connection.closed) init()
         return sql
     }
 }
