@@ -11,9 +11,7 @@ class GitSCM extends SCM {
     private Map gitConfig
 
     GitSCM(CI ci) {
-        gitConfig = ci.config.getProperty("git", [
-                since: "2.weeks"
-        ]) as Map
+        
     }
 
     @Override
