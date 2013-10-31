@@ -11,7 +11,9 @@ class GitSCM extends SCM {
     private Map gitConfig
 
     GitSCM(CI ci) {
-        
+        this.gitConfig = ci.config.getProperty("git", [
+                logLength: 4
+        ]) as Map
     }
 
     @Override
@@ -21,8 +23,15 @@ class GitSCM extends SCM {
         builder.command(cmd)
         builder.directory(job.buildDir)
         builder.redirectErrorStream(true)
-        builder.redirectOutput(job.logFile)
         def proc = builder.start()
+        def log = job.logFile.newPrintWriter()
+        proc.inputStream.eachLine {
+            log.println(it)
+            log.flush()
+        }
+        log.println()
+        log.flush()
+        log.close()
         def exitCode = proc.waitFor()
         if (exitCode != 0) throw new ToolException("Git failed to clone repository!")
     }
@@ -62,7 +71,7 @@ class GitSCM extends SCM {
         def builder = new ProcessBuilder()
 
         builder.directory(dir)
-        builder.command([findGit().absolutePath, "log", "--pretty=format:['%H', '%an', \"%s\"]", "--since=2.weeks"])
+        builder.command([findGit().absolutePath, "log", "-${gitConfig['logLimit'].toString()}".toString(), "--pretty='format:%H%n%an%n%s'"])
         // Makes Git Log Lines into Groovy List
 
         def proc = builder.start()
@@ -71,12 +80,24 @@ class GitSCM extends SCM {
 
         def log = proc.text.readLines()
 
+        def current = changelog.newEntry()
+        def type = 1
         for (entry in log) {
-            def logEntry = changelog.newEntry()
-            def data = Eval.me(entry) as List<String>
-            logEntry.revision = data[0]
-            logEntry.author = data[1]
-            logEntry.message = data[2]
+            switch (type) {
+                case 1:
+                    type++
+                    current.revision = entry
+                    break
+                case 2:
+                    type++
+                    current.author = entry
+                    break
+                case 3:
+                    type = 1
+                    current.message = entry
+                    current = changelog.newEntry()
+                    break
+            }
         }
 
         return changelog

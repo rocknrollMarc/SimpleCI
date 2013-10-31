@@ -17,7 +17,6 @@ class Job {
         this.ci = ci
         this.buildConfig = new BuildConfig(file)
         getBuildDir().mkdirs()
-
     }
 
     def getName() {
@@ -85,5 +84,15 @@ class Job {
 
     Changelog getChangelog() {
         return ci.scmTypes[SCM.type].changelog(this)
+    }
+
+    def getHistory() {
+        def history = new JobHistory(this)
+        history.load()
+        return history
+    }
+
+    def getNotifications() {
+        return buildConfig.notify
     }
 }

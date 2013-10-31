@@ -28,5 +28,5 @@ irc = [
 ]
 
 git = [
-        since: "2.weeks"
+        logLength: 4
 ]

@@ -1,5 +1,6 @@
 package com.directmyfile.ci
 
+import com.directmyfile.ci.exception.CIException
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 
@@ -11,13 +12,13 @@ class Utils {
     }
 
     static File findCommandOnPath(String executableName) {
-        String systemPath = System.getenv("PATH")
-        String[] pathDirs = systemPath.split(File.pathSeparator)
+        def systemPath = System.getenv("PATH")
+        def pathDirs = systemPath.split(File.pathSeparator)
 
-        File fullyQualifiedExecutable = null
+        def fullyQualifiedExecutable = null
         for (pathDir in pathDirs) {
             def file = new File(pathDir, executableName)
-            if (file.isFile()) {
+            if (file.file) { // Hehehe it really means is this file a file
                 fullyQualifiedExecutable = file
                 break
             }
@@ -58,5 +59,15 @@ class Utils {
         cc.addCompilationCustomizers(scc)
 
         return new GroovyShell(cc).parse(file)
+    }
+
+    static def resource(String path) {
+        def res = Utils.class.classLoader.getResourceAsStream(path)
+
+        if (res==null) {
+            throw new CIException("Tried to get a resource that is not available! ${path}")
+        }
+
+        return res
     }
 }

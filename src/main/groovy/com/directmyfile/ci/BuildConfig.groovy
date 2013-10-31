@@ -31,4 +31,8 @@ class BuildConfig {
     def getArtifacts() {
         return json['artifacts'] as List<String>
     }
+
+    def getNotify() {
+        return json['notify'] ?: [:]
+    }
 }

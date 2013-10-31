@@ -1,5 +1,4 @@
 package com.directmyfile.ci
-
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.exception.JobConfigurationException
@@ -33,9 +32,7 @@ class CI {
             make: new MakeTask()
     ]
 
-    Map<String, SCM> scmTypes = [
-            git: new GitSCM()
-    ]
+    Map<String, SCM> scmTypes = [:]
 
     LinkedBlockingQueue<Job> jobQueue
 
@@ -62,7 +59,7 @@ class CI {
         eventBus.publish("ci/init", [
                 time: System.currentTimeMillis()
         ])
-
+        scmTypes['git'] = new GitSCM(this)
     }
 
     void loadJobs() {
@@ -101,8 +98,14 @@ class CI {
         Thread.start("Builder[${job.name}]") {
             jobQueue.put(job)
 
+            def number = (job.history.latestBuild?.number ?: 0) + 1
+
+            def lastStatus = job.status
+
             eventBus.publish("ci/job-running", [
-                    jobName: job.name
+                    jobName: job.name,
+                    lastStatus: lastStatus,
+                    number: number
             ])
 
             def success = true
@@ -167,8 +170,11 @@ class CI {
                     jobName: job.name,
                     status: job.status,
                     buildTime: buildTime,
-                    timeString: timer.toString()
+                    timeString: timer.toString(),
+                    number: number
             ])
+
+            sql.executeSQL("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.intValue()}, '${job.logFile.text}', CURRENT_TIMESTAMP, ${number});")
         }
     }
 

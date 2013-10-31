@@ -1,6 +1,7 @@
 package com.directmyfile.ci.helper
 
 import com.directmyfile.ci.CI
+import com.directmyfile.ci.Utils
 import groovy.sql.Sql
 
 class SqlHelper {
@@ -16,6 +17,8 @@ class SqlHelper {
         def url = "jdbc:mysql://${config['host']}:${config['port']}/${config['database']}"
         this.sql = Sql.newInstance(url, config['username'] as String, config['password'] as String)
 
+        executeSQL(Utils.resource("sql/init.sql"))
+
         println("Connected to Database")
     }
 
@@ -26,5 +29,17 @@ class SqlHelper {
     Sql getSql() {
         if (sql.connection.closed) init()
         return sql
+    }
+
+    boolean executeSQL(String query) {
+       return sql.execute(query)
+    }
+
+    boolean executeSQL(InputStream stream) {
+        return executeSQL(stream.text)
+    }
+
+    boolean executeSQL(File file) {
+        return executeSQL(file.text)
     }
 }

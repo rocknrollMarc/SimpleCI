@@ -1,6 +1,6 @@
 package com.directmyfile.ci.notify
-
 import com.directmyfile.ci.CI
+import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
 import org.nanobot.Colors
 import org.nanobot.NanoBot
@@ -57,8 +57,13 @@ class IRCBot {
             def e = msg.body() as Map
             def jobName = e.jobName as String
 
-            channels.each {
-                bot.msg(it, "> CI is building: ${jobName}")
+            def job = ci.jobs[jobName]
+
+            def status = e['lastStatus'] as JobStatus
+
+            getNotifyChannels(job, channels).each { String channel ->
+                if (!bot.channels.containsKey(channel)) bot.join(channel)
+                bot.msg(channel, "> Build #${e['number']} for ${jobName} starting (Last Status: ${status.IRCColor}${status}${Colors.NORMAL})")
             }
         }
 
@@ -67,9 +72,11 @@ class IRCBot {
             def jobName = e.jobName as String
             def status = e.status as JobStatus
             def time = e.timeString as String
+            def job = ci.jobs[jobName]
 
-            channels.each {
-                bot.msg(it, "> Job '${jobName}' completed with status '${status.IRCColor}${status}${Colors.NORMAL}' taking ${time}")
+            getNotifyChannels(job, channels).each { String channel ->
+                if (!bot.channels.containsKey(channel)) bot.join(channel)
+                bot.msg(channel, "> Build #${e['number']} for ${jobName} completed with status ${status.IRCColor}${status}${Colors.NORMAL} taking ${time}")
             }
         }
 
@@ -101,9 +108,27 @@ class IRCBot {
                 msg(channel, "> Reloading Jobs")
                 ci.loadJobs()
                 msg(channel, "> Jobs Reloaded: CI has ${ci.jobs.size()} jobs")
+            } else if (cmd == 'status') {
+                def jobList = []
+
+                ci.jobs.values().each {
+                    jobList.add("${it.status.IRCColor}${it.name}${Colors.NORMAL} (${it.history.latestBuild?.number ?: "Not Started"})")
+                }
+
+                bot.msg(channel, "> ${jobList.join(', ')}")
             }
         }
 
+        bot.on("disconnect") {
+            bot.connect()
+        }
+
         bot.connect()
+    }
+
+    static def getNotifyChannels(Job job, List<String> defaults) {
+        def irc = job.notifications['irc'] ?: [:]
+
+        return irc['channels'] ?: defaults
     }
 }

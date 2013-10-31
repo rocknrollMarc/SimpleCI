@@ -1,11 +1,7 @@
 package com.directmyfile.ci.exception
 
-class JobConfigurationException extends Exception {
-    JobConfigurationException(String message) {
-        super(message)
-    }
+import groovy.transform.InheritConstructors
 
-    JobConfigurationException(String message, Throwable cause) {
-        super(message, cause)
-    }
+@InheritConstructors
+class JobConfigurationException extends CIException {
 }

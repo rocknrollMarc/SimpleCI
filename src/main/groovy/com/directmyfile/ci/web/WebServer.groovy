@@ -108,7 +108,7 @@ class WebServer {
 
             def job = ci.jobs[jobName]
 
-            def changelog = ci.scmTypes[job.SCM.type].changelog(job).entries
+            def changelog = job.changelog.entries
 
             def out = ""
 

@@ -43,6 +43,20 @@
     </div>
 </div>
 
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#builds">
+            <h2 class="panel-title">Recent Builds</h2>
+        </a>
+    </div>
+    <div id="builds" class="panel-content panel-collapse collapse">
+        <%
+        def h = job.history
+        print h.toHTML()
+        %>
+    </div>
+</div>
+
 <table class="table centered table-striped" border="1">
     <% print job.generateArtifactList() %>
 </table>

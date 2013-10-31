@@ -1,8 +1,10 @@
 package com.directmyfile.ci.tasks
 
 import com.directmyfile.ci.CI
+import com.directmyfile.ci.Utils
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.exception.JobConfigurationException
+import com.directmyfile.ci.exception.ToolException
 import com.directmyfile.ci.jobs.Job
 
 class GradleTask extends Task {
@@ -27,6 +29,9 @@ class GradleTask extends Task {
                 throw new JobConfigurationException("Gradle Wrapper not found in Job: ${job.name}")
             }
             gradleCommand = "sh gradlew"
+        } else {
+            def c = Utils.findCommandOnPath("gradle")
+            if (c==null) throw new ToolException("Gradle not found on this system.")
         }
 
         return new CommandTask().execute([
