@@ -3,7 +3,7 @@ apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
 
 ext {
-   groovyVersion = '2.1.9'
+   groovyVersion = '2.1.9:indy'
 }
 
 repositories {
@@ -23,6 +23,10 @@ dependencies {
    compile 'mysql:mysql-connector-java:5.1.26'
    testCompile 'junit:junit:4.11'
    testCompile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
+}
+
+tasks.withType(GroovyCompile) {
+    groovyOptions.optimizationOptions.indy = true
 }
 
 jar {
