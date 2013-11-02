@@ -31,8 +31,11 @@ class SqlHelper {
         return sql
     }
 
-    boolean executeSQL(String query) {
-       return sql.execute(query)
+    boolean executeSQL(String fullQuery) {
+        fullQuery.tokenize(";").each {
+            if (!sql.execute(it)) return false
+        }
+        return true
     }
 
     boolean executeSQL(InputStream stream) {
