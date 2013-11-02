@@ -66,6 +66,8 @@ class CI {
 
     void loadJobs() {
         def jobRoot = new File(configRoot, "jobs")
+        if (!jobRoot.exists())
+            jobRoot.mkdir();
 
         sql.sql.dataSet("jobs").rows().each {
             def jobCfg = new File(jobRoot, "${it['name']}.json")
