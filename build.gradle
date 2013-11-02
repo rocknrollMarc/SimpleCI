@@ -2,6 +2,10 @@ apply plugin: 'groovy'
 apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
 
+ext {
+   groovyVersion = '2.1.9'
+}
+
 repositories {
    mavenCentral()
 
@@ -11,12 +15,14 @@ repositories {
 }
 
 dependencies {
-   compile 'org.codehaus.groovy:groovy-all:2.1.8'
+   compile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
    compile 'io.vertx:vertx-core:2.0.2-final'
    compile 'io.vertx:lang-groovy:2.0.0-final'
    compile 'org.mozilla:rhino:1.7R4'
    compile 'com.directmyfile:NanoBot:0.5.2-SNAPSHOT'
    compile 'mysql:mysql-connector-java:5.1.26'
+   testCompile 'junit:junit:4.11'
+   testCompile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
 }
 
 jar {
