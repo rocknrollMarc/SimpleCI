@@ -18,7 +18,7 @@ class Utils {
         def fullyQualifiedExecutable = null
         for (pathDir in pathDirs) {
             def file = new File(pathDir, executableName)
-            if (file.file) { // Hehehe it really means is this file a file
+            if (file.file) {
                 fullyQualifiedExecutable = file
                 break
             }
