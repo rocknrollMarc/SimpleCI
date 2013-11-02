@@ -1,8 +1,8 @@
 package com.directmyfile.ci.jobs
-import com.directmyfile.ci.BuildConfig
-import com.directmyfile.ci.CI
-import com.directmyfile.ci.SCMConfig
-import com.directmyfile.ci.TaskConfig
+import com.directmyfile.ci.config.BuildConfig
+import com.directmyfile.ci.core.CI
+import com.directmyfile.ci.config.SCMConfig
+import com.directmyfile.ci.config.TaskConfig
 import com.directmyfile.ci.scm.Changelog
 
 class Job {

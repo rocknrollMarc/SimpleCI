@@ -1,6 +1,6 @@
 package com.directmyfile.ci.web
 
-import com.directmyfile.ci.CI
+import com.directmyfile.ci.core.CI
 import groovy.text.SimpleTemplateEngine
 import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest

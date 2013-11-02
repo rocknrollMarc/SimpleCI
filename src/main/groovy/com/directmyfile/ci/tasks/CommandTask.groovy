@@ -1,6 +1,6 @@
 package com.directmyfile.ci.tasks
 
-import com.directmyfile.ci.CI
+import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.api.Task
 

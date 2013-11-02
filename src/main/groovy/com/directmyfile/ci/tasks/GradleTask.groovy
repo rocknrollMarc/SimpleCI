@@ -1,6 +1,6 @@
 package com.directmyfile.ci.tasks
 
-import com.directmyfile.ci.CI
+import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.Utils
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.exception.JobConfigurationException

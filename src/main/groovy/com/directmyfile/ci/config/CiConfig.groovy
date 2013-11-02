@@ -1,6 +1,6 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.config
 
-import com.directmyfile.ci.config.GConfig
+import com.directmyfile.ci.core.CI
 
 class CiConfig extends GConfig {
     private CI ci

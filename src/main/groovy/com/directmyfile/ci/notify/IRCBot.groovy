@@ -1,5 +1,5 @@
 package com.directmyfile.ci.notify
-import com.directmyfile.ci.CI
+import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
 import org.nanobot.Colors

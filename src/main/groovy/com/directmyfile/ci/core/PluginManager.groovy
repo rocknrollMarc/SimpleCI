@@ -1,5 +1,6 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.core
 
+import com.directmyfile.ci.core.CI
 import org.mozilla.javascript.*
 
 class PluginManager {

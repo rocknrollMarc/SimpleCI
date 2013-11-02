@@ -37,7 +37,7 @@ class JobHistory {
     def toHTML() {
         def html = ""
         entries.each {
-            html += "<br/>${it.id}"
+            html += "<br/>${it.number}"
         }
         return html
     }

@@ -1,7 +1,7 @@
 package com.directmyfile.ci.tasks
 
-import com.directmyfile.ci.*
 import com.directmyfile.ci.api.Task
+import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.jobs.Job
 
 class MakeTask extends Task {

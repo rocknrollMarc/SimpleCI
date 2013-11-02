@@ -1,6 +1,8 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.core
+
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
+import com.directmyfile.ci.config.CiConfig
 import com.directmyfile.ci.exception.JobConfigurationException
 import com.directmyfile.ci.helper.SqlHelper
 import com.directmyfile.ci.jobs.Job

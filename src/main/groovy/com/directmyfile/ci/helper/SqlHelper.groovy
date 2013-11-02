@@ -1,6 +1,6 @@
 package com.directmyfile.ci.helper
 
-import com.directmyfile.ci.CI
+import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.Utils
 import groovy.sql.Sql
 

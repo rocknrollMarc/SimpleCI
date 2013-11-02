@@ -1,4 +1,4 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.config
 
 class SCMConfig {
     String type

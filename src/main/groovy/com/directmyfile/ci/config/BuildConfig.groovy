@@ -1,4 +1,4 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.config
 
 import com.directmyfile.ci.exception.JobConfigurationException
 import groovy.json.JsonSlurper
