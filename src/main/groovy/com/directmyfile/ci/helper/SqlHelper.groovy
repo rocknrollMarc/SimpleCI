@@ -1,7 +1,7 @@
 package com.directmyfile.ci.helper
 
-import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.Utils
+import com.directmyfile.ci.core.CI
 import groovy.sql.Sql
 
 class SqlHelper {
@@ -19,7 +19,7 @@ class SqlHelper {
 
         executeSQL(Utils.resource("sql/init.sql"))
 
-        println("Connected to Database")
+        ci.logger.info("Connected to Database")
     }
 
     void setConfig(Map config) {
