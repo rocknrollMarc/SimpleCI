@@ -3,11 +3,15 @@ package com.directmyfile.ci
 import com.directmyfile.ci.core.CI
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
+import org.apache.log4j.PropertyConfigurator
 
 class Main {
     static void main(String[] args) {
         try {
             Logger.getRootLogger().setLevel(Level.INFO)
+            def props = new Properties()
+            props.load(Utils.resource("logging.properties"))
+            PropertyConfigurator.configure(props)
 
             def ci = new CI()
             ci.start()

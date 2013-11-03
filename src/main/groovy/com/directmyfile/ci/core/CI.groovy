@@ -14,8 +14,11 @@ import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
 import com.directmyfile.ci.web.VertxManager
 import groovy.util.logging.Log4j
+import org.apache.log4j.ConsoleAppender
 
 import java.util.concurrent.LinkedBlockingQueue
+import java.util.logging.Level
+import java.util.logging.Logger
 
 @Log4j('logger')
 class CI {
@@ -53,6 +56,11 @@ class CI {
 
     private void init() {
         config.load()
+        def consoleAppender = new ConsoleAppender()
+        consoleAppender.activateOptions()
+        consoleAppender.layout = new LogLayout()
+        Logger.getLogger("groovy.sql.Sql").setLevel(Level.OFF)
+        logger.addAppender(consoleAppender)
         jobQueue = new LinkedBlockingQueue<Job>(config.ciSection()['queueSize'] as int)
         sql.init()
         new File(configRoot, 'logs').mkdirs()
@@ -95,7 +103,7 @@ class CI {
             }
         }
 
-        println "Loaded ${jobs.size()} jobs."
+        logger.info "Loaded ${jobs.size()} jobs."
     }
 
     void runJob(Job job) {
@@ -114,7 +122,7 @@ class CI {
 
             def success = true
             job.status = JobStatus.RUNNING
-            println "Running Job: ${job.name}"
+            logger.info "Job '${job.name}' is Running"
 
             def scmConfig = job.getSCM()
 
@@ -136,16 +144,13 @@ class CI {
 
             for (task in tasks) {
                 def id = tasks.indexOf(task) + 1
-                println "Running Task ${id} of ${job.tasks.size()}"
+                logger.info "Running Task ${id} of ${job.tasks.size()} for Job '${job.name}'"
                 def taskSuccess = task.task.execute(task.params)
 
                 if (!taskSuccess) {
-                    println 'Task has Failed'
                     success = false
                     break
                 }
-
-                println 'Task has Completed'
             }
             def artifacts = new File(artifactDir, "${job.name}")
             artifacts.mkdir()
@@ -161,10 +166,10 @@ class CI {
             def buildTime = timer.stop()
 
             if (!success) {
-                println 'Job has Failed'
+                logger.info "Job '${job.name}' has Failed"
                 job.status = JobStatus.FAILURE
             } else {
-                println 'Job has Completed'
+                logger.info "Job '${job.name}' has Completed"
                 job.status = JobStatus.SUCCESS
             }
 

@@ -1,4 +1,5 @@
 package com.directmyfile.ci.notify
+
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
@@ -30,7 +31,7 @@ class IRCBot {
         ])
 
         if (cfg['enabled']) {
-            println "Loading IRC Bot"
+            ci.logger.info "Loading IRC Bot"
         } else {
             return
         }

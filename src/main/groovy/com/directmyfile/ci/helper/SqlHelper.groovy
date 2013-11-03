@@ -19,7 +19,7 @@ class SqlHelper {
 
         executeSQL(Utils.resource("sql/init.sql"))
 
-        ci.logger.info("Connected to Database")
+        ci.logger.info "Connected to Database"
     }
 
     void setConfig(Map config) {
@@ -33,6 +33,7 @@ class SqlHelper {
 
     boolean executeSQL(String fullQuery) {
         fullQuery.tokenize(";").each {
+            ci.logger.debug "Executing SQL: ${it}"
             if (!sql.execute(it)) return false
         }
         return true

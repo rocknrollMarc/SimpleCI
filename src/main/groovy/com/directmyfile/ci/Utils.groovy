@@ -15,15 +15,15 @@ class Utils {
         def systemPath = System.getenv("PATH")
         def pathDirs = systemPath.split(File.pathSeparator)
 
-        def fullyQualifiedExecutable = null
+        def executable = null
         for (pathDir in pathDirs) {
             def file = new File(pathDir, executableName)
-            if (file.file) {
-                fullyQualifiedExecutable = file
+            if (file.file && file.canExecute()) {
+                executable = file
                 break
             }
         }
-        return fullyQualifiedExecutable
+        return executable
     }
 
     static Script parseConfig(File file) {
@@ -64,7 +64,7 @@ class Utils {
     static def resource(String path) {
         def res = Utils.class.classLoader.getResourceAsStream(path)
 
-        if (res==null) {
+        if (res == null) {
             throw new CIException("Tried to get a resource that is not available! ${path}")
         }
 
