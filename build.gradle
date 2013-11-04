@@ -3,26 +3,27 @@ buildscript {
         classpath files("gradle/gradle-d-plugin.jar")
     }
 }
-
+ 
 apply plugin: 'groovy'
 apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
 apply plugin: 'cpp-lib'
 apply plugin: 'dlang'
-
+ 
 version = "0.2-SNAPSHOT"
-
+ 
 ext {
-   groovyVersion = '2.1.9:indy'
+    groovyVersion = '2.1.9:indy'
+    jniInclude = "${System.getProperty("java.home")}/../include/"
 }
-
+ 
 sourceSets {
     main {
         output.resourcesDir = 'build/classes/production'
         output.classesDir = 'build/classes/production'
     }
 }
-
+ 
 sources {
     main {
         cpp {
@@ -30,50 +31,51 @@ sources {
         }
     }
 }
-
+ 
 tasks.withType(LinkSharedLibrary) {
     outputFile = file('build/binaries/libwrapper.so')
-    linkerArgs = [ '-rpath=$ORIGIN' ]
+    linkerArgs = ['-rpath=$ORIGIN']
 }
-
+ 
 tasks.withType(CppCompile) {
-    compilerArgs = [ '-I/opt/java/include', '-I/opt/java/include/linux', '-Lbuild/binaries', '-lbot' ]
+    compilerArgs = ['-Lbuild/binaries', '-lbot']
+    includes files(jniInclude, "${jniInclude}/linux")
 }
-
+ 
 repositories {
-   mavenCentral()
-
-   maven {
-      url 'https://oss.sonatype.org/content/repositories/snapshots/'
-   }
+    mavenCentral()
+ 
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
 }
-
+ 
 dependencies {
-   compile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
-   compile 'io.vertx:vertx-core:2.0.2-final'
-   compile 'io.vertx:lang-groovy:2.0.0-final'
-   compile 'org.mozilla:rhino:1.7R4'
-   compile 'com.directmyfile:NanoBot:0.5.2-SNAPSHOT'
-   compile 'mysql:mysql-connector-java:5.1.26'
-   testCompile 'junit:junit:4.11'
-   testCompile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
+    compile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
+    compile 'io.vertx:vertx-core:2.0.2-final'
+    compile 'io.vertx:lang-groovy:2.0.0-final'
+    compile 'org.mozilla:rhino:1.7R4'
+    compile 'com.directmyfile:NanoBot:0.5.2-SNAPSHOT'
+    compile 'mysql:mysql-connector-java:5.1.26'
+    testCompile 'junit:junit:4.11'
+    testCompile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
 }
-
+ 
 tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
 }
-
+ 
 compileD.dependsOn 'mainSharedLibrary'
-
+ 
 dlang {
     sourceFolder = "src/main/d"
     compilerOpts = ['-defaultlib=phobos2', '-fPIC', '-shared', '-odbuild/objectFiles/bot', '-ofbuild/binaries/libbot.so']
 }
-
+ 
 jar {
-   manifest {
-      attributes('Main-class': 'com.directmyfile.ci.Main')
-   }
-
-   from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest {
+        attributes('Main-class': 'com.directmyfile.ci.Main')
+    }
+ 
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 }
