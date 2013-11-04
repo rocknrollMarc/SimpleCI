@@ -52,6 +52,9 @@ class IRCBot {
             channels.each {
                 join(it)
             }
+            ci.eventBus.publish("irc/ready", [
+                    bot: bot
+            ])
         }
 
         ci.eventBus.registerHandler("ci/job-running") { Message msg ->
