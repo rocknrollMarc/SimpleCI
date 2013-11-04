@@ -1,6 +1,7 @@
 package com.directmyfile.ci.web
 
 import com.directmyfile.ci.core.CI
+import groovy.json.JsonBuilder
 import groovy.text.SimpleTemplateEngine
 import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
@@ -59,7 +60,15 @@ class WebServer {
             def jobName = it.params['name'] as String
             it.response.end('')
 
-            if (!ci.jobs.containsKey(jobName)) return
+            if (!ci.jobs.containsKey(jobName)) {
+                it.response.end(new JsonBuilder([
+                        error: "Job does not exist!"
+                ]).toPrettyString())
+            }
+
+            it.response.end(new JsonBuilder([
+                    error: null,
+            ]).toPrettyString())
 
             def job = ci.jobs[jobName]
 
