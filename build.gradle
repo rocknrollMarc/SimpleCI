@@ -74,14 +74,26 @@ dlang {
 }
  
 jar {
+
+    dependsOn 'compileD'
+
     manifest {
         attributes('Main-class': 'com.directmyfile.ci.Main')
     }
  
+    // Pack Dependencies
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    
+    // Pack Natives
+    into ("natives") {
+        from fileTree("build/binaries/")
+    }
+    // Makes Jar Clean
     exclude "TestNanoBot*.class"
     exclude "overviewj.html"
     exclude "overview.html"
     exclude "LICENSE.txt"
+
+    // Fix Duplicate Zip Entry Bugs
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
