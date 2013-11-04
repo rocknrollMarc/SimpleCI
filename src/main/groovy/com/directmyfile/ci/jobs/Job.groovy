@@ -1,8 +1,9 @@
 package com.directmyfile.ci.jobs
+
 import com.directmyfile.ci.config.BuildConfig
-import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.config.SCMConfig
 import com.directmyfile.ci.config.TaskConfig
+import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.scm.Changelog
 
 class Job {
@@ -61,10 +62,11 @@ class Job {
 
     def generateArtifactList() {
         def text = []
-        def artifactDir = new File(ci.artifactDir, name)
+        def number = history.latestBuild.number
+        def artifactDir = new File(ci.artifactDir, "${name}/${number}")
         if (!artifactDir.exists()) return ""
         artifactDir.eachFile {
-            text.add("<tr><td><a href=\"/artifact/${this.name}/${it.name}\">${it.name}</a></tr></td>")
+            text.add("<tr><td><a href=\"/artifact/${this.name}/${number}/${it.name}\">${it.name}</a></tr></td>")
         }
         return text.join('\n')
     }

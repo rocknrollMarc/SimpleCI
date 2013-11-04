@@ -77,13 +77,13 @@ class WebServer {
             ci.runJob(job)
         }
 
-        matcher.get('/artifact/:job/:name') { HttpServerRequest request ->
+        matcher.get('/artifact/:job/:id/:name') { HttpServerRequest request ->
             def jobName = request.params['job'] as String
             def artifact = request.params['name'] as String
-
+            def id = request.params['id'] as String
             if (!ci.jobs.containsKey(jobName)) { writeResource(request, "404.html") ; return }
 
-            def artifactFile = new File(ci.artifactDir, "${jobName}/${artifact}")
+            def artifactFile = new File(ci.artifactDir, "${jobName}/${id}/${artifact}")
 
             if (!artifactFile.exists()) { writeResource(request, "404.html") ; return }
 

@@ -154,8 +154,8 @@ class CI {
                     break
                 }
             }
-            def artifacts = new File(artifactDir, "${job.name}")
-            artifacts.mkdir()
+            def artifacts = new File(artifactDir, "${job.name}/${number}")
+            artifacts.mkdirs()
             job.artifactLocations.each {
                 def file = new File(job.buildDir, it)
                 if (!file.exists()) {
