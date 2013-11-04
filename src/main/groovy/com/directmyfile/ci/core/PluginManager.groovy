@@ -1,7 +1,7 @@
 package com.directmyfile.ci.core
 
-import com.directmyfile.ci.core.CI
-import org.mozilla.javascript.*
+import org.mozilla.javascript.Context
+import org.mozilla.javascript.ScriptableObject
 
 class PluginManager {
     CI ci
@@ -13,6 +13,9 @@ class PluginManager {
     }
 
     void loadPlugins() {
+
+        ci.logger.info "Loading Plugins"
+
         def pluginsDir = new File(ci.configRoot, "plugins")
 
         pluginsDir.mkdirs()
@@ -21,6 +24,8 @@ class PluginManager {
 
         pluginsDir.eachFileRecurse {
             if (it.isDirectory()) return
+
+            ci.logger.debug "Checking if file ${it.canonicalPath} is a plugin."
 
             if (it.name.endsWith(".groovy")) {
                 shell.evaluate(it)
@@ -34,7 +39,10 @@ class PluginManager {
                 ScriptableObject.putProperty(scope, "ci", ci)
                 cx.evaluateReader(scope, it.newReader(), "JSPlugin", 1, null)
                 cx.exit()
+            } else {
+                return
             }
+            ci.logger.debug "Plugin ${it.canonicalPath} was loaded."
         }
     }
 }
