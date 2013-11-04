@@ -153,7 +153,7 @@ class WebServer {
 
     private def getStream(String path) {
         def dir = new File(ci.configRoot, "www")
-        InputStream stream = null
+        InputStream stream
         if (!dir.exists()) {
             stream = this.class.classLoader.getResourceAsStream("simpleci/" + path)
         } else {
