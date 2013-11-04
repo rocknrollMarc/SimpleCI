@@ -1,7 +1,11 @@
 #include <jni.h>
 
+extern "C" {
+    void D_test();
+}
+
 void test(void) {
-    return;
+    D_test();
 }
 
 // TODO: Replace this with the actual wrapper

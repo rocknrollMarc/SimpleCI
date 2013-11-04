@@ -37,7 +37,7 @@ tasks.withType(LinkSharedLibrary) {
 }
 
 tasks.withType(CppCompile) {
-    compilerArgs = [ '-I/opt/java/include', '-I/opt/java/include/linux', '-Lbuild/binaries' ]
+    compilerArgs = [ '-I/opt/java/include', '-I/opt/java/include/linux', '-Lbuild/binaries', '-lbot' ]
 }
 
 repositories {
@@ -63,9 +63,11 @@ tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
 }
 
+compileD.dependsOn 'mainSharedLibrary'
+
 dlang {
     sourceFolder = "src/main/d"
-    compilerOpts = ["-defaultlib=phobos2", "-fPIC", "-shared", "-ofbuild/binaries/libbot.so"]
+    compilerOpts = ['-defaultlib=phobos2', '-fPIC', '-shared', '-odbuild/objectFiles/bot', '-ofbuild/binaries/libbot.so']
 }
 
 jar {
