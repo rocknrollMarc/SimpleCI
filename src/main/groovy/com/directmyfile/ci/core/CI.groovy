@@ -100,8 +100,8 @@ class CI {
             if (!jobs.containsKey(job.name)) { // This Job Config isn't in the Database yet.
                 def r = sql.sql.executeInsert("INSERT INTO `jobs` (`id`, `name`, `status`, `lastRevision`) VALUES (NULL, ${job.name}, '1', '');")
                 job.status = JobStatus.NOT_STARTED
-                println r
                 job.id = r[0][0] as int
+
             }
         }
 
@@ -114,7 +114,7 @@ class CI {
 
             def number = (job.history.latestBuild?.number ?: 0) + 1
 
-            def lastStatus = job.status
+            def lastStatus = number==1 ? JobStatus.NOT_STARTED : job.status
 
             eventBus.publish("ci/job-running", [
                     jobName: job.name,

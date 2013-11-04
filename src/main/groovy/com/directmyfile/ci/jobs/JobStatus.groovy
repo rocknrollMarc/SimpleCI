@@ -43,7 +43,7 @@ enum JobStatus {
 
     int intValue() {
         switch (this) {
-            case NOT_STARTED: return 1
+            case NOT_STARTED: return 0
             case SUCCESS: return 1
             case FAILURE: return 2
             case RUNNING: return 3
