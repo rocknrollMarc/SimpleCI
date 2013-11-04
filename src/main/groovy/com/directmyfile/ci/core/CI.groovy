@@ -96,7 +96,7 @@ class CI {
             def job = new Job(this, it)
 
             if (!jobs.containsKey(job.name)) { // This Job Config isn't in the Database yet.
-                def r = sql.sql.executeInsert("INSERT INTO `jobs` (`id`, `name`, `status`) VALUES (NULL, ${job.name}, '1');")
+                def r = sql.sql.executeInsert("INSERT INTO `jobs` (`id`, `name`, `status`, `lastRevision`) VALUES (NULL, ${job.name}, '1', '');")
                 job.status = JobStatus.NOT_STARTED
                 println r
                 job.id = r[0][0] as int
