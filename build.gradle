@@ -1,7 +1,14 @@
+buildscript {
+    dependencies {
+        classpath files("gradle/gradle-d-plugin.jar")
+    }
+}
+
 apply plugin: 'groovy'
 apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
 apply plugin: 'cpp-lib'
+apply plugin: 'dlang'
 
 version = "0.2-SNAPSHOT"
 
@@ -54,6 +61,11 @@ dependencies {
 
 tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
+}
+
+dlang {
+    sourceFolder = "src/main/d"
+    compilerOpts = ["-defaultlib=phobos2", "-fPIC", "-shared", "-ofbuild/binaries/libbot.so"]
 }
 
 jar {
