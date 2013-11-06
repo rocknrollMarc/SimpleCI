@@ -4,7 +4,7 @@ import org.nanobot.Colors
 
 
 enum JobStatus {
-    SUCCESS, FAILURE, NOT_STARTED, RUNNING;
+    SUCCESS, FAILURE, NOT_STARTED, RUNNING, WAITING;
 
     @Override
     String toString() {
@@ -27,6 +27,7 @@ enum JobStatus {
             case FAILURE: return Colors.RED
             case NOT_STARTED: return Colors.DARK_GRAY
             case RUNNING: return Colors.BLUE
+            case WAITING: return Colors.DARK_BLUE
             default: Colors.NORMAL
         }
     }
@@ -37,6 +38,7 @@ enum JobStatus {
             case 1: return SUCCESS
             case 2: return FAILURE
             case 3: return RUNNING
+            case 4: return WAITING
             default: return NOT_STARTED
         }
     }
@@ -47,6 +49,7 @@ enum JobStatus {
             case SUCCESS: return 1
             case FAILURE: return 2
             case RUNNING: return 3
+            case WAITING: return 4
             default: return 0
         }
     }

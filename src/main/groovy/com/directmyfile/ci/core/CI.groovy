@@ -1,5 +1,4 @@
 package com.directmyfile.ci.core
-
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
@@ -110,11 +109,27 @@ class CI {
 
     void runJob(Job job) {
         Thread.start("Builder[${job.name}]") {
+            def number = (job.history.latestBuild?.number ?: 0) + 1
+            def lastStatus = number==1 ? JobStatus.NOT_STARTED : job.status
+            job.status = JobStatus.WAITING
+
+            logger.debug "Job '${job.name}' has been queued"
+
             jobQueue.put(job)
 
-            def number = (job.history.latestBuild?.number ?: 0) + 1
+            def checkJobInQueue = {
+                return jobQueue.count {
+                    it.name==job.name
+                }!=1
+            }
+            while (checkJobInQueue()) {
+                switch(job.status) {
+                    case JobStatus.SUCCESS || JobStatus.FAILURE: break
+                }
+            }
 
-            def lastStatus = number==1 ? JobStatus.NOT_STARTED : job.status
+            // Update Number
+            number = (job.history.latestBuild?.number ?: 0) + 1
 
             eventBus.publish("ci/job-running", [
                     jobName: job.name,
@@ -160,12 +175,15 @@ class CI {
                 def file = new File(job.buildDir, it)
                 if (!file.exists()) {
                     job.logFile.append("\nArtifact File: ${file.canonicalPath} does not exist")
+                    logger.debug "Job '${job.name}' has non existent artifact: ${file.canonicalPath}"
                     return
                 }
                 new File(artifacts, file.name).bytes = file.bytes
             }
 
             def buildTime = timer.stop()
+
+            logger.debug "Job '${job.name}' completed in ${buildTime} milliseconds"
 
             if (!success) {
                 logger.info "Job '${job.name}' has Failed"
@@ -174,8 +192,6 @@ class CI {
                 logger.info "Job '${job.name}' has Completed"
                 job.status = JobStatus.SUCCESS
             }
-
-            jobQueue.remove(job)
 
             eventBus.publish("ci/job-done", [
                     jobName: job.name,
@@ -186,6 +202,8 @@ class CI {
             ])
 
             sql.executeSQL("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.intValue()}, '${job.logFile.text}', CURRENT_TIMESTAMP, ${number});")
+            jobQueue.remove(job)
+            logger.debug "Job '${job.name}' removed from queue"
         }
     }
 
