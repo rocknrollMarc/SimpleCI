@@ -73,7 +73,7 @@ class Job {
 
     void setStatus(JobStatus status) {
         this.status = status
-        ci.sql.sql.executeUpdate("UPDATE `jobs` SET  `status` =  '${status.intValue()}' WHERE  `jobs`.`id` = ${id};")
+        ci.sql.sql.executeUpdate("UPDATE `jobs` SET  `status` =  '${status.ordinal()}' WHERE  `jobs`.`id` = ${id};")
     }
 
     JobStatus getStatus() {

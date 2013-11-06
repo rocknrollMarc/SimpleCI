@@ -201,7 +201,7 @@ class CI {
                     number: number
             ])
 
-            sql.executeSQL("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.intValue()}, '${job.logFile.text}', CURRENT_TIMESTAMP, ${number});")
+            sql.executeSQL("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.ordinal()}, '${job.logFile.text}', CURRENT_TIMESTAMP, ${number});")
             jobQueue.remove(job)
             logger.debug "Job '${job.name}' removed from queue"
         }

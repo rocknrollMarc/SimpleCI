@@ -33,24 +33,8 @@ enum JobStatus {
     }
 
     static JobStatus parse(int id) {
-        switch (id) {
-            case 0: return NOT_STARTED
-            case 1: return SUCCESS
-            case 2: return FAILURE
-            case 3: return RUNNING
-            case 4: return WAITING
-            default: return NOT_STARTED
-        }
-    }
-
-    int intValue() {
-        switch (this) {
-            case NOT_STARTED: return 0
-            case SUCCESS: return 1
-            case FAILURE: return 2
-            case RUNNING: return 3
-            case WAITING: return 4
-            default: return 0
-        }
+        if (id < 0 || id >= values().size())
+            return NOT_STARTED
+        return values()[id]
     }
 }
