@@ -36,7 +36,7 @@ dmd -m"$build_type" -defaultlib=phobos2 $COMMON_ARGS "$D_SRC"/*.d -of"$BUILD_DIR
 exit_on_bad_status
 
 # GCC build
-JAVA_DIR="/opt/java/include"
+JAVA_DIR="${1}/include"
 g++ -Wl,-rpath='$ORIGIN' -m"$build_type" $COMMON_ARGS -I"$JAVA_DIR" -I"$JAVA_DIR"/linux -L"$BUILD_DIR" -lbot "$C_SRC"/wrapper.cpp -o "$BUILD_DIR"/libwrapper.so
 exit_on_bad_status
 

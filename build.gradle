@@ -6,7 +6,7 @@ version = "0.2.0-SNAPSHOT"
 
 ext {
     groovyVersion = '2.1.9:indy'
-    jniInclude = "${System.getProperty("java.home")}/../include/"
+    jdkHome = "${System.getProperty("java.home")}/../"
 }
  
 sourceSets {
@@ -38,9 +38,11 @@ dependencies {
     codenarc 'org.codenarc:CodeNarc:0.19'
 
 }
+
+check.dependsOn 'jar'
  
 task makeDBot(type: Exec) {
-    commandLine './gradle/dbot.sh'
+    commandLine "./gradle/dbot.sh", jdkHome
 }
  
 tasks.withType(GroovyCompile) {
