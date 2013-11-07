@@ -1,4 +1,9 @@
 language: groovy
+before_install:
+  - "wget http://downloads.dlang.org/releases/2013/dmd_2.064.2-0_amd64.deb -Odmd.deb"
+install:
+  - "sudo dpkg -i dmd.deb"
+  - "rm dmd.deb"
 before_deploy: "cd build/libs/"
 deploy:
   provider: s3
