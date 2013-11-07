@@ -7,5 +7,4 @@
 
     <ruleset-ref path="rulesets/imports.xml"></ruleset-ref>
     <ruleset-ref path="rulesets/groovyism.xml"></ruleset-ref>
-    <ruleset-ref path="rulesets/logging.xml"></ruleset-ref>
 </ruleset>
