@@ -6,6 +6,9 @@ install:
   - "sudo apt-get install gcc-multilib"
   - "sudo dpkg -i dmd.deb"
   - "rm dmd.deb"
+  - "TERM=dumb ./gradlew assemble"
+script:
+  - "TERM=dumb ./gradlew check"
 before_deploy:
   - "mkdir deploy/builds/CI/${TRAVIS_BUILD_NUMBER} -p"
   - "cd deploy/"
