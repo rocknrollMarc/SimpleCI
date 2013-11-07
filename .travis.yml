@@ -13,5 +13,6 @@ deploy:
   secret_access_key:
     secure: fF6OOkiwErMIraMBQ2Kc5XYz3EK+2VDA8awpbBisjNazmDHWT+7PfswxcV1IYwiCu7h0R2zWRALs0kOtD7G2XABsMoWh++sfV+mZyxcbOdWHk79ltNA9LnvutwRcZpK3dHG0GBsq4WRB4cpT8Up68ZKUZT2HT7ILshlx3bqhzcM=
   bucket: directmyfile
+  skip_cleanup: true
   on:
     repo: DirectMyFile/SimpleCI
