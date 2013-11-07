@@ -3,7 +3,7 @@ apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
  
 version = "0.2.0-SNAPSHOT"
- 
+
 ext {
     groovyVersion = '2.1.9:indy'
     jniInclude = "${System.getProperty("java.home")}/../include/"
@@ -34,6 +34,9 @@ dependencies {
     compile 'com.directmyfile:NanoBot:0.5.2-SNAPSHOT'
     compile 'mysql:mysql-connector-java:5.1.26'
     testCompile 'junit:junit:4.11'
+
+    codenarc 'org.codenarc:CodeNarc:0.19'
+
 }
  
 task makeDBot(type: Exec) {
@@ -42,6 +45,10 @@ task makeDBot(type: Exec) {
  
 tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
+}
+
+tasks.withType(CodeNarc) {
+    configFile = file("gradle/CodeNarc.xml")
 }
  
 jar {
