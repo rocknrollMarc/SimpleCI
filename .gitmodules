@@ -1,0 +1,3 @@
+[submodule "depends/drirc"]
+	path = depends/drirc
+	url = https://github.com/DirectMyFile/DrIRC.git

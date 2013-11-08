@@ -32,7 +32,7 @@ exit_on_bad_status() {
 }
 
 # DMD build
-dmd -m"$build_type" -defaultlib=phobos2 $COMMON_ARGS "$D_SRC"/*.d -of"$BUILD_DIR"/libbot.so
+dmd -m"$build_type" -defaultlib=phobos2 $COMMON_ARGS $(find $D_SRC -type f -name '*.d') $(find 'depends/drirc/src' -type f -name '*.d') -of"$BUILD_DIR"/libbot.so
 exit_on_bad_status
 
 # GCC build

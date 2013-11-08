@@ -30,8 +30,8 @@ class IRCBot {
         ])
 
         if (cfg['enabled']) {
-            extractNatives()
-            loadNatives()
+            NativeManager.loadNatives()
+            NativeManager.init((String) cfg['host'], (short) cfg['port'], (String) cfg['nickname'], (String) cfg['username'])
             ci.logger.info "Loading IRC Bot"
         } else {
             return
@@ -131,34 +131,6 @@ class IRCBot {
 
     static def getNotifyChannels(Job job, List<String> defaults) {
         def irc = job.notifications['irc'] ?: [:]
-
         return irc['channels'] ?: defaults
-    }
-
-    private static void extractNatives() {
-        def nativesDir = new File('natives')
-        if (!nativesDir.exists())
-            nativesDir.mkdir()
-        nativesDir.deleteOnExit()
-
-        def libs = ['bot', 'wrapper']
-        libs.each {
-            def libName = System.mapLibraryName(it);
-            def is = getClass().getResourceAsStream("/natives/${libName}")
-            try {
-                def file = new File('natives', libName)
-                if (file.exists())
-                    file.delete()
-                file.bytes = is.bytes
-            } finally {
-                if (is != null)
-                    is.close()
-            }
-
-        }
-    }
-
-    private static void loadNatives() {
-        System.load(new File('natives', System.mapLibraryName('wrapper')).absolutePath)
     }
 }
