@@ -1,7 +1,7 @@
 <html>
 <head>
     <title><% print job.name %> - SimpleCI</title>
-    <link rel="stylesheet" href="css/core.css">
+    <link rel="stylesheet" href="/css/core.css">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="centered matchStrap">
