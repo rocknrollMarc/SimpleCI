@@ -11,7 +11,7 @@ script:
   - "TERM=dumb ./gradlew check"
 before_deploy:
   - "mkdir deploy/builds/CI/${TRAVIS_BUILD_NUMBER} -p"
-  - "cp ../build/libs/* deploy/builds/CI/${TRAVIS_BUILD_NUMBER}"
+  - "cp build/libs/* deploy/builds/CI/${TRAVIS_BUILD_NUMBER}"
   - "cd deploy"
 deploy:
   provider: s3
