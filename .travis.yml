@@ -12,6 +12,7 @@ script:
 before_deploy:
   - "mkdir deploy/builds/CI/${TRAVIS_BUILD_NUMBER} -p"
   - "cd deploy/"
+  - "cp ../build/libs/* deploy/builds/CI/${TRAVIS_BUILD_NUMBER}"
 deploy:
   provider: s3
   access_key_id: AKIAIHIGFEL2YAAKGPRQ
