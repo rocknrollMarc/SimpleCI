@@ -3,6 +3,9 @@ package com.directmyfile.ci.api
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.scm.Changelog
 
+/**
+ * A Source Code Manager
+ */
 abstract class SCM {
     abstract void clone(Job job);
 

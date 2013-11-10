@@ -1,4 +1,5 @@
 package com.directmyfile.ci.core
+
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
@@ -110,7 +111,7 @@ class CI {
     void runJob(Job job) {
         Thread.start("Builder[${job.name}]") {
             def number = (job.history.latestBuild?.number ?: 0) + 1
-            def lastStatus = number==1 ? JobStatus.NOT_STARTED : job.status
+            def lastStatus = number == 1 ? JobStatus.NOT_STARTED : job.status
             job.status = JobStatus.WAITING
 
             logger.debug "Job '${job.name}' has been queued"
@@ -119,11 +120,11 @@ class CI {
 
             def checkJobInQueue = {
                 return jobQueue.count {
-                    it.name==job.name
-                }!=1
+                    it.name == job.name
+                } != 1
             }
             while (checkJobInQueue()) {
-                switch(job.status) {
+                switch (job.status) {
                     case JobStatus.SUCCESS || JobStatus.FAILURE: break
                 }
             }
