@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+[ ! -d build ] && mkdir build
+
 # clean the dirs
 rm -rf build/binaries
 mkdir build/binaries
@@ -23,6 +25,11 @@ clean() {
     rm -f build/binaries/natives/*.o
 }
 
+update_modules() {
+    git submodule init
+    git submodule update
+}
+
 exit_on_bad_status() {
     local status=$?
     if [ $status -ne 0 ]; then
@@ -30,6 +37,9 @@ exit_on_bad_status() {
         exit $status
     fi
 }
+
+# Check for directory
+[ ! -d depends/drirc/ ] && update_modules
 
 # DMD build
 dmd -m"$build_type" -defaultlib=phobos2 $COMMON_ARGS $(find $D_SRC -type f -name '*.d') $(find 'depends/drirc/src' -type f -name '*.d') -of"$BUILD_DIR"/libbot.so
