@@ -72,7 +72,7 @@ class WebServer {
 
             def job = ci.jobs[jobName]
 
-            println "Job Hook executing job ${jobName}"
+            ci.logger.info "Job Hook executing job ${jobName}"
 
             ci.runJob(job)
         }
@@ -102,7 +102,7 @@ class WebServer {
 
             def job = ci.jobs[jobName]
 
-            println "GitHub Hook executing job ${jobName}"
+            ci.logger.info "GitHub Hook executing job ${jobName}"
 
             ci.runJob(job)
         }
@@ -164,7 +164,7 @@ class WebServer {
         def dir = new File(ci.configRoot, "www")
         InputStream stream
         if (!dir.exists()) {
-            stream = this.class.classLoader.getResourceAsStream("simpleci/" + path)
+            stream = this.class.classLoader.getResourceAsStream("simpleci/${path}")
         } else {
             def file = new File(dir, path)
             if (!file.exists()) return null
