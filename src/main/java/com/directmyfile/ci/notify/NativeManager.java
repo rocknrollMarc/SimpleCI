@@ -1,11 +1,53 @@
 package com.directmyfile.ci.notify;
 
+import com.directmyfile.ci.Main;
 import java.io.*;
 
-class NativeManager {
+final class NativeManager {
 
-    static native void init(String host, short port, String nick, String user);
-    
+    /* Exposed to the JNI */
+    static NativeManager manager;
+
+    private static native void Dinit();
+    private static native void Ddone();
+
+    private static native void botInit(String host, short port, String nick, String user, String commandPrefix);
+    static native void msg(String channel, String msg);
+    static native boolean isInChannel(String channel);
+    static native void addAdmin(String user);
+    static native void join(String channel);
+    static native void disconnect();
+    static native boolean loop();
+    static native void connect();
+
+    public final IRCBot bot;
+
+    public NativeManager(IRCBot bot) {
+        this.bot = bot;
+        this.manager = this;
+    }
+
+    public static void init(String host, short port, String nick, String user, String prefix) {
+        Dinit();
+        botInit(host, port, nick, user, prefix);
+    }
+
+    public static void startLoop() {
+        Main.setBotState(true);
+        connect();
+        while (Main.isRunning() && loop()) {
+            try {
+                // Fake work to prevent cpu cycles being from being wasted
+                Thread.sleep(0, 1);
+            } catch (InterruptedException ignored) {}
+        }
+
+        disconnect();
+        Ddone();
+        Main.setBotState(false);
+    }
+
+    /* Lib extraction */
     static void loadNatives() {
         extractNatives();
         System.load(new File("natives", System.mapLibraryName("bot")).getAbsolutePath());

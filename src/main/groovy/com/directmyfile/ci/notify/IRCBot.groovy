@@ -3,21 +3,18 @@ package com.directmyfile.ci.notify
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
-import org.nanobot.Colors
-import org.nanobot.NanoBot
 import org.vertx.groovy.core.eventbus.Message
 
 class IRCBot {
-
     CI ci
-    NanoBot bot
+    Object cfg
 
     void start(CI ci) {
         this.ci = ci
+        NativeManager.manager = new NativeManager(this)
 
         def ciConfig = ci.config
-
-        def cfg = ciConfig.getProperty("irc", [
+        cfg = ciConfig.getProperty("irc", [
                 enabled: false,
                 host: "irc.esper.net",
                 port: 6667,
@@ -29,44 +26,29 @@ class IRCBot {
                 commandPrefix: "!"
         ])
 
-        if (cfg['enabled']) {
-            NativeManager.loadNatives()
-            NativeManager.init((String) cfg['host'], (short) cfg['port'], (String) cfg['nickname'], (String) cfg['username'])
-            ci.logger.info "Loading IRC Bot"
-        } else {
+        if (!cfg['enabled'])
             return
-        }
 
-        this.bot = new NanoBot()
-
-        bot.setServer(cfg['host'])
-        bot.setPort(cfg['port'])
-        bot.setNickname(cfg['nickname'])
-        bot.setUserName(cfg['username'])
-        bot.setCommandPrefix(cfg['commandPrefix'])
-        bot.enableCommandEvent()
+        ci.logger.info "Loading IRC Bot"
+        NativeManager.loadNatives()
+        NativeManager.init((String) cfg['host'], (short) cfg['port'], (String) cfg['nickname'], (String) cfg['username'], (String) cfg['commandPrefix'])
 
         def channels = cfg['channels'] as List<String>
         def admins = cfg['admins'] as List<String>
-
-        bot.on('ready') {
-            channels.each {
-                join(it)
-            }
-            ci.eventBus.publish("irc/ready", System.currentTimeMillis())
+        admins.each {
+            NativeManager.addAdmin(it)
         }
 
         ci.eventBus.registerHandler("ci/job-running") { Message msg ->
             def e = msg.body() as Map
             def jobName = e.jobName as String
-
             def job = ci.jobs[jobName]
-
             def status = e['lastStatus'] as JobStatus
 
             getNotifyChannels(job, channels).each { String channel ->
-                if (!bot.channels.containsKey(channel)) bot.join(channel)
-                bot.msg(channel, "> Build #${e['number']} for ${jobName} starting (Last Status: ${status.IRCColor}${status}${Colors.NORMAL})")
+                if (!NativeManager.isInChannel(channel))
+                    NativeManager.join(channel)
+                NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} starting (Last Status: ${status.IRCColor}${status}${Colors.NORMAL})")
             }
         }
 
@@ -78,59 +60,65 @@ class IRCBot {
             def job = ci.jobs[jobName]
 
             getNotifyChannels(job, channels).each { String channel ->
-                if (!bot.channels.containsKey(channel)) bot.join(channel)
-                bot.msg(channel, "> Build #${e['number']} for ${jobName} completed with status ${status.IRCColor}${status}${Colors.NORMAL} taking ${time}")
+                if (!NativeManager.isInChannel(channel))
+                    NativeManager.join(channel)
+                NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} completed with status ${status.IRCColor}${status}${Colors.NORMAL} taking ${time}")
             }
         }
-
-        bot.on('command') { Map it ->
-            def channel = it['channel'] as String
-            def cmd = it['command'] as String
-            def args = it['args'] as String[]
-            def user = it['user'] as String
-
-            if (cmd == 'listJobs') {
-                msg(channel, "> ${ci.jobs.keySet().join(', ')}")
-            } else if (cmd == 'build') {
-                if (args.length != 1) {
-                    msg(channel, '> Usage: !build JOB')
-                    return
-                }
-                def jobName = args[0]
-                def job = ci.jobs[jobName]
-                if (job == null) {
-                    msg(channel, "> No Such Job: ${jobName}")
-                    return
-                }
-                ci.runJob(job)
-            } else if (cmd == 'loadJobs') {
-                if (!admins.contains(user)) {
-                    msg(channel, "> You must be an admin to use this command.")
-                    return
-                }
-                msg(channel, "> Reloading Jobs")
-                ci.loadJobs()
-                msg(channel, "> Jobs Reloaded: CI has ${ci.jobs.size()} jobs")
-            } else if (cmd == 'status') {
-                def jobList = []
-
-                ci.jobs.values().each {
-                    jobList.add("${it.status.IRCColor}${it.name}${Colors.NORMAL} (${it.history.latestBuild?.number ?: "Not Started"})")
-                }
-
-                bot.msg(channel, "> ${jobList.join(', ')}")
-            }
-        }
-
-        bot.on("disconnect") {
-            bot.connect()
-        }
-
-        bot.connect()
+        NativeManager.startLoop()
     }
 
     static def getNotifyChannels(Job job, List<String> defaults) {
         def irc = job.notifications['irc'] ?: [:]
         return irc['channels'] ?: defaults
+    }
+
+    /* JNI called methods */
+    void listJobs(String channel) {
+        NativeManager.msg(channel, "> ${ci.jobs.keySet().join(', ')}")
+    }
+
+    void loadJobs(String channel) {
+        NativeManager.msg(channel, "> Reloading Jobs")
+        ci.loadJobs()
+        NativeManager.msg(channel, "> Jobs Reloaded: CI has ${ci.jobs.size()} jobs")
+    }
+
+    void build(String channel, String jobName) {
+        if (jobName == null) {
+            NativeManager.msg(channel, '> Usage: !build JOB')
+            return
+        }
+        def job = ci.jobs[jobName]
+        if (job == null) {
+            NativeManager.msg(channel, "> No Such Job: ${jobName}")
+            return
+        }
+        ci.runJob(job)
+    }
+
+    void status(String channel, String job) {
+        def jobList = []
+        if (job == null) {
+            ci.jobs.values().each {
+                jobList.add("${it.status.IRCColor}${it.name}${Colors.NORMAL} (${it.history.latestBuild?.number ?: "Not Started"})")
+            }
+        } else {
+            def it = ci.jobs[job]
+            if (it == null) {
+                NativeManager.msg(channel, "> No such job: ${job}")
+                return
+            }
+            jobList.add("${it.status.IRCColor}${it.name}${Colors.NORMAL} (${it.history.latestBuild?.number ?: "Not Started"})")
+        }
+        NativeManager.msg(channel, "> ${jobList.join(', ')}")
+    }
+
+    void onReady() {
+        def channels = cfg['channels'] as List<String>
+        channels.each {
+            NativeManager.join(it)
+        }
+        ci.eventBus.publish("irc/ready", System.currentTimeMillis())
     }
 }

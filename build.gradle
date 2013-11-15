@@ -7,14 +7,7 @@ ext {
     jdkHome = "${System.getProperty("java.home")}/../"
     version = "0.2.1"
 }
- 
-sourceSets {
-    main {
-        output.resourcesDir = 'build/classes/production'
-        output.classesDir = 'build/classes/production'
-    }
-}
- 
+
 repositories {
     mavenCentral()
  
@@ -30,7 +23,6 @@ dependencies {
     }
     compile 'io.vertx:lang-groovy:2.0.0-final'
     compile 'org.mozilla:rhino:1.7R4'
-    compile 'com.directmyfile:NanoBot:0.5.2-SNAPSHOT'
     compile 'mysql:mysql-connector-java:5.1.26'
     testCompile 'junit:junit:4.11'
 
@@ -51,6 +43,10 @@ tasks.withType(GroovyCompile) {
 tasks.withType(CodeNarc) {
     configFile = file("gradle/CodeNarc.xml")
 }
+
+// Compile java code with the groovy compiler
+sourceSets.main.java.srcDirs = []
+sourceSets.main.groovy.srcDirs += ["src/main/java"]
  
 jar {
     dependsOn 'makeDBot'
@@ -67,15 +63,14 @@ jar {
         from fileTree("build/binaries/natives")
     }
     // Makes Jar Clean
-    exclude "TestNanoBot*.class"
     exclude "overviewj.html"
     exclude "overview.html"
     exclude "LICENSE.txt"
  
-    // Fix Duplicate Zip Entry Bugs
+    // Fix Duplicate Zip Entry
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
  
 task wrapper(type: Wrapper) {
-  gradleVersion = "1.9-rc-2"
+  gradleVersion = "1.9-rc-3"
 }

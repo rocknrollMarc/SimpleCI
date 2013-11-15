@@ -1,6 +1,6 @@
 package com.directmyfile.ci.jobs
 
-import org.nanobot.Colors
+import com.directmyfile.ci.notify.Colors
 
 
 enum JobStatus {

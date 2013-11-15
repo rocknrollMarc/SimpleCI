@@ -39,10 +39,8 @@ class CI {
     ]
 
     Map<String, SCM> scmTypes = [:]
-
-    LinkedBlockingQueue<Job> jobQueue
-
     Map<String, Job> jobs = [:]
+    LinkedBlockingQueue<Job> jobQueue
 
     def vertxManager = new VertxManager(this)
 
@@ -52,6 +50,9 @@ class CI {
         init()
         loadJobs()
         vertxManager.setupWebServer()
+    }
+
+    def startBot() {
         ircBot.start(this)
     }
 
@@ -59,7 +60,7 @@ class CI {
         config.load()
         def consoleAppender = new ConsoleAppender()
         consoleAppender.activateOptions()
-        consoleAppender.layout = new LogLayout()
+        consoleAppender.layout = new LogLayout("CI")
         Logger.getLogger("groovy.sql.Sql").setLevel(JavaLogLevel.OFF)
         logger.setLevel(Level.INFO)
         logger.addAppender(consoleAppender)
