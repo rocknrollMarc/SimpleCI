@@ -38,7 +38,7 @@
     </div>
     <div id="changes" class="panel-content panel-collapse collapse">
         <%
-        print job.changelog.generateHTML()
+            print job.changelog.generateHTML()
         %>
     </div>
 </div>
@@ -51,8 +51,8 @@
     </div>
     <div id="builds" class="panel-content panel-collapse collapse">
         <%
-        def h = job.history
-        print h.toHTML()
+            def h = job.history
+            print h.toHTML()
         %>
     </div>
 </div>
