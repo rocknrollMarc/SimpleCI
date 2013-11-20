@@ -51,7 +51,6 @@ final class NativeManager {
     static void loadNatives() {
         extractNatives();
         System.load(new File("natives", System.mapLibraryName("bot")).getAbsolutePath());
-        System.load(new File("natives", System.mapLibraryName("wrapper")).getAbsolutePath());
     }
 
     private static void extractNatives() {
@@ -60,7 +59,7 @@ final class NativeManager {
             nativesDir.mkdir();
         nativesDir.deleteOnExit();
 
-        String[] libs = new String[] { "bot", "wrapper" };
+        String[] libs = new String[] { "bot" };
         for (String lib : libs) {
             String libName  = System.mapLibraryName(lib);
             InputStream  is = NativeManager.class.getResourceAsStream("/natives/" + libName);
