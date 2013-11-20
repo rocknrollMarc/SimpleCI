@@ -9,7 +9,6 @@ mkdir build/binaries/natives
 
 # variables
 BUILD_DIR="build/binaries/natives"
-COMMON_ARGS="-fPIC -shared"
 C_SRC="src/main/c"
 D_SRC="src/main/d"
 
@@ -23,6 +22,7 @@ fi
 # functions
 clean() {
     rm -f build/binaries/natives/*.o
+    rm -f build/binaries/natives/*.a
 }
 
 update_modules() {
@@ -42,12 +42,12 @@ exit_on_bad_status() {
 [ ! -d depends/drirc/ ] && update_modules
 
 # DMD build
-dmd -m"$build_type" -defaultlib=phobos2 $COMMON_ARGS $(find $D_SRC -type f -name '*.d') $(find 'depends/drirc/src' -type f -name '*.d') -of"$BUILD_DIR"/libbot.so
+dmd -m"$build_type" -defaultlib=phobos2 -fPIC -lib $(find $D_SRC -type f -name '*.d') $(find 'depends/drirc/src' -type f -name '*.d') -of"$BUILD_DIR"/libbot.a
 exit_on_bad_status
 
 # GCC build
 JAVA_DIR="${1}/include"
-g++ -Wl,-rpath='$ORIGIN' -m"$build_type" $COMMON_ARGS -I"$JAVA_DIR" -I"$JAVA_DIR"/linux -L"$BUILD_DIR" -lbot "$C_SRC"/wrapper.cpp -o "$BUILD_DIR"/libwrapper.so
+g++ -Wl,-rpath='$ORIGIN' -m"$build_type" -fPIC -shared -I"$JAVA_DIR" -I"$JAVA_DIR"/linux -lphobos2 -Wl,-whole-archive "$BUILD_DIR"/libbot.a -Wl,-no-whole-archive "$C_SRC"/wrapper.cpp -o "$BUILD_DIR"/libbot.so
 exit_on_bad_status
 
 # Cleanup

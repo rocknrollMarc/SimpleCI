@@ -52,20 +52,22 @@ extern (C) export void _Dmain() {}
 // Initialization functions
 private bool initialized;
 
-extern (C) export void Java_com_directmyfile_ci_notify_NativeManager_Dinit() {
-    if (initialized)
-        return;
-    initialized = true;
+extern (C) export {
+    void Java_com_directmyfile_ci_notify_NativeManager_Dinit() {
+        if (initialized)
+            return;
+        initialized = true;
 
-    import core.runtime;
-    Runtime.initialize();
-}
+        import core.runtime;
+        Runtime.initialize();
+    }
 
-extern (C) export void Java_com_directmyfile_ci_notify_NativeManager_Ddone() {
-    if (!initialized)
-        return;
-    initialized = false;
+    void Java_com_directmyfile_ci_notify_NativeManager_Ddone() {
+        if (!initialized)
+            return;
+        initialized = false;
 
-    import core.runtime;
-    Runtime.terminate();
+        import core.runtime;
+        Runtime.terminate();
+    }
 }
