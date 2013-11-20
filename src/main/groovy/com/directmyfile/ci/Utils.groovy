@@ -1,6 +1,8 @@
 package com.directmyfile.ci
-
-import com.directmyfile.ci.exception.CIException
+import com.directmyfile.ci.core.LogLayout
+import groovy.transform.Memoized
+import org.apache.log4j.ConsoleAppender
+import org.apache.log4j.Logger
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 
@@ -62,12 +64,23 @@ class Utils {
     }
 
     static def resource(String path) {
-        def res = Utils.class.classLoader.getResourceAsStream(path)
+        return Utils.class.classLoader.getResourceAsStream(path)
+    }
 
-        if (res == null) {
-            throw new CIException("Tried to get a resource that is not available! ${path}")
-        }
+    @Memoized(maxCacheSize = 15)
+    static def resourceToString(String path) {
+        return resource(path).text
+    }
 
-        return res
+    static def newLogger(String loggerName) {
+        def logger = Logger.getLogger(loggerName)
+        configureLogger(logger, loggerName)
+        return logger
+    }
+
+    static def configureLogger(Logger logger, String name) {
+        def consoleAppender = new ConsoleAppender(new LogLayout(name))
+        consoleAppender.activateOptions()
+        logger.addAppender(consoleAppender)
     }
 }

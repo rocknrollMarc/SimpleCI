@@ -6,11 +6,11 @@ import java.text.SimpleDateFormat
 
 class LogLayout extends Layout {
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd H:m:s");
-    private String name;
+    private static final sdf = new SimpleDateFormat("yyyy-MM-dd H:m:s")
+    String name
 
     LogLayout(String name) {
-        this.name = name;
+        this.name = name
     }
 
     @Override

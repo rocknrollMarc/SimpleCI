@@ -3,7 +3,7 @@ apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
  
 ext {
-    groovyVersion = '2.1.9:indy'
+    groovyVersion = '2.2.0:indy'
     jdkHome = "${System.getProperty("java.home")}/../"
     version = "0.2.1"
 }

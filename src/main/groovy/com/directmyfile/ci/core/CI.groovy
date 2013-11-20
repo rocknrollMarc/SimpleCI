@@ -1,5 +1,6 @@
 package com.directmyfile.ci.core
 
+import com.directmyfile.ci.Utils
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
@@ -14,7 +15,6 @@ import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
 import com.directmyfile.ci.web.VertxManager
 import groovy.util.logging.Log4j
-import org.apache.log4j.ConsoleAppender
 import org.apache.log4j.Level
 
 import java.util.concurrent.LinkedBlockingQueue
@@ -58,12 +58,9 @@ class CI {
 
     private void init() {
         config.load()
-        def consoleAppender = new ConsoleAppender()
-        consoleAppender.activateOptions()
-        consoleAppender.layout = new LogLayout("CI")
+        Utils.configureLogger(logger, "CI")
         Logger.getLogger("groovy.sql.Sql").setLevel(JavaLogLevel.OFF)
         logger.setLevel(Level.INFO)
-        logger.addAppender(consoleAppender)
         jobQueue = new LinkedBlockingQueue<Job>(config.ciSection()['queueSize'] as int)
         sql.init()
         new File(configRoot, 'logs').mkdirs()
