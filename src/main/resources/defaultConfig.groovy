@@ -2,6 +2,10 @@ ci = [
         queueSize: 4
 ]
 
+logging = [
+        level: "INFO"
+]
+
 web = [
         port: 8080
 ]

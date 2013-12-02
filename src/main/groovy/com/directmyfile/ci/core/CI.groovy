@@ -60,7 +60,10 @@ class CI {
         config.load()
         Utils.configureLogger(logger, "CI")
         Logger.getLogger("groovy.sql.Sql").setLevel(JavaLogLevel.OFF)
-        logger.setLevel(Level.INFO)
+
+        def logLevel = Level.toLevel(config.loggingSection().level.toString().toUpperCase())
+        logger.setLevel(logLevel)
+
         jobQueue = new LinkedBlockingQueue<Job>(config.ciSection()['queueSize'] as int)
         sql.init()
         new File(configRoot, 'logs').mkdirs()
@@ -200,7 +203,11 @@ class CI {
                     number: number
             ])
 
-            sql.executeSQL("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.ordinal()}, '${job.logFile.text}', CURRENT_TIMESTAMP, ${number});")
+            def log = job.logFile.text
+
+            def base64Log = log.bytes.encodeBase64().writeTo(new StringWriter()).toString()
+
+            sql.executeSQL("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.ordinal()}, '${base64Log}', CURRENT_TIMESTAMP, ${number});")
             jobQueue.remove(job)
             logger.debug "Job '${job.name}' removed from queue"
         }

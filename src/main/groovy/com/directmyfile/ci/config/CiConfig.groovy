@@ -35,4 +35,10 @@ class CiConfig extends GConfig {
                 queueSize: 2
         ]) as Map
     }
+
+    Map loggingSection() {
+        return getProperty("logging", [
+                level: "INFO"
+        ])
+    }
 }
