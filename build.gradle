@@ -28,7 +28,6 @@ dependencies {
     testCompile 'junit:junit:4.11'
 
     codenarc 'org.codenarc:CodeNarc:0.19'
-
 }
 
 check.dependsOn 'jar'
