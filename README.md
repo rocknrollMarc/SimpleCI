@@ -8,6 +8,20 @@ SimpleCI is a Continuous Integration Server written in [Groovy](http://groovy.co
 
 [Issue Tracker](https://directmyfile.atlassian.net/browse/CI)
 
+## Features
+
+- Jobs
+- Job Queue
+- Job Hooks
+- REST API
+- Tasks
+- SCM
+- Plugins
+- Web Interface
+- IRC Bot
+
+Plugins can be written in Groovy/JavaScript and can add Task Types and SCM support. SimpleCI has support for Gradle, GNU Make, Commands for tasks and Git for SCMs built-in.
+
 ## Building
 
 Building SimpleCI requires that the [dmd](http://dlang.org/) compiler be installed.
@@ -15,7 +29,7 @@ Building SimpleCI requires that the [dmd](http://dlang.org/) compiler be install
 To build SimpleCI, execute the following command:
 ```./gradlew jar```
 
-The jar file will be in build/libs/
+The Jar File will be located at build/libs/SimpleCI.jar
 
 ## Running
 

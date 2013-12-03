@@ -44,7 +44,7 @@ tasks.withType(CodeNarc) {
     configFile = file("gradle/CodeNarc.xml")
 }
 
-// Compile java code with the groovy compiler
+// Compile Java code with the groovy compiler
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs += ["src/main/java"]
  
