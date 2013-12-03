@@ -81,7 +81,7 @@ class CI {
         if (!jobRoot.exists())
             jobRoot.mkdir()
 
-        sql.sql.dataSet("jobs").rows().each {
+        sql.dataSet("jobs").rows().each {
             def jobCfg = new File(jobRoot, "${it['name']}.json")
 
             if (!jobCfg.exists()) {
@@ -103,7 +103,7 @@ class CI {
                 def r = sql.insert("INSERT INTO `jobs` (`id`, `name`, `status`, `lastRevision`) VALUES (NULL, ${job.name}, '1', '');")
                 job.status = JobStatus.NOT_STARTED
                 job.id = r[0][0] as int
-
+                jobs[job.name] = job
             }
         }
 
