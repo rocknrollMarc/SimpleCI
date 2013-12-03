@@ -81,6 +81,11 @@ class Utils {
     static def configureLogger(Logger logger, String name) {
         def consoleAppender = new ConsoleAppender(new LogLayout(name))
         consoleAppender.activateOptions()
+        logger.additivity = false
         logger.addAppender(consoleAppender)
+    }
+
+    static def decodeBase64(String input) {
+        return new String(input.decodeBase64())
     }
 }

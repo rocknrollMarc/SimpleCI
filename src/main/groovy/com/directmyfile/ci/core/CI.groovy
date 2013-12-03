@@ -66,6 +66,7 @@ class CI {
 
         jobQueue = new LinkedBlockingQueue<Job>(config.ciSection()['queueSize'] as int)
         sql.init()
+        logger.info "Connected to Database"
         new File(configRoot, 'logs').mkdirs()
         pluginManager.loadPlugins()
 
@@ -99,7 +100,7 @@ class CI {
             def job = new Job(this, it)
 
             if (!jobs.containsKey(job.name)) { // This Job Config isn't in the Database yet.
-                def r = sql.sql.executeInsert("INSERT INTO `jobs` (`id`, `name`, `status`, `lastRevision`) VALUES (NULL, ${job.name}, '1', '');")
+                def r = sql.insert("INSERT INTO `jobs` (`id`, `name`, `status`, `lastRevision`) VALUES (NULL, ${job.name}, '1', '');")
                 job.status = JobStatus.NOT_STARTED
                 job.id = r[0][0] as int
 
@@ -207,10 +208,14 @@ class CI {
 
             def base64Log = log.bytes.encodeBase64().writeTo(new StringWriter()).toString()
 
-            sql.executeSQL("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.ordinal()}, '${base64Log}', CURRENT_TIMESTAMP, ${number});")
+            sql.insert("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.ordinal()}, '${base64Log}', CURRENT_TIMESTAMP, ${number});")
             jobQueue.remove(job)
             logger.debug "Job '${job.name}' removed from queue"
         }
+    }
+
+    def updateJobs() {
+       jobs.values()*.reload()
     }
 
     def getArtifactDir() {

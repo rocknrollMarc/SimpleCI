@@ -73,11 +73,17 @@ class Job {
 
     void setStatus(JobStatus status) {
         this.status = status
-        ci.sql.sql.executeUpdate("UPDATE `jobs` SET  `status` =  '${status.ordinal()}' WHERE  `jobs`.`id` = ${id};")
+        ci.sql.update("UPDATE `jobs` SET  `status` =  '${status.ordinal()}' WHERE  `jobs`.`id` = ${id};")
     }
 
     JobStatus getStatus() {
         return status
+    }
+
+    void reload() {
+        this.buildConfig = new BuildConfig(buildConfig.file)
+
+        this.status = JobStatus.parse(ci.sql.firstRow("SELECT `status` FROM `jobs` WHERE `id` = ${id};").status as int)
     }
 
     void forceStatus(JobStatus status) {

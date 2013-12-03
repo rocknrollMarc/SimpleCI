@@ -16,34 +16,69 @@ class SqlHelper {
     void init() {
         def url = "jdbc:mysql://${config['host']}:${config['port']}/${config['database']}"
         this.sql = Sql.newInstance(url, config['username'] as String, config['password'] as String)
-
-        executeSQL(Utils.resource("sql/init.sql"))
-
-        ci.logger.info "Connected to Database"
+        sql.cacheStatements = true
+        ci.logger.debug "Running Initialization Queries"
+        ci.logger.debug "Groovy Sql instance created and Connection Established"
+        execute(Utils.resource("sql/init.sql"))
+        ci.logger.debug "Initialization Queries Complete"
     }
 
     void setConfig(Map config) {
         this.config = config
     }
 
-    Sql getSql() {
-        if (sql.connection.closed) init()
+    def getSql() {
+        if (sql.connection.closed) {
+            init()
+        }
         return sql
     }
 
-    boolean executeSQL(String fullQuery) {
+    def execute(String fullQuery) {
+        def success = true
         fullQuery.tokenize(";").each {
-            ci.logger.debug "Executing SQL: ${it}"
-            if (!sql.execute(it)) return false
+            def query = it.replaceAll("\n", "").trim()
+            ci.logger.debug "Executing SQL: ${query}"
+            if (!sql.execute(query))
+                success = false
         }
-        return true
+        return success
     }
 
-    boolean executeSQL(InputStream stream) {
-        return executeSQL(stream.text)
+    def rows(String query) {
+        ci.logger.debug "Executing SQL: ${query}"
+        return sql.rows(query)
     }
 
-    boolean executeSQL(File file) {
-        return executeSQL(file.text)
+    def eachRow(String query, Closure closure) {
+        sql.eachRow(query, closure)
+    }
+
+    def dataSet(String table) {
+        return sql.dataSet(table)
+    }
+
+    def firstRow(String query) {
+        return sql.firstRow(query)
+    }
+
+    def query(String query, Closure closure) {
+        sql.query(query, closure)
+    }
+
+    def insert(String query) {
+        return sql.executeInsert(query)
+    }
+
+    def update(String query) {
+        return sql.executeUpdate(query)
+    }
+
+    boolean execute(InputStream stream) {
+        return execute(stream.text)
+    }
+
+    boolean execute(File file) {
+        return execute(file.text)
     }
 }

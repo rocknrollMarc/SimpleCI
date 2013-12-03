@@ -1,10 +1,7 @@
 package com.directmyfile.ci
-
 import com.directmyfile.ci.core.CI
-import com.directmyfile.ci.core.LogLayout
 import com.directmyfile.ci.exception.UnexpectedExceptionHandler
 import groovy.util.logging.Log4j
-import org.apache.log4j.ConsoleAppender
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import org.apache.log4j.PropertyConfigurator
@@ -18,11 +15,7 @@ class Main {
 
     @SuppressWarnings("GroovyEmptyStatementBody")
     static void main(String[] args) throws Exception {
-        def consoleAppender = new ConsoleAppender()
-        consoleAppender.activateOptions()
-        consoleAppender.layout = new LogLayout("CORE")
-        logger.setLevel(Level.INFO)
-        logger.addAppender(consoleAppender)
+        Utils.configureLogger(logger, "CORE")
 
         Thread.setDefaultUncaughtExceptionHandler(new UnexpectedExceptionHandler())
         System.addShutdownHook {
@@ -67,6 +60,8 @@ class Main {
                         System.gc()
                         ci = new CI()
                         ci.start()
+                    } else if (split[0] == 'stop') {
+                        System.exit(0)
                     }
                 }
             }

@@ -6,8 +6,11 @@ import groovy.json.JsonSlurper
 class BuildConfig {
 
     private def json
+    File file
 
     BuildConfig(File file) {
+
+        this.file = file
 
         if (!file.exists()) {
             throw new JobConfigurationException("No Such Job Configuration File: ${file.absolutePath}")

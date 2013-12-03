@@ -13,7 +13,7 @@ class JobHistory {
     }
 
     void load() {
-        job.ci.sql.getSql().eachRow("SELECT * FROM `job_history` WHERE `job_id` = ${job.id}") {
+        job.ci.sql.eachRow("SELECT * FROM `job_history` WHERE `job_id` = ${job.id}") {
             def entry = new Entry()
             entries.add(entry)
             def result = it.toRowResult() as GroovyRowResult
