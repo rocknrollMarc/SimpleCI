@@ -1,9 +1,0 @@
-{
-    "name": "SimpleCI",
-    "intellij": {
-        "moduleFile": "https://bitbucket.org/directmyfile/simpleci/downloads/SimpleCI.iml"
-    },
-    "jira": {
-        "key": "CI"
-    }
-}

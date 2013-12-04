@@ -1,16 +1,1 @@
-*.iml
-*.iws
-*.ipr
-.idea/
-/out/
-/jar/
-/lib/
-/build
-/.gradle
-*.*~
-/classes/
-/builds.json
-/build-number.txt
-/.c9*
-/*.xml
-/work
+depends/
