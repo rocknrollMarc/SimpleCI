@@ -1,0 +1,11 @@
+com.directmyfile.ci
+com.directmyfile.ci.api
+com.directmyfile.ci.config
+com.directmyfile.ci.core
+com.directmyfile.ci.exception
+com.directmyfile.ci.helper
+com.directmyfile.ci.jobs
+com.directmyfile.ci.notify
+com.directmyfile.ci.scm
+com.directmyfile.ci.tasks
+com.directmyfile.ci.web
