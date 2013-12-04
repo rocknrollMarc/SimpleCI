@@ -1,6 +1,7 @@
 package com.directmyfile.ci.notify;
 
 import com.directmyfile.ci.Main;
+
 import java.io.*;
 
 final class NativeManager {
@@ -9,15 +10,23 @@ final class NativeManager {
     static NativeManager manager;
 
     private static native void Dinit();
+
     private static native void Ddone();
 
     private static native void botInit(String host, short port, String nick, String user, String commandPrefix);
+
     static native void msg(String channel, String msg);
+
     static native boolean isInChannel(String channel);
+
     static native void addAdmin(String user);
+
     static native void join(String channel);
+
     static native void disconnect();
+
     static native boolean loop();
+
     static native void connect();
 
     public final IRCBot bot;
@@ -39,7 +48,8 @@ final class NativeManager {
             try {
                 // Fake work to prevent cpu cycles being from being wasted
                 Thread.sleep(0, 1);
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+            }
         }
 
         disconnect();
@@ -59,10 +69,10 @@ final class NativeManager {
             nativesDir.mkdir();
         nativesDir.deleteOnExit();
 
-        String[] libs = new String[] { "bot" };
+        String[] libs = new String[]{"bot"};
         for (String lib : libs) {
-            String libName  = System.mapLibraryName(lib);
-            InputStream  is = NativeManager.class.getResourceAsStream("/natives/" + libName);
+            String libName = System.mapLibraryName(lib);
+            InputStream is = NativeManager.class.getResourceAsStream("/natives/" + libName);
             OutputStream os = null;
             try {
                 File file = new File("natives", libName);
@@ -85,7 +95,8 @@ final class NativeManager {
                         os.close();
                     if (is != null)
                         is.close();
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                }
             }
 
         }

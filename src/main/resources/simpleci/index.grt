@@ -17,6 +17,7 @@
 <div class="centered jumbotron">
     <div class="container">
         <br/>
+
         <h1>SimpleCI</h1>
     </div>
 </div>
@@ -25,7 +26,11 @@
     import com.directmyfile.ci.jobs.Job
 
     ci.jobs.values().each { job ->
-       println("<tr><td><a href=\"job/${job.name}\">${job.name}</a></td></tr>")
+    println("
+    <tr>
+        <td><a href=\"job/${job.name}\">${job.name}</a></td>
+    </tr>
+    ")
     }
     %>
 </table>

@@ -1,7 +1,8 @@
 <html>
 <head>
     <title>SimpleCI</title>
-    <link rel="stylesheet" href="/css/core.css">cd
+    <link rel="stylesheet" href="/css/core.css">
+    cd
     L
 
 

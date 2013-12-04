@@ -114,18 +114,17 @@ private void onMessage(MessageEvent e) {
                 "help": "Displays Help"
             ];
             string command = args.length >= 2 ? args[1] : null;
+            
             if (command != null && command in commands) {
                 e.target.sendMessage(format("> %s: %s", command, commands[command]));
             } else {
-                auto cmdstring = ">";
+                auto cmdstring = "";
 
                 foreach(cmd; commands.keys) {
-                    if (cmd == "help") {
-                        cmdstring = format("%s %s", cmdstring, cmd);
-                    } else {
-                        cmdstring = format("%s, %s", cmdstring, cmd);
-                    }
+                    cmdstring ~= ", " ~ cmd;
                 }
+
+                cmdstring = ">" ~ cmdstring[1 .. cmdstring.length];
 
                 e.target.sendMessage(cmdstring);
             }

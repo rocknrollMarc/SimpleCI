@@ -7,6 +7,6 @@ class UtilsTest extends GroovyTestCase {
     @Test
     void testFindCommand() {
         def actual = Utils.findCommandOnPath("sh")
-        assertFalse "Command was not found!", actual==null
+        assertFalse "Command was not found!", actual == null
     }
 }

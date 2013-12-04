@@ -1,7 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
- 
+
 ext {
     groovyVersion = '2.2.1:indy'
     jdkHome = "${System.getProperty("java.home")}/../"
@@ -10,15 +10,15 @@ ext {
 
 repositories {
     mavenCentral()
- 
+
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
 }
- 
+
 dependencies {
     compile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
-    compile ('io.vertx:vertx-core:2.1M1') {
+    compile('io.vertx:vertx-core:2.1M1') {
         exclude group: "com.hazelcast", module: "hazelcast"
     }
     compile 'io.vertx:lang-groovy:2.0.0-final'
@@ -31,11 +31,11 @@ dependencies {
 }
 
 check.dependsOn 'jar'
- 
+
 task makeDBot(type: Exec) {
     commandLine "./gradle/dbot.sh", jdkHome
 }
- 
+
 tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
 }
@@ -47,30 +47,30 @@ tasks.withType(CodeNarc) {
 // Compile Java code with the groovy compiler
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs += ["src/main/java"]
- 
+
 jar {
     dependsOn 'makeDBot'
 
     manifest {
         attributes('Main-class': 'com.directmyfile.ci.Main')
     }
- 
+
     // Pack Dependencies
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
- 
+
     // Pack Natives
-    into ("natives") {
+    into("natives") {
         from fileTree("build/binaries/natives")
     }
     // Makes Jar Clean
     exclude "overviewj.html"
     exclude "overview.html"
     exclude "LICENSE.txt"
- 
+
     // Fix Duplicate Zip Entry
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
- 
+
 task wrapper(type: Wrapper) {
-  gradleVersion = "1.9"
+    gradleVersion = "1.9"
 }
