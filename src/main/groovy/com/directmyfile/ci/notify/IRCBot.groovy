@@ -26,8 +26,9 @@ class IRCBot {
                 commandPrefix: "!"
         ])
 
-        if (!cfg['enabled'])
+        if (!cfg['enabled']) {
             return
+        }
 
         ci.logger.info "Loading IRC Bot"
         NativeManager.loadNatives()
@@ -46,8 +47,9 @@ class IRCBot {
             def status = e['lastStatus'] as JobStatus
 
             getNotifyChannels(job, channels).each { String channel ->
-                if (!NativeManager.isInChannel(channel))
+                if (!NativeManager.isInChannel(channel)) {
                     NativeManager.join(channel)
+                }
                 NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} starting (Last Status: ${status.ircColor}${status}${Colors.NORMAL})")
             }
         }
@@ -60,8 +62,9 @@ class IRCBot {
             def job = ci.jobs[jobName]
 
             getNotifyChannels(job, channels).each { String channel ->
-                if (!NativeManager.isInChannel(channel))
+                if (!NativeManager.isInChannel(channel)) {
                     NativeManager.join(channel)
+                }
                 NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} completed with status ${status.ircColor}${status}${Colors.NORMAL} taking ${time}")
             }
         }
@@ -74,6 +77,7 @@ class IRCBot {
     }
 
     /* JNI called methods */
+
     void listJobs(String channel) {
         NativeManager.msg(channel, "> ${ci.jobs.keySet().join(', ')}")
     }

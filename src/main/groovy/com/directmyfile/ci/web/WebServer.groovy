@@ -45,7 +45,9 @@ class WebServer {
 
         matcher.get('/log/:job') { HttpServerRequest request ->
             def jobName = request.params['job'] as String
-            if (!ci.jobs.containsKey(jobName)) { writeResource(request, "404.html") ; return }
+            if (!ci.jobs.containsKey(jobName)) {
+                writeResource(request, "404.html"); return
+            }
 
             def job = ci.jobs.get(jobName)
 
@@ -81,11 +83,15 @@ class WebServer {
             def jobName = request.params['job'] as String
             def artifact = request.params['name'] as String
             def id = request.params['id'] as String
-            if (!ci.jobs.containsKey(jobName)) { writeResource(request, "404.html") ; return }
+            if (!ci.jobs.containsKey(jobName)) {
+                writeResource(request, "404.html"); return
+            }
 
             def artifactFile = new File(ci.artifactDir, "${jobName}/${id}/${artifact}")
 
-            if (!artifactFile.exists()) { writeResource(request, "404.html") ; return }
+            if (!artifactFile.exists()) {
+                writeResource(request, "404.html"); return
+            }
 
             request.response.sendFile(artifactFile.absolutePath)
         }
@@ -134,10 +140,10 @@ class WebServer {
     }
 
     private def writeResource(HttpServerRequest r, String path) {
-        
+
         def stream = getStream(path)
 
-        if (stream==null) {
+        if (stream == null) {
             writeResource(r, "404.html")
         }
 
@@ -149,7 +155,7 @@ class WebServer {
         binding.put("request", request)
         def stream = getStream(path)
 
-        if (stream==null) {
+        if (stream == null) {
             writeResource(request, "404.html")
         }
 

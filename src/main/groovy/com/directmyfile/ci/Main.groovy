@@ -1,4 +1,5 @@
 package com.directmyfile.ci
+
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.exception.UnexpectedExceptionHandler
 import groovy.util.logging.Log4j
@@ -75,6 +76,7 @@ class Main {
     }
 
     /* Shut down & startup methods */
+
     static boolean isRunning() {
         return ciRunning
     }

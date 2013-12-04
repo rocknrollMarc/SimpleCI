@@ -1,4 +1,5 @@
 package com.directmyfile.ci
+
 import com.directmyfile.ci.core.LogLayout
 import groovy.transform.Memoized
 import org.apache.log4j.ConsoleAppender

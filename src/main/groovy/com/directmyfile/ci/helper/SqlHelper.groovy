@@ -39,8 +39,9 @@ class SqlHelper {
         fullQuery.tokenize(";").each {
             def query = it.replaceAll("\n", "").trim()
             ci.logger.debug "Executing SQL: ${query}"
-            if (!sql.execute(query))
+            if (!sql.execute(query)) {
                 success = false
+            }
         }
         return success
     }

@@ -2,6 +2,7 @@ package com.directmyfile.ci.core
 
 import org.apache.log4j.Layout
 import org.apache.log4j.spi.LoggingEvent
+
 import java.text.SimpleDateFormat
 
 class LogLayout extends Layout {

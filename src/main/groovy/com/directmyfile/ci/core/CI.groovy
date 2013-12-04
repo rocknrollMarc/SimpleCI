@@ -133,8 +133,9 @@ class CI {
      */
     void loadJobs() {
         def jobRoot = new File(configRoot, "jobs")
-        if (!jobRoot.exists())
+        if (!jobRoot.exists()) {
             jobRoot.mkdir()
+        }
 
         sql.dataSet("jobs").rows().each {
             def jobCfg = new File(jobRoot, "${it['name']}.json")
@@ -205,8 +206,9 @@ class CI {
 
             def scmConfig = job.getSCM()
 
-            if (!scmTypes.containsKey(scmConfig.type))
+            if (!scmTypes.containsKey(scmConfig.type)) {
                 throw new JobConfigurationException("Unkown SCM Type ${scmConfig.type}")
+            }
 
             def scm = scmTypes.get(scmConfig.type)
 

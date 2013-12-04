@@ -1,8 +1,8 @@
 package com.directmyfile.ci.tasks
 
+import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.jobs.Job
-import com.directmyfile.ci.api.Task
 
 class CommandTask extends Task {
 
@@ -37,6 +37,6 @@ class CommandTask extends Task {
         log.flush()
         log.close()
 
-        return exitCode==0
+        return exitCode == 0
     }
 }

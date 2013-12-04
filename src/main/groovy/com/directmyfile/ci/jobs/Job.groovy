@@ -64,7 +64,9 @@ class Job {
         def text = []
         def number = history.latestBuild.number
         def artifactDir = new File(ci.artifactDir, "${name}/${number}")
-        if (!artifactDir.exists()) return ""
+        if (!artifactDir.exists()) {
+            return ""
+        }
         artifactDir.eachFile {
             text.add("<tr><td><a href=\"/artifact/${this.name}/${number}/${it.name}\">${it.name}</a></tr></td>")
         }
