@@ -21,7 +21,7 @@ enum JobStatus {
         }
     }
 
-    String getIRCColor() {
+    String getIrcColor() {
         switch (this) {
             case SUCCESS: return Colors.GREEN
             case FAILURE: return Colors.RED

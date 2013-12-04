@@ -24,38 +24,90 @@ import java.util.logging.Logger
 @Log4j('logger')
 class CI {
 
+    /**
+     * Configuration Root
+     */
     def configRoot = new File(".")
+
+    /**
+     * CI Server Web Port
+     */
     int port = 0
+
+    /**
+     * Plugin Manager
+     */
     def pluginManager = new PluginManager(this)
+
+    /**
+     * CI Configuration
+     */
     def config = new CiConfig(this)
+
+    /**
+     * SQL Functionality Provider
+     */
     def sql = new SqlHelper(this)
 
+    /**
+     * CI IRC Bot
+     */
     def ircBot = new IRCBot()
 
+    /**
+     * CI Task Types
+     */
     Map<String, Task> taskTypes = [
             command: new CommandTask(),
             gradle: new GradleTask(),
             make: new MakeTask()
     ]
 
+    /**
+     * Source Code Manager Types
+     */
     Map<String, SCM> scmTypes = [:]
+
+    /**
+     * CI Jobs
+     */
     Map<String, Job> jobs = [:]
+
+    /**
+     * Job Queue System
+     */
     LinkedBlockingQueue<Job> jobQueue
 
+    /**
+     * Vert.x Manager for managing Vert.x related systems
+     */
     def vertxManager = new VertxManager(this)
 
+    /**
+     * Vert.x Backed Event Bus
+     */
     def eventBus = vertxManager.eventBus
 
-    def start() {
+    /**
+     * Starts CI Server
+     */
+    void start() {
         init()
         loadJobs()
         vertxManager.setupWebServer()
     }
 
-    def startBot() {
+    /**
+     * Starts the IRC Bot
+     * <p><b>NOTICE:</b> Must be run on Main Thread</p>
+     */
+    void startBot() {
         ircBot.start(this)
     }
 
+    /**
+     * Initializes this CI Server
+     */
     private void init() {
         config.load()
         Utils.configureLogger(logger, "CI")
@@ -76,6 +128,9 @@ class CI {
         scmTypes['git'] = new GitSCM(this)
     }
 
+    /**
+     * Loads Jobs from Database and Job Files
+     */
     void loadJobs() {
         def jobRoot = new File(configRoot, "jobs")
         if (!jobRoot.exists())
@@ -110,6 +165,10 @@ class CI {
         logger.info "Loaded ${jobs.size()} jobs."
     }
 
+    /**
+     * Adds the Specified Job to the Queue
+     * @param job Job to Add to Queue
+     */
     void runJob(Job job) {
         Thread.start("Builder[${job.name}]") {
             def number = (job.history.latestBuild?.number ?: 0) + 1
@@ -146,7 +205,8 @@ class CI {
 
             def scmConfig = job.getSCM()
 
-            if (!scmTypes.containsKey(scmConfig.type)) throw new JobConfigurationException("Unkown SCM Type ${scmConfig.type}")
+            if (!scmTypes.containsKey(scmConfig.type))
+                throw new JobConfigurationException("Unkown SCM Type ${scmConfig.type}")
 
             def scm = scmTypes.get(scmConfig.type)
 
@@ -214,10 +274,17 @@ class CI {
         }
     }
 
+    /**
+     * Updates all Jobs from the Database and parses Job Files
+     */
     def updateJobs() {
-       jobs.values()*.reload()
+        jobs.values()*.reload()
     }
 
+    /**
+     * Gets where artifacts are stored
+     * @return Artifact Directory
+     */
     def getArtifactDir() {
         def dir = new File(configRoot, "artifacts")
         dir.mkdir()

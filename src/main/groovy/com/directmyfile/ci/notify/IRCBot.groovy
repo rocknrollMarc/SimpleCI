@@ -48,7 +48,7 @@ class IRCBot {
             getNotifyChannels(job, channels).each { String channel ->
                 if (!NativeManager.isInChannel(channel))
                     NativeManager.join(channel)
-                NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} starting (Last Status: ${status.IRCColor}${status}${Colors.NORMAL})")
+                NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} starting (Last Status: ${status.ircColor}${status}${Colors.NORMAL})")
             }
         }
 
@@ -62,7 +62,7 @@ class IRCBot {
             getNotifyChannels(job, channels).each { String channel ->
                 if (!NativeManager.isInChannel(channel))
                     NativeManager.join(channel)
-                NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} completed with status ${status.IRCColor}${status}${Colors.NORMAL} taking ${time}")
+                NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} completed with status ${status.ircColor}${status}${Colors.NORMAL} taking ${time}")
             }
         }
         NativeManager.startLoop()
@@ -101,7 +101,7 @@ class IRCBot {
         def jobList = []
         if (job == null) {
             ci.jobs.values().each {
-                jobList.add("${it.status.IRCColor}${it.name}${Colors.NORMAL} (${it.history.latestBuild?.number ?: "Not Started"})")
+                jobList.add("${it.status.ircColor}${it.name}${Colors.NORMAL} (${it.history.latestBuild?.number ?: "Not Started"})")
             }
         } else {
             def it = ci.jobs[job]
@@ -109,7 +109,7 @@ class IRCBot {
                 NativeManager.msg(channel, "> No such job: ${job}")
                 return
             }
-            jobList.add("${it.status.IRCColor}${it.name}${Colors.NORMAL} (${it.history.latestBuild?.number ?: "Not Started"})")
+            jobList.add("${it.status.ircColor}${it.name}${Colors.NORMAL} (${it.history.latestBuild?.number ?: "Not Started"})")
         }
         NativeManager.msg(channel, "> ${jobList.join(', ')}")
     }

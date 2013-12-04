@@ -40,6 +40,7 @@ extern "C" {
     void msg(const char*, const char*);
     bool inChannel(const char*);
     void addAdmin(const char*);
+    bool isAdmin(const char*);
     void join(const char*);
     void disconnect();
     bool loop();
@@ -126,6 +127,17 @@ extern "C" {
         const char* l_user = env->GetStringUTFChars(user, 0);
         addAdmin(l_user);
         env->ReleaseStringUTFChars(user, l_user);
+    }
+
+    JNIEXPORT jboolean JNICALL Java_com_directmyfile_ci_notify_NativeManager_isAdmin(JNIEnv* env, jclass clazz, jstring user) {
+        const char* l_user = env->GetStringUTFChars(user, 0);
+        bool flag = isAdmin(l_user);
+        env->ReleaseStringUTFChars(user, l_user);
+
+        if (flag)
+            return JNI_TRUE;
+        else
+            return JNI_FALSE;
     }
 
     JNIEXPORT void JNICALL Java_com_directmyfile_ci_notify_NativeManager_join(JNIEnv* env, jclass clazz, jstring chan) {

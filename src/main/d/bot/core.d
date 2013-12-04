@@ -2,6 +2,7 @@ module bot.core;
 
 import irc.collections;
 import std.string;
+import std.array;
 import irc.irc;
 
 private shared(IRCBot) bot;
@@ -47,6 +48,10 @@ public class BotCore {
         auto ch = (cast(IRCBot) bot).getChannel(chan);
         if (ch)
             ch.sendMessage(_msg);
+    }
+
+    public bool isAdmin(string user) {
+        return (cast(List!string) admins).contains(user);
     }
 
     public void disconnect() {
@@ -99,6 +104,31 @@ private void onMessage(MessageEvent e) {
             }
             string jobName = args.length >= 2 ? args[1] : null;
             build(toStringz(e.target.target), jobName != null ? toStringz(jobName) : null);
+            break;
+        case "help":
+            auto commands = [
+                "listJobs": "Lists Jobs",
+                "status": "Displays Job Statuses",
+                "loadJobs": "Loads Jobs",
+                "build": "Builds a Job",
+                "help": "Displays Help"
+            ];
+            string command = args.length >= 2 ? args[1] : null;
+            if (command != null && command in commands) {
+                e.target.sendMessage(format("> %s: %s", command, commands[command]));
+            } else {
+                auto cmdstring = ">";
+
+                foreach(cmd; commands.keys) {
+                    if (cmd == "help") {
+                        cmdstring = format("%s %s", cmdstring, cmd);
+                    } else {
+                        cmdstring = format("%s, %s", cmdstring, cmd);
+                    }
+                }
+
+                e.target.sendMessage(cmdstring);
+            }
             break;
         default:
     }

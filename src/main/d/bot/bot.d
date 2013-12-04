@@ -30,6 +30,10 @@ extern (C) export {
         (cast(BotCore) core).join(tos(chan));
     }
 
+    bool isAdmin(const(char)* user) {
+    	return (cast(BotCore) core).isAdmin(tos(user));
+    }
+
     void msg(const(char)* chan, const(char)* _msg) {
         (cast(BotCore) core).msg(tos(chan), tos(_msg));
     }

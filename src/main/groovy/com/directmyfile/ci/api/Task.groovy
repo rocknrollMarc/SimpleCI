@@ -1,9 +1,12 @@
 package com.directmyfile.ci.api
 
 /**
- * A build Task
+ * A CI build Task
  */
 abstract class Task {
+    /**
+     * Specifies this Task Type Name
+     */
     protected String type
 
     /**
