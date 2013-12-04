@@ -1,10 +1,8 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>SimpleCI</title>
     <link rel="stylesheet" href="/css/core.css">
-    cd
-    L
-
 
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -20,7 +18,15 @@
 </nav>
 
 <br/>
-<table id="jobList" class="centered table table-bordered" border="1"></table>
+<table id="jobList" class="centered table table-bordered" border="1">
+    <%
+      import com.directmyfile.ci.jobs.Job
+
+      ci.jobs.values().each { job ->
+         println("<tr><td><a href=\"job/${job.name}\">${job.name}</a></td></tr>")
+      }
+    %>
+</table>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>

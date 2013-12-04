@@ -61,9 +61,6 @@ task release {
 githubPages {
   repoUri = 'git@github.com:DirectMyFile/SimpleCI.git'
   pages {
-    from(javadoc.outputs.files) {
-      into 'docs/javadoc'
-    }
     from(groovydoc.outputs.files) {
       into 'docs/groovydoc'
     }

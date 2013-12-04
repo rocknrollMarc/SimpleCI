@@ -4,6 +4,7 @@ import com.directmyfile.ci.Utils
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
+import com.directmyfile.ci.exception.CIException
 import com.directmyfile.ci.exception.JobConfigurationException
 import com.directmyfile.ci.helper.SqlHelper
 import com.directmyfile.ci.jobs.Job
@@ -200,6 +201,10 @@ class CI {
                     number: number
             ])
 
+            def timer = new com.directmyfile.ci.helper.Timer()
+
+            timer.start()
+
             def success = true
             job.status = JobStatus.RUNNING
             logger.info "Job '${job.name}' is Running"
@@ -210,40 +215,50 @@ class CI {
                 throw new JobConfigurationException("Unkown SCM Type ${scmConfig.type}")
             }
 
-            def scm = scmTypes.get(scmConfig.type)
+            def scm = scmTypes[scmConfig.type]
 
-            if (scm.exists(job)) {
-                scm.update(job)
-            } else {
-                scm.clone(job)
+            def tasksShouldRun = true
+
+            try {
+                if (scm.exists(job))
+                    scm.update(job)
+                else
+                    scm.clone(job)
+            } catch (CIException e) {
+                logger.info "Job '${job.name}' (SCM): ${e.message}"
+                tasksShouldRun = false
+                success = false
             }
 
-            def tasks = job.tasks
+            if (tasksShouldRun) {
+                def tasks = job.tasks
 
-            def timer = new com.directmyfile.ci.helper.Timer()
+                for (taskConfig in tasks) {
+                    def id = tasks.indexOf(taskConfig) + 1
+                    logger.info "Running Task ${id} of ${job.tasks.size()} for Job '${job.name}'"
 
-            timer.start()
+                    try {
+                        def taskSuccess = taskConfig.getTask().execute(taskConfig.params)
 
-            for (task in tasks) {
-                def id = tasks.indexOf(task) + 1
-                logger.info "Running Task ${id} of ${job.tasks.size()} for Job '${job.name}'"
-                def taskSuccess = task.task.execute(task.params)
-
-                if (!taskSuccess) {
-                    success = false
-                    break
+                        if (!taskSuccess) {
+                            success = false
+                            break
+                        }
+                    } catch (CIException e) {
+                        logger.info "Job '${job.name}' (Task #${tasks.indexOf(taskConfig) + 1}): ${e.message}"
+                    }
                 }
-            }
-            def artifacts = new File(artifactDir, "${job.name}/${number}")
-            artifacts.mkdirs()
-            job.artifactLocations.each {
-                def file = new File(job.buildDir, it)
-                if (!file.exists()) {
-                    job.logFile.append("\nArtifact File: ${file.canonicalPath} does not exist")
-                    logger.debug "Job '${job.name}' has non existent artifact: ${file.canonicalPath}"
-                    return
+                def artifacts = new File(artifactDir, "${job.name}/${number}")
+                artifacts.mkdirs()
+                job.artifactLocations.each {
+                    def file = new File(job.buildDir, it)
+                    if (!file.exists()) {
+                        job.logFile.append("\nArtifact File: ${file.canonicalPath} does not exist")
+                        logger.debug "Job '${job.name}' has non existent artifact: ${file.canonicalPath}"
+                        return
+                    }
+                    new File(artifacts, file.name).bytes = file.bytes
                 }
-                new File(artifacts, file.name).bytes = file.bytes
             }
 
             def buildTime = timer.stop()

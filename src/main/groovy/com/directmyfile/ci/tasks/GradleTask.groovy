@@ -25,9 +25,8 @@ class GradleTask extends Task {
         def gradleCommand = "gradle"
 
         if (wrapper) {
-            if (!new File(job.buildDir, "gradlew").exists()) {
+            if (!new File(job.buildDir, "gradlew").exists())
                 throw new JobConfigurationException("Gradle Wrapper not found in Job: ${job.name}")
-            }
             gradleCommand = "sh gradlew"
         } else {
             def c = Utils.findCommandOnPath("gradle")
