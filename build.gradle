@@ -1,6 +1,16 @@
 apply plugin: 'groovy'
 apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
+apply plugin: 'github-pages'
+
+defaultTasks 'jar'
+
+import org.ajoberstar.gradle.git.tasks.*
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies { classpath 'org.ajoberstar:gradle-git:0.6.3' }
+}
 
 ext {
     groovyVersion = '2.2.1:indy'
@@ -33,7 +43,32 @@ dependencies {
 check.dependsOn 'jar'
 
 task makeDBot(type: Exec) {
+    inputs.dir file("src/main/c")
+    inputs.dir file("src/main/d")
+    outputs.dir file("build/natives")
     commandLine "./gradle/dbot.sh", jdkHome
+}
+
+task tagRelease(type: GitTag) {
+    tagName = "v${version}"
+    message = "Release of v${version}"
+}
+
+task release {
+    dependsOn "jar", "publishGhPages", "tagRelease"
+}
+
+githubPages {
+  repoUri = 'git@github.com:DirectMyFile/SimpleCI.git'
+  pages {
+    from(javadoc.outputs.files) {
+      into 'docs/javadoc'
+    }
+    from(groovydoc.outputs.files) {
+      into 'docs/groovydoc'
+    }
+  }
+  workingPath = 'build/somewhere/else'
 }
 
 tasks.withType(GroovyCompile) {
@@ -44,7 +79,7 @@ tasks.withType(CodeNarc) {
     configFile = file("gradle/CodeNarc.xml")
 }
 
-// Compile Java code with the groovy compiler
+// Compile Java code with the Groovy compiler
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs += ["src/main/java"]
 
@@ -62,6 +97,7 @@ jar {
     into("natives") {
         from fileTree("build/binaries/natives")
     }
+
     // Makes Jar Clean
     exclude "overviewj.html"
     exclude "overview.html"
@@ -72,5 +108,5 @@ jar {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "1.9"
+    gradleVersion = "1.10-rc-1"
 }
