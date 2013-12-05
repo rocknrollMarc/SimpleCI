@@ -3,7 +3,6 @@ package com.directmyfile.ci.notify
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
-import org.vertx.groovy.core.eventbus.Message
 
 class IRCBot {
     CI ci
@@ -32,16 +31,16 @@ class IRCBot {
 
         ci.logger.info "Loading IRC Bot"
         NativeManager.loadNatives()
-        NativeManager.init((String) cfg['host'], (short) cfg['port'], (String) cfg['nickname'], (String) cfg['username'], (String) cfg['commandPrefix'])
+        NativeManager.init(cfg['host'] as String, cfg['port'] as short, cfg['nickname'] as String, cfg['username'] as String, cfg['commandPrefix'] as String)
 
         def channels = cfg['channels'] as List<String>
         def admins = cfg['admins'] as List<String>
+
         admins.each {
             NativeManager.addAdmin(it)
         }
 
-        ci.eventBus.registerHandler("ci/job-running") { Message msg ->
-            def e = msg.body() as Map
+        ci.eventBus.on("ci/job-running") { Map<String, Object> e ->
             def jobName = e.jobName as String
             def job = ci.jobs[jobName]
             def status = e['lastStatus'] as JobStatus
@@ -54,17 +53,15 @@ class IRCBot {
             }
         }
 
-        ci.eventBus.registerHandler("ci/job-done") { Message msg ->
-            def e = msg.body() as Map
+        ci.eventBus.on("ci/job-done") { Map<String, Object> e ->
             def jobName = e.jobName as String
             def status = e.status as JobStatus
             def time = e.timeString as String
             def job = ci.jobs[jobName]
 
             getNotifyChannels(job, channels).each { String channel ->
-                if (!NativeManager.isInChannel(channel)) {
+                if (!NativeManager.isInChannel(channel))
                     NativeManager.join(channel)
-                }
                 NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} completed with status ${status.ircColor}${status}${Colors.NORMAL} taking ${time}")
             }
         }
@@ -123,6 +120,6 @@ class IRCBot {
         channels.each {
             NativeManager.join(it)
         }
-        ci.eventBus.publish("irc/ready", System.currentTimeMillis())
+        ci.eventBus.dispatch(name: "irc/ready", time: System.currentTimeMillis())
     }
 }

@@ -5,7 +5,6 @@ import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
 import com.directmyfile.ci.exception.CIException
-import com.directmyfile.ci.exception.JobConfigurationException
 import com.directmyfile.ci.helper.SqlHelper
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
@@ -85,9 +84,9 @@ class CI {
     def vertxManager = new VertxManager(this)
 
     /**
-     * Vert.x Backed Event Bus
+     * CI Event Bus
      */
-    def eventBus = vertxManager.eventBus
+    def eventBus = new EventBus()
 
     /**
      * Starts CI Server
@@ -123,9 +122,8 @@ class CI {
         new File(configRoot, 'logs').mkdirs()
         pluginManager.loadPlugins()
 
-        eventBus.publish("ci/init", [
-                time: System.currentTimeMillis()
-        ])
+        eventBus.dispatch(name: "ci/init", time: System.currentTimeMillis())
+
         scmTypes['git'] = new GitSCM(this)
     }
 
@@ -134,15 +132,16 @@ class CI {
      */
     void loadJobs() {
         def jobRoot = new File(configRoot, "jobs")
-        if (!jobRoot.exists()) {
+
+        if (!jobRoot.exists())
             jobRoot.mkdir()
-        }
 
         sql.dataSet("jobs").rows().each {
             def jobCfg = new File(jobRoot, "${it['name']}.json")
 
             if (!jobCfg.exists()) {
-                throw new JobConfigurationException("Job File: ${jobCfg.absolutePath} does not exist!")
+                logger.warn "Job Configuration File '${jobCfg.name}' does not exist. Skipping."
+                return
             }
 
             def job = new Job(this, jobCfg)
@@ -152,7 +151,8 @@ class CI {
         }
 
         jobRoot.eachFile {
-            if (it.isDirectory() || !it.name.endsWith(".json")) return
+            if (it.isDirectory() || !it.name.endsWith(".json"))
+                return
 
             def job = new Job(this, it)
 
@@ -172,12 +172,14 @@ class CI {
      * @param job Job to Add to Queue
      */
     void runJob(Job job) {
-        Thread.start("Builder[${job.name}]") {
+        Thread.start("Builder[${job.name}]") { ->
             def number = (job.history.latestBuild?.number ?: 0) + 1
             def lastStatus = number == 1 ? JobStatus.NOT_STARTED : job.status
             job.status = JobStatus.WAITING
 
             logger.debug "Job '${job.name}' has been queued"
+
+
 
             jobQueue.put(job)
 
@@ -195,39 +197,40 @@ class CI {
             // Update Number
             number = (job.history.latestBuild?.number ?: 0) + 1
 
-            eventBus.publish("ci/job-running", [
-                    jobName: job.name,
-                    lastStatus: lastStatus,
-                    number: number
-            ])
+            eventBus.dispatch(name: "ci/job-running", jobName: job.name, lastStatus: lastStatus, number: number)
 
             def timer = new com.directmyfile.ci.helper.Timer()
 
             timer.start()
 
             def success = true
+            def scmShouldRun = true
+            def tasksShouldRun = true
+
             job.status = JobStatus.RUNNING
             logger.info "Job '${job.name}' is Running"
 
-            def scmConfig = job.getSCM()
+            if (scmShouldRun) {
+                def scmConfig = job.getSCM()
 
-            if (!scmTypes.containsKey(scmConfig.type)) {
-                throw new JobConfigurationException("Unkown SCM Type ${scmConfig.type}")
-            }
+                if (!scmTypes.containsKey(scmConfig.type)) {
+                    logger.error "Job '${job.name}' is attempting to use a non-existant SCM Type '${scmConfig.type}!'"
+                    success = false
+                    tasksShouldRun = false
+                }
 
-            def scm = scmTypes[scmConfig.type]
+                def scm = scmTypes[scmConfig.type]
 
-            def tasksShouldRun = true
-
-            try {
-                if (scm.exists(job))
-                    scm.update(job)
-                else
-                    scm.clone(job)
-            } catch (CIException e) {
-                logger.info "Job '${job.name}' (SCM): ${e.message}"
-                tasksShouldRun = false
-                success = false
+                try {
+                    if (scm.exists(job))
+                        scm.update(job)
+                    else
+                        scm.clone(job)
+                } catch (CIException e) {
+                    logger.info "Job '${job.name}' (SCM): ${e.message}"
+                    tasksShouldRun = false
+                    success = false
+                }
             }
 
             if (tasksShouldRun) {
@@ -273,13 +276,7 @@ class CI {
                 job.status = JobStatus.SUCCESS
             }
 
-            eventBus.publish("ci/job-done", [
-                    jobName: job.name,
-                    status: job.status,
-                    buildTime: buildTime,
-                    timeString: timer.toString(),
-                    number: number
-            ])
+            eventBus.dispatch(name: "ci/job-done", jobName: job.name, status: job.status, buildTime: buildTime, timeString: timer.toString(), number: number)
 
             def log = job.logFile.text
 

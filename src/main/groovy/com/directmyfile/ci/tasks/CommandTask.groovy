@@ -1,4 +1,5 @@
 package com.directmyfile.ci.tasks
+
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.jobs.Job
 
