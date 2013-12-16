@@ -39,7 +39,7 @@ class SqlHelper {
         fullQuery.tokenize(";").each {
             def query = it.replaceAll("\n", "").trim()
             ci.logger.debug "Executing SQL: ${query}"
-            if (!sql.execute(query)) {
+            if (!getSql().execute(query)) {
                 success = false
             }
         }
@@ -48,31 +48,31 @@ class SqlHelper {
 
     def rows(String query) {
         ci.logger.debug "Executing SQL: ${query}"
-        return sql.rows(query)
+        return getSql().rows(query)
     }
 
     def eachRow(String query, Closure closure) {
-        sql.eachRow(query, closure)
+        getSql().eachRow(query, closure)
     }
 
     def dataSet(String table) {
-        return sql.dataSet(table)
+        return getSql().dataSet(table)
     }
 
     def firstRow(String query) {
-        return sql.firstRow(query)
+        return getSql().firstRow(query)
     }
 
     def query(String query, Closure closure) {
-        sql.query(query, closure)
+        getSql().query(query, closure)
     }
 
     def insert(String query) {
-        return sql.executeInsert(query)
+        return getSql().executeInsert(query)
     }
 
     def update(String query) {
-        return sql.executeUpdate(query)
+        return getSql().executeUpdate(query)
     }
 
     boolean execute(InputStream stream) {

@@ -1,6 +1,5 @@
 package com.directmyfile.ci.core
 
-import com.directmyfile.ci.Utils
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
@@ -8,22 +7,25 @@ import com.directmyfile.ci.exception.CIException
 import com.directmyfile.ci.helper.SqlHelper
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
+import com.directmyfile.ci.logging.LogLevel
+import com.directmyfile.ci.logging.Logger
 import com.directmyfile.ci.notify.IRCBot
 import com.directmyfile.ci.scm.GitSCM
 import com.directmyfile.ci.tasks.CommandTask
 import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
 import com.directmyfile.ci.web.VertxManager
-import groovy.util.logging.Log4j
-import org.apache.log4j.Level
 
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.logging.Level as JavaLogLevel
-import java.util.logging.Logger
+import java.util.logging.Logger as JavaLogger
 
-@Log4j('logger')
 class CI {
 
+    /**
+     * Main CI Logger
+     */
+    def logger = Logger.getLogger("CI")
     /**
      * Configuration Root
      */
@@ -110,10 +112,9 @@ class CI {
      */
     private void init() {
         config.load()
-        Utils.configureLogger(logger, "CI")
-        Logger.getLogger("groovy.sql.Sql").setLevel(JavaLogLevel.OFF)
+        JavaLogger.getLogger("groovy.sql.Sql").setLevel(JavaLogLevel.OFF)
 
-        def logLevel = Level.toLevel(config.loggingSection().level.toString().toUpperCase())
+        def logLevel = LogLevel.parse(config.loggingSection().level.toString().toUpperCase())
         logger.setLevel(logLevel)
 
         jobQueue = new LinkedBlockingQueue<Job>(config.ciSection()['queueSize'] as int)
@@ -140,7 +141,7 @@ class CI {
             def jobCfg = new File(jobRoot, "${it['name']}.json")
 
             if (!jobCfg.exists()) {
-                logger.warn "Job Configuration File '${jobCfg.name}' does not exist. Skipping."
+                logger.info "Job Configuration File '${jobCfg.name}' does not exist. Skipping."
                 return
             }
 
@@ -157,7 +158,7 @@ class CI {
             def job = new Job(this, it)
 
             if (!jobs.containsKey(job.name)) { // This Job Config isn't in the Database yet.
-                def r = sql.insert("INSERT INTO `jobs` (`id`, `name`, `status`, `lastRevision`) VALUES (NULL, ${job.name}, '1', '');")
+                def r = sql.insert("INSERT INTO `jobs` (`id`, `name`, `status`, `lastRevision`) VALUES (NULL, '${job.name}', '${JobStatus.NOT_STARTED.ordinal()}', '');")
                 job.status = JobStatus.NOT_STARTED
                 job.id = r[0][0] as int
                 jobs[job.name] = job

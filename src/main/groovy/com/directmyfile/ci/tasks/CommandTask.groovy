@@ -3,6 +3,9 @@ package com.directmyfile.ci.tasks
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.jobs.Job
 
+/**
+ * Executes a Command
+ */
 class CommandTask extends Task {
 
     CommandTask() {

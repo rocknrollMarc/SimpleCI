@@ -4,6 +4,9 @@ import com.directmyfile.ci.core.CI
 import org.vertx.groovy.core.Vertx
 import org.vertx.groovy.core.eventbus.EventBus
 
+/**
+ * Manages Vert.x Instances
+ */
 class VertxManager {
 
     def vertx = newVertx()

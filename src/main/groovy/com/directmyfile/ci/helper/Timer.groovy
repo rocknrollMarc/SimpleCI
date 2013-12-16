@@ -14,8 +14,6 @@ class Timer {
     long stop() {
         this.stopTime = System.currentTimeMillis()
 
-        this.time = stopTime - startTime
-
         return this.time = stopTime - startTime
     }
 

@@ -34,7 +34,6 @@ dependencies {
     compile 'io.vertx:lang-groovy:2.0.0-final'
     compile 'org.mozilla:rhino:1.7R4'
     compile 'mysql:mysql-connector-java:5.1.26'
-
     testCompile 'junit:junit:4.11'
 
     codenarc 'org.codenarc:CodeNarc:0.19'
@@ -105,5 +104,5 @@ jar {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "1.10-rc-1"
+    gradleVersion = "1.10-rc-2"
 }

@@ -33,7 +33,7 @@ final class NativeManager {
 
     public NativeManager(IRCBot bot) {
         this.bot = bot;
-        this.manager = this;
+        manager = this;
     }
 
     public static void init(String host, short port, String nick, String user, String prefix) {
@@ -69,7 +69,10 @@ final class NativeManager {
             nativesDir.mkdir();
         nativesDir.deleteOnExit();
 
-        String[] libs = new String[]{"bot"};
+        String[] libs = {
+                "bot"
+        };
+
         for (String lib : libs) {
             String libName = System.mapLibraryName(lib);
             InputStream is = NativeManager.class.getResourceAsStream("/natives/" + libName);

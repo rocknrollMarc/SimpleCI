@@ -18,12 +18,10 @@ class GitSCM extends SCM {
 
     @Override
     void clone(Job job) {
+
         def cmd = [findGit().absolutePath, "clone", "--recursive", job.getSCM().url, job.buildDir.absolutePath]
-        def builder = new ProcessBuilder()
-        builder.command(cmd)
-        builder.directory(job.buildDir)
-        builder.redirectErrorStream(true)
-        def proc = builder.start()
+
+        def proc = execute(job, cmd)
         def log = job.logFile.newPrintWriter()
         proc.inputStream.eachLine {
             log.println(it)
@@ -33,17 +31,19 @@ class GitSCM extends SCM {
         log.flush()
         log.close()
         def exitCode = proc.waitFor()
-        if (exitCode != 0) throw new ToolException("Git failed to clone repository!")
+        if (exitCode != 0)
+            throw new ToolException("Git failed to clone repository!")
+        updateSubmodules(job)
     }
 
     @Override
     void update(Job job) {
         def cmd = [findGit().absolutePath, "pull", "--all"]
-        def builder = new ProcessBuilder()
-        builder.command(cmd)
-        builder.directory(job.buildDir)
-        builder.redirectErrorStream(true)
-        def proc = builder.start()
+
+        updateSubmodules(job)
+
+        def proc = execute(job, cmd)
+
         def log = job.logFile.newPrintWriter()
         proc.inputStream.eachLine {
             log.println(it)
@@ -53,7 +53,8 @@ class GitSCM extends SCM {
         log.println()
         log.flush()
         log.close()
-        if (exitCode != 0) throw new ToolException("Git failed to pull changes!")
+        if (exitCode != 0)
+            throw new ToolException("Git failed to pull changes!")
     }
 
     @Override
@@ -68,13 +69,8 @@ class GitSCM extends SCM {
         def changelog = new Changelog()
 
         def dir = job.buildDir
-        def builder = new ProcessBuilder()
 
-        builder.directory(dir)
-        builder.command([findGit().absolutePath, "log", "-${gitConfig['logLimit'].toString()}".toString(), "--pretty='format:%H%n%an%n%s'"])
-        // Makes Git Log Lines into Groovy List
-
-        def proc = builder.start()
+        def proc = execute(job, [findGit().absolutePath, "log", "-${gitConfig['logLimit'].toString()}".toString(), "--pretty='format:%H%n%an%n%s'"])
 
         proc.waitFor()
 
@@ -103,11 +99,27 @@ class GitSCM extends SCM {
         return changelog
     }
 
-    private static File findGit() {
+    public static File findGit() {
         def gitCommand = Utils.findCommandOnPath("git")
         if (gitCommand == null) {
             throw new ToolException("Could not find Git on System!")
         }
         return gitCommand
+    }
+
+    private static boolean detectSubmodules(File dir) {
+        return "${findGit().absolutePath} submodule status".execute([], dir) != ""
+    }
+
+    static boolean updateSubmodules(Job job) {
+        return execute(job, ["${findGit().absolutePath}", "submodule", "update", "--init", "--recursive"]).waitFor() == 0
+    }
+
+    private static Process execute(Job job, List<String> command) {
+        def builder = new ProcessBuilder()
+        builder.command(command)
+        builder.directory(job.buildDir)
+        builder.redirectErrorStream(true)
+        return builder.start()
     }
 }

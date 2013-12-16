@@ -1,9 +1,6 @@
 package com.directmyfile.ci
 
-import com.directmyfile.ci.core.LogLayout
 import groovy.transform.Memoized
-import org.apache.log4j.ConsoleAppender
-import org.apache.log4j.Logger
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 
@@ -14,6 +11,7 @@ class Utils {
         return builder.start()
     }
 
+    @Memoized(maxCacheSize = 10)
     static File findCommandOnPath(String executableName) {
         def systemPath = System.getenv("PATH")
         def pathDirs = systemPath.split(File.pathSeparator)
@@ -73,20 +71,12 @@ class Utils {
         return resource(path).text
     }
 
-    static def newLogger(String loggerName) {
-        def logger = Logger.getLogger(loggerName)
-        configureLogger(logger, loggerName)
-        return logger
-    }
-
-    static def configureLogger(Logger logger, String name) {
-        def consoleAppender = new ConsoleAppender(new LogLayout(name))
-        consoleAppender.activateOptions()
-        logger.additivity = false
-        logger.addAppender(consoleAppender)
-    }
-
+    @Memoized(maxCacheSize = 15)
     static def decodeBase64(String input) {
         return new String(input.decodeBase64())
+    }
+
+    static def newProperties() {
+        return new Properties()
     }
 }

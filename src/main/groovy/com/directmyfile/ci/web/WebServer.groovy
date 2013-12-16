@@ -1,5 +1,6 @@
 package com.directmyfile.ci.web
 
+import com.directmyfile.ci.Utils
 import com.directmyfile.ci.core.CI
 import groovy.json.JsonBuilder
 import groovy.text.SimpleTemplateEngine
@@ -147,7 +148,7 @@ class WebServer {
             writeResource(r, "404.html")
         }
 
-        r.response.end(stream.readLines().join('\n'))
+        r.response.end(stream.text)
     }
 
     private void writeTemplate(HttpServerRequest request, String path, Map binding) {
@@ -170,7 +171,7 @@ class WebServer {
         def dir = new File(ci.configRoot, "www")
         InputStream stream
         if (!dir.exists()) {
-            stream = this.class.classLoader.getResourceAsStream("simpleci/${path}")
+            stream = Utils.resource("simpleci/${path}")
         } else {
             def file = new File(dir, path)
             if (!file.exists()) return null

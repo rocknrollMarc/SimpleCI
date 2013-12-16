@@ -2,7 +2,6 @@ package com.directmyfile.ci.jobs
 
 import com.directmyfile.ci.notify.Colors
 
-
 enum JobStatus {
     SUCCESS, FAILURE, NOT_STARTED, RUNNING, WAITING;
 

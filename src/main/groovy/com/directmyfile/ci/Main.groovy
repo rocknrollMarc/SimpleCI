@@ -1,24 +1,30 @@
 package com.directmyfile.ci
 
 import com.directmyfile.ci.core.CI
-import com.directmyfile.ci.exception.UnexpectedExceptionHandler
-import groovy.util.logging.Log4j
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
-import org.apache.log4j.PropertyConfigurator
+import com.directmyfile.ci.logging.Logger
+import org.apache.log4j.Level as Log4jLevel
+import org.apache.log4j.Logger as Log4j
 
-@Log4j('logger')
 class Main {
 
     /* Running states */
     private static def ciRunning = true
     private static def botRunning = false
 
+    private static logger = Logger.getLogger("Console")
+
     @SuppressWarnings("GroovyEmptyStatementBody")
     static void main(String[] args) throws Exception {
-        Utils.configureLogger(logger, "CORE")
 
-        Thread.setDefaultUncaughtExceptionHandler(new UnexpectedExceptionHandler())
+        /* Configure log4j to fix warnings */
+        Log4j.getRootLogger().setLevel(Log4jLevel.OFF)
+
+        Thread.defaultUncaughtExceptionHandler = [
+                uncaughtException: { Thread thread, Throwable e ->
+                    logger.error("An unexpected error occurred in SimpleCI", e)
+                }
+        ] as Thread.UncaughtExceptionHandler
+
         System.addShutdownHook {
             logger.info "Shutdown sequence initiated"
             ciRunning = false
@@ -28,11 +34,6 @@ class Main {
 
             logger.info "Shutdown sequence complete"
         }
-
-        Logger.getRootLogger().setLevel(Level.INFO)
-        def props = new Properties()
-        props.load(Utils.resource("logging.properties"))
-        PropertyConfigurator.configure(props)
 
         def ci = new CI()
         ci.start()
