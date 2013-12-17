@@ -70,10 +70,21 @@ final class NativeManager {
         nativesDir.deleteOnExit();
 
         String[] libs = {
-                "bot"
+            "bot"
         };
 
-        for (String lib : libs) {
+        String[] unrequired = {
+            "libphobos2.so.0.64"
+        };
+
+        for (String lib : libs)
+            extract(lib, true);
+        for (String lib : unrequired)
+            extract(lib, false);
+    }
+
+    private static void extract(String lib, boolean required) {
+        try {
             String libName = System.mapLibraryName(lib);
             InputStream is = NativeManager.class.getResourceAsStream("/natives/" + libName);
             OutputStream os = null;
@@ -91,7 +102,8 @@ final class NativeManager {
                 }
                 os.flush();
             } catch (IOException e) {
-                e.printStackTrace(System.err);
+                if (required)
+                    e.printStackTrace(System.err);
             } finally {
                 try {
                     if (os != null)
@@ -101,7 +113,9 @@ final class NativeManager {
                 } catch (IOException ignored) {
                 }
             }
-
+        } catch (Throwable t) {
+            if (required)
+                throw new RuntimeException(t);
         }
     }
 }
