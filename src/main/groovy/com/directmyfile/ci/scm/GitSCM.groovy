@@ -19,7 +19,7 @@ class GitSCM extends SCM {
     @Override
     void clone(Job job) {
 
-        def cmd = [findGit().absolutePath, "clone", "--recursive", job.getSCM().url, job.buildDir.absolutePath]
+        def cmd = [findGit().absolutePath, "clone", "--recursive", job.getSCM().getUrl(), job.buildDir.absolutePath]
 
         def proc = execute(job, cmd)
         def log = job.logFile.newPrintWriter()
@@ -112,12 +112,11 @@ class GitSCM extends SCM {
     }
 
     static boolean updateSubmodules(Job job) {
-        return execute(job, ["${findGit().absolutePath}", "submodule", "update", "--init", "--recursive"]).waitFor() == 0
+        return execute(job, [findGit().absolutePath, "submodule", "update", "--init", "--recursive"]).waitFor() == 0
     }
 
     private static Process execute(Job job, List<String> command) {
-        def builder = new ProcessBuilder()
-        builder.command(command)
+        def builder = new ProcessBuilder(command)
         builder.directory(job.buildDir)
         builder.redirectErrorStream(true)
         return builder.start()

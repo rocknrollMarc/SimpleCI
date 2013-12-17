@@ -39,7 +39,7 @@ class Logger {
     }
 
     void debug(String message) {
-        log(LogLevel.INFO, message)
+        log(LogLevel.DEBUG, message)
     }
 
     void error(String message) {
