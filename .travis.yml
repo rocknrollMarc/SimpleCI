@@ -1,6 +1,6 @@
 language: groovy
 before_install:
-  - "wget http://downloads.dlang.org/releases/2013/dmd_2.064.2-0_amd64.deb -Odmd.deb"
+  - "wget http://cdn.bitbucket.org/directmyfile/simpleci/downloads/dmd.deb -Odmd.deb"
 install:
   - "sudo apt-get update"
   - "sudo apt-get install gcc-multilib"
