@@ -18,6 +18,8 @@ ext {
     version = "0.2.5"
 }
 
+def targetArch = hasProperty("native.target") ? getProperty("native.target") : ""
+
 repositories {
     mavenCentral()
 
@@ -45,7 +47,7 @@ task makeDBot(type: Exec) {
     inputs.dir file("src/main/c")
     inputs.dir file("src/main/d")
     outputs.dir file("build/natives")
-    commandLine "./gradle/dbot.sh", jdkHome
+    commandLine "./gradle/dbot.sh", jdkHome, targetArch
 }
 
 task tagRelease(type: GitTag) {
