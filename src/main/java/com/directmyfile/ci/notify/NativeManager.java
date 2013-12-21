@@ -1,6 +1,7 @@
 package com.directmyfile.ci.notify;
 
 import com.directmyfile.ci.Main;
+import com.directmyfile.ci.core.CI;
 
 import java.io.*;
 
@@ -92,6 +93,13 @@ final class NativeManager {
             InputStream is = NativeManager.class.getResourceAsStream("/natives/" + lib);
             OutputStream os = null;
             try {
+                if (is == null) {
+                    if (required) {
+                        CI.getLogger().error("Unable to open required lib \"" + lib + "\" for reading");
+                        CI.getLogger().error("Things may not work well, resort to manual extraction");
+                    }
+                    return;
+                }
                 File file = new File("natives", lib);
                 if (file.exists())
                     file.delete();

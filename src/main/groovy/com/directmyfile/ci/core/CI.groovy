@@ -25,7 +25,8 @@ class CI {
     /**
      * Main CI Logger
      */
-    def logger = Logger.getLogger("CI")
+    static final Logger logger = Logger.getLogger("CI")
+
     /**
      * Configuration Root
      */
