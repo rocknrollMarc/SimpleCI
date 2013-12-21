@@ -37,6 +37,11 @@ class CI {
     int port = 0
 
     /**
+     * CI Server Web Host
+     */
+    String host = "0.0.0.0"
+
+    /**
      * Plugin Manager
      */
     def pluginManager = new PluginManager(this)

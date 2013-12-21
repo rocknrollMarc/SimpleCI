@@ -19,9 +19,9 @@ class WebServer {
         server = ci.vertxManager.vertx.createHttpServer()
     }
 
-    def start(int port) {
+    def start(int port, String ip) {
         server.requestHandler(configure(new RouteMatcher()).asClosure())
-        server.listen(port)
+        server.listen(port, ip)
     }
 
     private def configure(RouteMatcher matcher) {

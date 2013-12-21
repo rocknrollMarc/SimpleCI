@@ -15,7 +15,7 @@ buildscript {
 ext {
     groovyVersion = '2.2.1:indy'
     jdkHome = "${System.getProperty("java.home")}/../"
-    version = "0.2.2"
+    version = "0.2.5"
 }
 
 repositories {
@@ -107,5 +107,5 @@ jar {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "1.10-rc-2"
+    gradleVersion = "1.10"
 }

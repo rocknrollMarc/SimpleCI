@@ -7,12 +7,13 @@ logging = [
 ]
 
 web = [
+        host: "0.0.0.0",
         port: 8080
 ]
 
 sql = [
         host: "localhost",
-        port: "3306",
+        port: 3306,
         username: "root",
         password: "changeme",
         database: "ci"
