@@ -78,18 +78,21 @@ final class NativeManager {
         };
 
         for (String lib : libs)
-            extract(lib, true);
+            extractNative(lib, true);
         for (String lib : unrequired)
             extract(lib, false);
     }
 
+    private static void extractNative(String lib, boolean required) {
+        extract(System.mapLibraryName(lib), required);
+    }
+
     private static void extract(String lib, boolean required) {
         try {
-            String libName = System.mapLibraryName(lib);
-            InputStream is = NativeManager.class.getResourceAsStream("/natives/" + libName);
+            InputStream is = NativeManager.class.getResourceAsStream("/natives/" + lib);
             OutputStream os = null;
             try {
-                File file = new File("natives", libName);
+                File file = new File("natives", lib);
                 if (file.exists())
                     file.delete();
 
