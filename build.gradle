@@ -79,6 +79,9 @@ tasks.withType(CodeNarc) {
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs += ["src/main/java"]
 
+sourceCompatibility = 7
+targetCompatibility = 7
+
 jar {
     dependsOn 'makeDBot'
 
