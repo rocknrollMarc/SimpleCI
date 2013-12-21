@@ -20,7 +20,7 @@ class VertxManager {
 
     void setupWebServer() {
         this.webServer = new WebServer(ci)
-        webServer.start(ci.port)
+        webServer.start(ci.port, ci.host)
     }
 
     void stopWebServer() {

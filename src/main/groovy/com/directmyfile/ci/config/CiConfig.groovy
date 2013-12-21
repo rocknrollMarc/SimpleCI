@@ -15,10 +15,13 @@ class CiConfig extends GConfig {
     @Override
     void load() {
         super.load()
+
         def web = getProperty("web", [
+                host: "0.0.0.0",
                 port: 8080
         ])
 
+        ci.host = web['host'] as String
         ci.port = web['port'] as int
 
         ci.sql.setConfig(getProperty("sql", [
