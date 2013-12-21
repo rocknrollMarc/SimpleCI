@@ -12,12 +12,7 @@ BUILD_DIR="build/binaries/natives"
 C_SRC="src/main/c"
 D_SRC="src/main/d"
 
-if [ $2 == "" ]; then
-    build_type=$(uname -m)
-else
-    build_type=$2
-fi
-
+build_type=$(uname -m)
 if [ "$build_type" == "x86_64" ]; then
     build_type=64
 else
