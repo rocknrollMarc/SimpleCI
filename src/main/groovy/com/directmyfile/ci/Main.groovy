@@ -68,7 +68,7 @@ class Main {
                 }
             }
         })
-        thread.setDaemon(true)
+        thread.setDaemon(false)
         thread.start()
 
         // Must run on the main thread
