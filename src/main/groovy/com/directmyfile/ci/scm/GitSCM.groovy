@@ -68,9 +68,7 @@ class GitSCM extends SCM {
     Changelog changelog(Job job) {
         def changelog = new Changelog()
 
-        def dir = job.buildDir
-
-        def proc = execute(job, [findGit().absolutePath, "log", "-${gitConfig['logLimit'].toString()}".toString(), "--pretty='format:%H%n%an%n%s'"])
+        def proc = execute(job, [findGit().absolutePath, "log", "-${gitConfig['logLength'].toString()}".toString(), "--pretty=%H%n%an%n%s"])
 
         proc.waitFor()
 
