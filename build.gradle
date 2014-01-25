@@ -28,15 +28,15 @@ repositories {
 
 dependencies {
     compile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
-    compile('io.vertx:vertx-core:2.1M1') {
+    compile('io.vertx:vertx-core:2.1M3') {
         exclude group: "com.hazelcast", module: "hazelcast"
     }
     compile 'io.vertx:lang-groovy:2.0.0-final'
     compile 'org.mozilla:rhino:1.7R4'
-    compile 'mysql:mysql-connector-java:5.1.26'
+    compile 'mysql:mysql-connector-java:5.1.28'
     testCompile 'junit:junit:4.11'
 
-    codenarc 'org.codenarc:CodeNarc:0.19'
+    codenarc 'org.codenarc:CodeNarc:0.20'
 }
 
 check.dependsOn 'jar'
