@@ -62,6 +62,7 @@ class Job {
 
     def generateArtifactList() {
         def text = []
+        if (history.latestBuild == null) return "No builds yet."
         def number = history.latestBuild.number
         def artifactDir = new File(ci.artifactDir, "${name}/${number}")
         if (!artifactDir.exists()) {
