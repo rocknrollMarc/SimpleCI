@@ -14,12 +14,15 @@
         <li class="active"><a href="#">Home</a></li>
         <li><a href="/jobs">Jobs</a></li>
     </ul>
+    <ul class="nav navbar-nav pull-right" id="navigate-right">
+        <li><a href="/login">Login</a></li>
+    </ul>
 </nav>
 <div class="centered jumbotron">
     <div class="container">
         <br/>
 
-        <h1>SimpleCI</h1>
+        <img src="/img/logo.png" height="200">
     </div>
 </div>
 <table class="centered table table-bordered" border="1">

@@ -4,6 +4,7 @@ import com.directmyfile.ci.Utils
 import com.directmyfile.ci.core.CI
 import groovy.json.JsonBuilder
 import groovy.text.SimpleTemplateEngine
+import org.vertx.groovy.core.buffer.Buffer
 import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
 import org.vertx.groovy.core.http.RouteMatcher
@@ -35,6 +36,10 @@ class WebServer {
 
         matcher.get('/js/:file') { HttpServerRequest r ->
             writeResource(r, "js/${r.params['file']}")
+        }
+
+        matcher.get('/img/:file') { HttpServerRequest r ->
+            writeImage(r, "img/${r.params['file']}")
         }
 
         matcher.get('/job/:name') { HttpServerRequest r ->
@@ -135,6 +140,10 @@ class WebServer {
             r.response.end(out)
         }
 
+        matcher.get('/login') { HttpServerRequest r ->
+            writeTemplate(r, "login.grt")
+        }
+
         matcher.noMatch { HttpServerRequest r ->
             writeResource(r, "404.html")
         }
@@ -165,6 +174,16 @@ class WebServer {
         def out = new StringWriter()
         templateEngine.createTemplate(text).make(binding).writeTo(out)
         request.response.end(out.toString())
+    }
+
+    private void writeImage(HttpServerRequest request, String path) {
+        request.response.putHeader("content-type", "image/*")
+
+        InputStream input = Utils.resource("simpleci/${path}")
+
+        byte[] fileContent = input.getBytes()
+
+        request.response.end(new Buffer().appendBytes(fileContent))
     }
 
     private def getStream(String path) {

@@ -13,6 +13,9 @@
         <li><a href="/">Home</a></li>
         <li class="active"><a href="/jobs">Jobs</a></li>
     </ul>
+    <ul class="nav navbar-nav pull-right" id="navigate-right">
+        <li><a href="/login">Login</a></li>
+    </ul>
 </nav>
 <br/>
 <br/>
