@@ -1,7 +1,7 @@
 package com.directmyfile.ci.utils.db
 
-import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.core.CI
+import com.directmyfile.ci.utils.Utils
 import groovy.sql.Sql
 
 class SqlHelper {

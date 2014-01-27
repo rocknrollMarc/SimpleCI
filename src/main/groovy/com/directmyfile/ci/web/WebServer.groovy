@@ -1,7 +1,7 @@
 package com.directmyfile.ci.web
 
-import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.core.CI
+import com.directmyfile.ci.utils.Utils
 import groovy.json.JsonBuilder
 import groovy.text.SimpleTemplateEngine
 import org.vertx.groovy.core.buffer.Buffer

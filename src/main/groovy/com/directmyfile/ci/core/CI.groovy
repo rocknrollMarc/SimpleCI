@@ -4,16 +4,16 @@ import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
 import com.directmyfile.ci.exception.CIException
-import com.directmyfile.ci.utils.db.SqlHelper
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
-import com.directmyfile.ci.utils.logging.LogLevel
-import com.directmyfile.ci.utils.logging.Logger
 import com.directmyfile.ci.notify.IRCBot
 import com.directmyfile.ci.scm.GitSCM
 import com.directmyfile.ci.tasks.CommandTask
 import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
+import com.directmyfile.ci.utils.db.SqlHelper
+import com.directmyfile.ci.utils.logging.LogLevel
+import com.directmyfile.ci.utils.logging.Logger
 import com.directmyfile.ci.web.VertxManager
 
 import java.util.concurrent.LinkedBlockingQueue

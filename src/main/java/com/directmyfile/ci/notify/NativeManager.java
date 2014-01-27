@@ -1,7 +1,7 @@
 package com.directmyfile.ci.notify;
 
-import com.directmyfile.ci.core.Main;
 import com.directmyfile.ci.core.CI;
+import com.directmyfile.ci.core.Main;
 
 import java.io.*;
 

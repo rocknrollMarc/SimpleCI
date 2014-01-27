@@ -1,10 +1,10 @@
 package com.directmyfile.ci.scm
 
-import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.exception.ToolException
 import com.directmyfile.ci.jobs.Job
+import com.directmyfile.ci.utils.Utils
 
 class GitSCM extends SCM {
 

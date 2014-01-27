@@ -1,11 +1,11 @@
 package com.directmyfile.ci.tasks
 
-import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.exception.JobConfigurationException
 import com.directmyfile.ci.exception.ToolException
 import com.directmyfile.ci.jobs.Job
+import com.directmyfile.ci.utils.Utils
 
 class GradleTask extends Task {
     @Override
