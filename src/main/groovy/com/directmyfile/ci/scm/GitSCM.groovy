@@ -18,10 +18,10 @@ class GitSCM extends SCM {
 
     @Override
     void clone(Job job) {
-
         def cmd = [findGit().absolutePath, "clone", "--recursive", job.getSCM().getUrl(), job.buildDir.absolutePath]
 
         def proc = execute(job, cmd)
+        job.logFile.mkdirs()
         def log = job.logFile.newPrintWriter()
         proc.inputStream.eachLine {
             log.println(it)
