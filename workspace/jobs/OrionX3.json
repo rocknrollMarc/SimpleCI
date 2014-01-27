@@ -1,0 +1,17 @@
+{
+    "name": "OrionX3",
+    "scm": {
+        "type": "git",
+        "url": "https://bitbucket.org/requimrar/orion-x3.git"
+    },
+    "tasks": [
+        {
+            "type": "make",
+            "targets": [
+                "all"
+            ]
+        }
+    ],
+    "artifacts": [
+    ]
+}

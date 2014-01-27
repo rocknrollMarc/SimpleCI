@@ -1,0 +1,19 @@
+{
+    "name": "GEBus",
+    "scm": {
+        "type": "git",
+        "url": "git://github.com/DirectMyFile/GEBus.git"
+    },
+    "tasks": [
+        {
+            "type": "gradle",
+            "tasks": [
+                 "jar"
+            ]
+        }
+    ],
+    "artifacts": [
+        "build/libs/GEBus.jar"
+    ]
+}
+

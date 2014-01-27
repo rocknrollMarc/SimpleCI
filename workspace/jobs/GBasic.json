@@ -1,0 +1,19 @@
+{
+    "name": "GBasic",
+    "scm": {
+        "type": "git",
+        "url": "git://github.com/DirectMyFile/GBasic.git"
+    },
+    "tasks": [
+        {
+            "type": "gradle",
+            "tasks": [
+                 "jar"
+            ]
+        }
+    ],
+    "artifacts": [
+        "build/libs/GBasic.jar"
+    ]
+}
+

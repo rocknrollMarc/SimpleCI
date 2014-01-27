@@ -1,0 +1,19 @@
+{
+    "name": "GroovyWebHost",
+    "scm": {
+        "type": "git",
+        "url": "git://github.com/DirectMyFile/GroovyWebHost.git"
+    },
+    "tasks": [
+        {
+            "type": "gradle",
+            "tasks": [
+                "build"
+            ]
+        }
+    ],
+    "artifacts": [
+        "build/libs/GroovyWebHost.jar"
+    ]
+}
+

@@ -1,0 +1,20 @@
+{
+    "name": "Minetweak",
+    "scm": {
+        "type": "git",
+        "url": "git://github.com/Minetweak/Minetweak.git"
+    },
+    "tasks": [
+        {
+            "type": "gradle",
+            "tasks": [
+                "ciBuild"
+            ]
+        }
+    ],
+    "artifacts": [
+        "build/libs/Minetweak.jar",
+        "build/libs/Minetweak-javadoc.jar",
+        "build/libs/Minetweak-standalone.jar"
+    ]
+}

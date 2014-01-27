@@ -1,0 +1,12 @@
+:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.6
+1 warning
+
+:compileGroovy
+:processResources UP-TO-DATE
+:classes
+:jar
+
+BUILD SUCCESSFUL
+
+Total time: 18.521 secs
+Process Exited with Status 0

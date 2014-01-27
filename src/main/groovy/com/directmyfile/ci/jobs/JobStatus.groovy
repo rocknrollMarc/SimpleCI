@@ -31,10 +31,19 @@ enum JobStatus {
         }
     }
 
-    static JobStatus parse(int id) {
-        if (id < 0 || id >= values().size()) {
-            return NOT_STARTED
+    String cssContextClass() {
+        switch(this) {
+            case SUCCESS:
+                return "success"
+            case FAILURE:
+                return "danger"
+            default: return ""
         }
+    }
+
+    static JobStatus parse(int id) {
+        if (id < 0 || id >= values().size())
+            return NOT_STARTED
         return values()[id]
     }
 }

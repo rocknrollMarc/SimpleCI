@@ -1,5 +1,6 @@
 package com.directmyfile.ci.utils
 
+import com.google.gson.GsonBuilder
 import groovy.transform.Memoized
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
@@ -8,6 +9,9 @@ import java.security.MessageDigest
 import java.security.SecureRandom
 
 class Utils {
+
+    static def gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create()
+
     static Process execute(List<String> command) {
         def builder = new ProcessBuilder()
         builder.command(command)
@@ -98,5 +102,13 @@ class Utils {
 
     static String toString(byte[] input) {
         return new BigInteger(1, input).toString(16).padLeft(40, '0')
+    }
+
+    static def encodeJSON(Object object) {
+        return gson.toJson(object)
+    }
+
+    static def parseJSON(String text, Class<?> type) {
+        return gson.fromJson(text, type)
     }
 }

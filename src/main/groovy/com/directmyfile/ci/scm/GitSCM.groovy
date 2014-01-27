@@ -68,6 +68,9 @@ class GitSCM extends SCM {
     Changelog changelog(Job job) {
         def changelog = new Changelog()
 
+        if (!exists(job))
+            clone(job)
+
         def proc = execute(job, [findGit().absolutePath, "log", "-${gitConfig['logLength'].toString()}".toString(), "--pretty=%H%n%an%n%s"])
 
         proc.waitFor()
@@ -92,6 +95,10 @@ class GitSCM extends SCM {
                     current = changelog.newEntry()
                     break
             }
+        }
+
+        changelog.entries.removeAll { entry ->
+            !entry.message || !entry.revision || !entry.author
         }
 
         return changelog

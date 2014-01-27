@@ -42,15 +42,17 @@ class WebServer {
             writeImage(r, "img/${r.params['file']}")
         }
 
-        matcher.get('/job/:name') { HttpServerRequest r ->
-            writeTemplate(r, "job.grt", [
-                    jobName: r.params['name'],
-                    job: ci.jobs.get(r.params['name'])
-            ])
+        matcher.get('/fonts/:file') { HttpServerRequest r ->
+            writeImage(r, "fonts/${r.params['file']}")
         }
 
-        matcher.get('/log/:job') { HttpServerRequest request ->
+        matcher.get('/job/:name') { HttpServerRequest r ->
+            writeResource(r, "job.html")
+        }
+
+        matcher.get('/api/log/:job') { HttpServerRequest request ->
             def jobName = request.params['job'] as String
+
             if (!ci.jobs.containsKey(jobName)) {
                 writeResource(request, "404.html"); return
             }
@@ -70,7 +72,7 @@ class WebServer {
 
             if (!ci.jobs.containsKey(jobName)) {
                 it.response.end(new JsonBuilder([
-                        error: "Job does not exist!"
+                    error: "Job does not exist!"
                 ]).toPrettyString())
             }
 
@@ -102,8 +104,21 @@ class WebServer {
             request.response.sendFile(artifactFile.absolutePath)
         }
 
-        matcher.get('/jobs') { HttpServerRequest it ->
-            writeTemplate(it, "jobs.grt")
+        matcher.get('/jobs') { HttpServerRequest r ->
+            writeResource(r, "jobs.html")
+        }
+
+        matcher.get('/api/jobs') { HttpServerRequest r ->
+            def jobInfo = []
+
+            ci.jobs.values().each { job ->
+                jobInfo += [
+                        name: job.name,
+                        status: job.status.ordinal()
+                ]
+            }
+
+            r.response.end(Utils.encodeJSON(jobInfo) as String)
         }
 
         matcher.post('/github/:name') {
@@ -119,7 +134,7 @@ class WebServer {
             ci.runJob(job)
         }
 
-        matcher.get('/changes/:name') { HttpServerRequest r ->
+        matcher.get('/api/changes/:name') { HttpServerRequest r ->
             def jobName = r.params['name'] as String
 
             if (!ci.jobs.containsKey(jobName)) {
@@ -131,13 +146,7 @@ class WebServer {
 
             def changelog = job.changelog.entries
 
-            def out = ""
-
-            for (entry in changelog) {
-                out = "${out}${entry.revision}: ${entry.message}\n"
-            }
-
-            r.response.end(out)
+            r.response.end(Utils.encodeJSON(changelog))
         }
 
         matcher.get('/login') { HttpServerRequest r ->
