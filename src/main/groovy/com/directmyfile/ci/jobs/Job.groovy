@@ -45,7 +45,7 @@ class Job {
     }
 
     def getBuildDir() {
-        return new File(ci.configRoot, "build/${name}")
+        return new File(ci.configRoot, "workspace/${name}")
     }
 
     def getSCM() {

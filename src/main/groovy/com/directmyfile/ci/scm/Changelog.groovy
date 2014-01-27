@@ -1,5 +1,7 @@
 package com.directmyfile.ci.scm
 
+import com.google.gson.annotations.Expose
+
 class Changelog {
     List<Entry> entries = []
 
@@ -9,19 +11,12 @@ class Changelog {
         return entry
     }
 
-    String generateHTML() {
-        def out = ""
-
-        for (entry in entries) {
-            out += "<br/>${entry.author}: ${entry.message}"
-        }
-
-        return out
-    }
-
     static class Entry {
+        @Expose
         String revision
+        @Expose
         String message
+        @Expose
         String author
     }
 }

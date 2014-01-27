@@ -1,4 +1,4 @@
-var jobList = $("#jobList");
+var jobName = window.location.pathname.replace("/job/", "");
 
 var parseStatus = function(id) {
     switch (id) {
@@ -17,9 +17,10 @@ var getStatusClass = function(id) {
     }
 };
 
-$.getJSON("/api/jobs", function(jobs) {
-    jobs.forEach(function(job) {
-        jobList.append('<tr id="job-' + job.name + '"><td>' + '<a href="' + "/job/" + job.name + '">' + job.name + '</a></td></tr>');
-        $("#job-" + job.name).append("<td>" + parseStatus(job.status) + "</td>").addClass(getStatusClass(job.status));
+$.getJSON("/api/changes/" + jobName, function(changes) {
+    changes.forEach(function(change) {
+        var rev = change["revision"];
+        var msg = change["message"];
+        var author = change["author"];
     });
 });

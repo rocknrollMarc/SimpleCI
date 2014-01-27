@@ -1,10 +1,14 @@
 package com.directmyfile.ci
 
+import com.google.gson.GsonBuilder
 import groovy.transform.Memoized
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 
 class Utils {
+
+    static def gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create()
+
     static Process execute(List<String> command) {
         def builder = new ProcessBuilder()
         builder.command(command)
@@ -78,5 +82,13 @@ class Utils {
 
     static def newProperties() {
         return new Properties()
+    }
+
+    static def encodeJSON(Object object) {
+        return gson.toJson(object)
+    }
+
+    static def parseJSON(String text, Class<?> type) {
+        return gson.fromJson(text, type)
     }
 }

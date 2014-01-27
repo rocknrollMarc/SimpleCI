@@ -15,7 +15,7 @@ buildscript {
 ext {
     groovyVersion = '2.2.1:indy'
     jdkHome = "${System.getProperty("java.home")}/../"
-    version = "0.2.5"
+    version = "0.2.7"
 }
 
 repositories {
@@ -33,6 +33,7 @@ dependencies {
     }
     compile 'io.vertx:lang-groovy:2.0.0-final'
     compile 'org.mozilla:rhino:1.7R4'
+    compile 'com.google.code.gson:gson:2.2.4'
     compile 'mysql:mysql-connector-java:5.1.28'
     testCompile 'junit:junit:4.11'
 
