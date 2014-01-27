@@ -9,7 +9,7 @@ import org.vertx.groovy.core.eventbus.EventBus
  */
 class VertxManager {
 
-    def vertx = newVertx()
+    def vertx = Vertx.newVertx()
     CI ci
 
     WebServer webServer
@@ -31,7 +31,4 @@ class VertxManager {
         return vertx.eventBus
     }
 
-    static Vertx newVertx() {
-        return Vertx.newVertx()
-    }
 }
