@@ -1,6 +1,6 @@
 package com.directmyfile.ci.test
 
-import com.directmyfile.ci.Utils
+import com.directmyfile.ci.utils.Utils
 import org.junit.Test
 
 class UtilsTest extends GroovyTestCase {

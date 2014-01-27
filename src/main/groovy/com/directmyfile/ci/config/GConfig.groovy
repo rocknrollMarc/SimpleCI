@@ -1,6 +1,6 @@
 package com.directmyfile.ci.config
 
-import com.directmyfile.ci.Utils
+import com.directmyfile.ci.utils.Utils
 
 class GConfig {
     private File configFile

@@ -1,4 +1,4 @@
-package com.directmyfile.ci.helper
+package com.directmyfile.ci.utils
 
 import java.util.concurrent.TimeUnit
 

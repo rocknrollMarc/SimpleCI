@@ -86,7 +86,7 @@ jar {
     dependsOn 'makeDBot'
 
     manifest {
-        attributes('Main-class': 'com.directmyfile.ci.Main')
+        attributes('Main-class': 'com.directmyfile.ci.core.Main')
     }
 
     // Pack Dependencies

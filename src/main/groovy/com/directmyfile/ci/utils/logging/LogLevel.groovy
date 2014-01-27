@@ -1,4 +1,4 @@
-package com.directmyfile.ci.logging
+package com.directmyfile.ci.utils.logging
 
 enum LogLevel {
     ERROR, INFO, DEBUG, DISABLED;

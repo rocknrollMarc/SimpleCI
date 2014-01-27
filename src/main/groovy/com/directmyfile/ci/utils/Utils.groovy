@@ -1,8 +1,11 @@
-package com.directmyfile.ci
+package com.directmyfile.ci.utils
 
 import groovy.transform.Memoized
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
+
+import java.security.MessageDigest
+import java.security.SecureRandom
 
 class Utils {
     static Process execute(List<String> command) {
@@ -78,5 +81,22 @@ class Utils {
 
     static def newProperties() {
         return new Properties()
+    }
+
+    static byte[] generateSalt(int size) {
+        SecureRandom random = new SecureRandom()
+        byte[] list = new byte[size]
+        random.nextBytes(list)
+        return list
+    }
+
+    static String generateHash(byte[] input) {
+        def messageDigest = MessageDigest.getInstance("SHA-256")
+        messageDigest.update(input)
+        return new BigInteger(1, messageDigest.digest()).toString(16).padLeft(40, '0')
+    }
+
+    static String toString(byte[] input) {
+        return new BigInteger(1, input).toString(16).padLeft(40, '0')
     }
 }

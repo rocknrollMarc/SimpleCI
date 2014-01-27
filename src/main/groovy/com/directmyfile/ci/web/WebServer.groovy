@@ -1,6 +1,6 @@
 package com.directmyfile.ci.web
 
-import com.directmyfile.ci.Utils
+import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.core.CI
 import groovy.json.JsonBuilder
 import groovy.text.SimpleTemplateEngine

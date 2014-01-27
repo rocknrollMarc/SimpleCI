@@ -4,11 +4,11 @@ import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
 import com.directmyfile.ci.exception.CIException
-import com.directmyfile.ci.helper.SqlHelper
+import com.directmyfile.ci.utils.db.SqlHelper
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
-import com.directmyfile.ci.logging.LogLevel
-import com.directmyfile.ci.logging.Logger
+import com.directmyfile.ci.utils.logging.LogLevel
+import com.directmyfile.ci.utils.logging.Logger
 import com.directmyfile.ci.notify.IRCBot
 import com.directmyfile.ci.scm.GitSCM
 import com.directmyfile.ci.tasks.CommandTask
@@ -206,7 +206,7 @@ class CI {
 
             eventBus.dispatch(name: "ci/job-running", jobName: job.name, lastStatus: lastStatus, number: number)
 
-            def timer = new com.directmyfile.ci.helper.Timer()
+            def timer = new com.directmyfile.ci.utils.Timer()
 
             timer.start()
 
