@@ -15,3 +15,8 @@
 /*.xml
 /work
 config.groovy
+/natives/
+/jobs/
+/artifacts/
+/logs/
+/plugins/
