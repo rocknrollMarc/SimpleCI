@@ -27,7 +27,7 @@ class WebServer {
 
     private def configure(RouteMatcher matcher) {
         matcher.get('/') { HttpServerRequest r ->
-            writeTemplate(r, "index.grt")
+            writeResource(r, "index.html")
         }
 
         matcher.get('/css/:file') { HttpServerRequest r ->
@@ -150,7 +150,7 @@ class WebServer {
         }
 
         matcher.get('/login') { HttpServerRequest r ->
-            writeTemplate(r, "login.grt")
+            writeResource(r, "login.html")
         }
 
         matcher.noMatch { HttpServerRequest r ->
@@ -169,30 +169,17 @@ class WebServer {
         r.response.end(stream.text)
     }
 
-    private void writeTemplate(HttpServerRequest request, String path, Map binding) {
-        binding.put("ci", ci)
-        binding.put("request", request)
-        def stream = getStream(path)
-
-        if (stream == null) {
-            writeResource(request, "404.html")
-        }
-
-        def text = stream.text
-
-        def out = new StringWriter()
-        templateEngine.createTemplate(text).make(binding).writeTo(out)
-        request.response.end(out.toString())
-    }
-
     private void writeImage(HttpServerRequest request, String path) {
         request.response.putHeader("content-type", "image/*")
 
-        InputStream input = Utils.resource("simpleci/${path}")
+        def stream = getStream(path)
 
-        byte[] fileContent = input.getBytes()
-
-        request.response.end(new Buffer().appendBytes(fileContent))
+        if (stream == null) {
+            request.response.statusCode = 404
+            writeResource(request, "404.html")
+        } else {
+            request.response.end(new Buffer().appendBytes(stream.bytes))
+        }
     }
 
     private def getStream(String path) {
@@ -206,9 +193,5 @@ class WebServer {
             stream = file.newInputStream()
         }
         return stream
-    }
-
-    private void writeTemplate(HttpServerRequest request, String path) {
-        writeTemplate(request, path, [:])
     }
 }

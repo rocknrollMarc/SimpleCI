@@ -1,5 +1,8 @@
 var jobName = window.location.pathname.replace("/job/", "");
 
+document.title = jobName + " - SimpleCI";
+$(".job-name").html(jobName);
+
 var parseStatus = function(id) {
     switch (id) {
         case 0: return "Success";
@@ -18,9 +21,12 @@ var getStatusClass = function(id) {
 };
 
 $.getJSON("/api/changes/" + jobName, function(changes) {
+    var $changes = $("#changes");
+
     changes.forEach(function(change) {
         var rev = change["revision"];
         var msg = change["message"];
         var author = change["author"];
+        $changes.append("<p>" + msg+ "</p>");
     });
 });

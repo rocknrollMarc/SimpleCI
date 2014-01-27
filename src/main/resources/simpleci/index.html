@@ -8,12 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body class="matchStrap">
+<body class="container">
 
 <nav class="navbar navbar-masthead navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header"><a class="navbar-brand" href="#">SimpleCI</a></div>
     <ul class="nav navbar-nav" id="navigate">
-        <li class="active"><a href="#">Home</a></li>
+        <li class="active"><a href="/"><span class="glyphicon glyphicon-home"></span> Home</a></li>
         <li><a href="/jobs">Jobs</a></li>
     </ul>
     <ul class="nav navbar-nav pull-right" id="navigate-right">
@@ -27,16 +27,22 @@
         <img src="/img/logo.png" height="200">
     </div>
 </div>
-<table class="centered table table-bordered job-table" border="1">
-    <%
-    import com.directmyfile.ci.jobs.Job
 
-    ci.jobs.values().each { job ->
-        println("<tr class=" + job.status.cssContextClass() + "><td><a href=\"job/${job.name}\">${job.name}</a></td></tr>")
-    }
-    %>
+<table class="table table-bordered" border="1">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+
+    <tbody id="jobList">
+
+    </tbody>
 </table>
 
+<script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/jobs.js"></script>
 </body>
 </html>

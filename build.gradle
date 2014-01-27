@@ -65,7 +65,6 @@ githubPages {
       into 'docs/groovydoc'
     }
   }
-  workingPath = 'build/somewhere/else'
 }
 
 tasks.withType(GroovyCompile) {
