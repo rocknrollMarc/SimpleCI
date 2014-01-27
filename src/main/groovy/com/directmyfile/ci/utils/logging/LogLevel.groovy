@@ -1,7 +1,7 @@
 package com.directmyfile.ci.utils.logging
 
 enum LogLevel {
-    ERROR, INFO, DEBUG, DISABLED;
+    ERROR, INFO, WARNING, DEBUG, DISABLED;
 
     static LogLevel parse(String name) {
         if (!(values()*.name().contains(name))) {

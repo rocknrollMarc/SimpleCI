@@ -38,6 +38,10 @@ class Logger {
         log(LogLevel.INFO, message)
     }
 
+    void warning(String message) {
+        log(LogLevel.WARNING, message)
+    }
+
     void debug(String message) {
         log(LogLevel.DEBUG, message)
     }
