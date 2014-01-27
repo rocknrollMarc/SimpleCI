@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 class Logger {
     private static final Map<String, Logger> loggers = [:]
-    private static final dateFormat = new SimpleDateFormat("yyyy-MM-dd H:m:s")
+    private static final dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     private String name
     def level = LogLevel.DEBUG
