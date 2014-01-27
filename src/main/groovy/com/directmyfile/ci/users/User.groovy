@@ -2,9 +2,6 @@ package com.directmyfile.ci.users
 
 import com.directmyfile.ci.core.CI
 
-import java.security.MessageDigest
-import java.security.SecureRandom
-
 class User {
 
     CI ci
