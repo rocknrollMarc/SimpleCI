@@ -1,9 +1,7 @@
 package com.directmyfile.ci.web
-
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.utils.Utils
 import groovy.json.JsonBuilder
-import groovy.text.SimpleTemplateEngine
 import org.vertx.groovy.core.buffer.Buffer
 import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
@@ -12,8 +10,6 @@ import org.vertx.groovy.core.http.RouteMatcher
 class WebServer {
     HttpServer server
     CI ci
-
-    def templateEngine = new SimpleTemplateEngine()
 
     WebServer(CI ci) {
         this.ci = ci
