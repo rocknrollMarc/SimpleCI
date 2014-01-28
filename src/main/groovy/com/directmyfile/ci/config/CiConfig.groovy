@@ -42,6 +42,12 @@ class CiConfig extends GConfig {
     Map loggingSection() {
         return getProperty("logging", [
                 level: "INFO"
-        ])
+        ]) as Map
+    }
+
+    Map securitySection() {
+        return getProperty("security", [
+                enabled: false
+        ]) as Map
     }
 }

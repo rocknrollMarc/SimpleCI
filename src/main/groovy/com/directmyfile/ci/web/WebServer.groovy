@@ -1,4 +1,5 @@
 package com.directmyfile.ci.web
+
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.utils.Utils
 import groovy.json.JsonBuilder
@@ -148,6 +149,24 @@ class WebServer {
         matcher.get('/login') { HttpServerRequest r ->
             writeResource(r, "login.html")
         }
+
+        /*matcher.post("/login") { HttpServerRequest request ->
+            request.expectMultiPart = true
+            request.endHandler { end ->
+                println request
+                def user = request.formAttributes.get("username")
+                def pass = request.formAttributes.get("password")
+                if (!user || !pass) {
+                    request.response.statusCode = 400
+                    request.response.end(Utils.encodeJSON([
+                            error: "Invalid Request",
+                            info: [
+                                    "Both Username and Password is required."
+                            ]
+                    ]))
+                }
+            }
+        }*/
 
         matcher.noMatch { HttpServerRequest r ->
             writeResource(r, "404.html")

@@ -8,6 +8,7 @@ import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
 import com.directmyfile.ci.notify.IRCBot
 import com.directmyfile.ci.scm.GitSCM
+import com.directmyfile.ci.security.CISecurity
 import com.directmyfile.ci.tasks.CommandTask
 import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
@@ -61,6 +62,11 @@ class CI {
      * CI IRC Bot
      */
     def ircBot = new IRCBot()
+
+    /**
+     * CI Security
+     */
+    def security = new CISecurity(this)
 
     /**
      * CI Task Types

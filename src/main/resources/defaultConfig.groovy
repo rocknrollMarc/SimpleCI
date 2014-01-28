@@ -35,3 +35,7 @@ irc = [
 git = [
         logLength: 4
 ]
+
+security = [
+        enabled: false
+]

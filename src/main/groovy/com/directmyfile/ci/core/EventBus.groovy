@@ -4,7 +4,7 @@ package com.directmyfile.ci.core
  * The Groovy Event Bus.
  */
 class EventBus {
-    private Map<String, List<Closure>> handlers = [:]
+    private Map<String, List<Closure<?>>> handlers = [:]
 
     /**
      * Hook into an Event
@@ -51,7 +51,7 @@ class EventBus {
      * Get all Handlers
      * @return Handlers
      */
-    Map<String, List<Closure>> handlers() {
+    Map<String, List<Closure<?>>> handlers() {
         return handlers
     }
 
@@ -60,7 +60,7 @@ class EventBus {
      * @param name Event Name
      * @return Handlers
      */
-    List<Closure> handlers(String name) {
+    List<Closure<?>> handlers(String name) {
         return handlers().get(name)
     }
 }
