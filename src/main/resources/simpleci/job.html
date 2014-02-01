@@ -22,10 +22,20 @@
 <h1 class="page-header job-name"></h1>
 
 <ul class="nav nav-tabs nav-tabs-google" id="info-tabs">
-    <li class="active"><a href="#">History</a></li>
-    <li><a href="#">Changes</a></li>
-    <li><a href="#">Artifacts</a></li>
+    <li data-target="history" class="active"><a href="#">History</a></li>
+    <li data-target="changes"><a href="#">Changes</a></li>
+    <li data-target="artifacts"><a href="#">Artifacts</a></li>
 </ul>
+
+<div id="content">
+    <div id="history"></div>
+    <div style="display: none;" id="changes">
+        <div id="changelog" class="list-group">
+
+        </div>
+    </div>
+    <div style="display: none;" id="artifacts"></div>
+</div>
 
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>

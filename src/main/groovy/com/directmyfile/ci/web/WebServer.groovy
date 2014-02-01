@@ -8,6 +8,8 @@ import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
 import org.vertx.groovy.core.http.RouteMatcher
 
+import java.sql.Timestamp
+
 class WebServer {
     HttpServer server
     CI ci
@@ -144,6 +146,39 @@ class WebServer {
             def changelog = job.changelog.entries
 
             r.response.end(Utils.encodeJSON(changelog))
+        }
+
+        matcher.get('/api/history/:name') { HttpServerRequest r ->
+            def jobName = r.params['name'] as String
+
+            if (!ci.jobs.containsKey(jobName)) {
+                writeResource(r, "404.html")
+                return
+            }
+
+            def job = ci.jobs[jobName]
+
+            def history = job.history
+
+            def out = [:]
+
+            out["length"] = history.entries.size()
+
+            def histories = new ArrayList<Map<String, Object>>(history.latestBuild.number)
+
+            history.entries.each { entry ->
+                histories.add([
+                        id: entry.id,
+                        number: entry.number,
+                        status: entry.status,
+                        log: entry.log,
+                        timestamp: (entry.logTime as Timestamp)
+                ])
+            }
+
+            out["history"] = histories
+
+            r.response.end(Utils.encodeJSON(out))
         }
 
         matcher.get('/login') { HttpServerRequest r ->
