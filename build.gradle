@@ -32,7 +32,6 @@ dependencies {
         exclude group: "com.hazelcast", module: "hazelcast"
     }
     compile 'io.vertx:lang-groovy:2.0.0-final'
-    compile 'org.mozilla:rhino:1.7R4'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'mysql:mysql-connector-java:5.1.28'
     testCompile 'junit:junit:4.11'
@@ -79,8 +78,8 @@ tasks.withType(CodeNarc) {
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs += ["src/main/java"]
 
-sourceCompatibility = 7
-targetCompatibility = 7
+sourceCompatibility = 8
+targetCompatibility = 8
 
 jar {
     dependsOn 'makeDBot'

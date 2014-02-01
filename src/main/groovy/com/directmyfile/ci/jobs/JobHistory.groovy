@@ -1,6 +1,7 @@
 package com.directmyfile.ci.jobs
 
 import groovy.sql.GroovyRowResult
+import groovy.transform.ToString
 
 import java.sql.Timestamp
 
@@ -31,17 +32,15 @@ class JobHistory {
     }
 
     def getLatestBuild() {
-        return entries.isEmpty() ? null : entries.last()
+        entries.isEmpty() ? null : entries.last()
     }
 
-    def toHTML() {
-        def html = ""
-        entries.each {
-            html += "<br/>${it.number}"
-        }
-        return html
+    @Override
+    String toString() {
+        entries.join("\n")
     }
 
+    @ToString
     static class Entry {
         int id, jobID, status, number
         String log

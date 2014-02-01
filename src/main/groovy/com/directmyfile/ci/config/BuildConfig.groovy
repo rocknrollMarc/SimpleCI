@@ -12,9 +12,8 @@ class BuildConfig {
 
         this.file = file
 
-        if (!file.exists()) {
+        if (!file.exists())
             throw new JobConfigurationException("No Such Job Configuration File: ${file.absolutePath}")
-        }
 
         this.json = new JsonSlurper().parse(file.newReader())
     }

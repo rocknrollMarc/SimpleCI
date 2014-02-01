@@ -7,6 +7,7 @@ import com.directmyfile.ci.exception.CIException
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
 import com.directmyfile.ci.notify.IRCBot
+import com.directmyfile.ci.plugins.PluginManager
 import com.directmyfile.ci.scm.GitSCM
 import com.directmyfile.ci.security.CISecurity
 import com.directmyfile.ci.tasks.CommandTask
