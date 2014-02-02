@@ -8,7 +8,7 @@ class BuildConfig {
     private def json
     File file
 
-    BuildConfig (File file) {
+    BuildConfig(File file) {
 
         this.file = file
 
@@ -19,23 +19,23 @@ class BuildConfig {
         this.json = new JsonSlurper().parse(file.newReader())
     }
 
-    String getName () {
+    String getName() {
         return json['name']
     }
 
-    Object[] getTasks () {
+    Object[] getTasks() {
         return json['tasks']
     }
 
-    def getSCM () {
+    def getSCM() {
         return json['scm']
     }
 
-    def getArtifacts () {
+    def getArtifacts() {
         return json['artifacts'] as List<String>
     }
 
-    def getNotify () {
+    def getNotify() {
         return json['notify'] ?: [:]
     }
 }

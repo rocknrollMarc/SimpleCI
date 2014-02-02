@@ -82,5 +82,5 @@ public final class Colors {
      */
     public static final String LIGHT_GRAY = "\u000315";
 
-    private Colors () {}
+    private Colors() {}
 }

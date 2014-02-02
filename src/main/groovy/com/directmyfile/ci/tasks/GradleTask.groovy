@@ -9,7 +9,7 @@ import com.directmyfile.ci.utils.Utils
 
 class GradleTask extends Task {
     @Override
-    boolean execute (Object params) {
+    boolean execute(Object params) {
         def config = params as Map
 
         def ci = config['ci'] as CI

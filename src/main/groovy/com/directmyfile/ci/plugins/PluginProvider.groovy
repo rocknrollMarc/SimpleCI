@@ -8,5 +8,5 @@ import com.directmyfile.ci.core.CI
 abstract class PluginProvider {
     CI ci
 
-    abstract void loadPlugins ();
+    abstract void loadPlugins();
 }

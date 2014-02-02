@@ -7,15 +7,15 @@ class GConfig {
     private Binding config
     private String defaultConfig
 
-    GConfig (File configFile) {
+    GConfig(File configFile) {
         this.configFile = configFile
     }
 
-    void setDefaultConfig (String defaultConfig) {
+    void setDefaultConfig(String defaultConfig) {
         this.defaultConfig = defaultConfig
     }
 
-    void load () {
+    void load() {
         if (!configFile.exists()) {
             configFile.write(defaultConfig)
         }
@@ -27,14 +27,14 @@ class GConfig {
     }
 
     @Override
-    Object getProperty (String key) {
+    Object getProperty(String key) {
         if (metaClass.hasProperty(key)) {
             return metaClass.getMetaProperty(key).getProperty(this)
         }
         return config.getVariable(key)
     }
 
-    Object getProperty (String key, Object defaultValue) {
+    Object getProperty(String key, Object defaultValue) {
         if (!hasProperty(key)) {
             return defaultValue
         } else {
@@ -43,12 +43,12 @@ class GConfig {
     }
 
     @Override
-    void setProperty (String key, Object value) {
+    void setProperty(String key, Object value) {
         this.config.setVariable(key, value)
     }
 
     @Override
-    boolean hasProperty (String key) {
+    boolean hasProperty(String key) {
         return config.hasVariable(key)
     }
 }

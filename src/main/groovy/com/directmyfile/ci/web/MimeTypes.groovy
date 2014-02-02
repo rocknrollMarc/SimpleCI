@@ -9,7 +9,7 @@ class MimeTypes {
             "text/css": [".css"]
     ]
 
-    static String get (String fileName) {
+    static String get(String fileName) {
         def extension
 
         def split = fileName.tokenize("\\.")

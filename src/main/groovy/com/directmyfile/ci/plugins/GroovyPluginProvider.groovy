@@ -6,7 +6,7 @@ class GroovyPluginProvider extends PluginProvider {
     GroovyShell shell = new GroovyShell()
 
     @Override
-    void loadPlugins () {
+    void loadPlugins() {
         shell.setVariable("ci", ci)
         def pluginsDir = new File(ci.configRoot, "plugins")
         new FileMatcher(pluginsDir).withExtension("groovy") { File file ->

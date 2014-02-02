@@ -9,11 +9,11 @@ class JobHistory {
     private List<Entry> entries = []
     private Job job
 
-    JobHistory (Job job) {
+    JobHistory(Job job) {
         this.job = job
     }
 
-    void load () {
+    void load() {
         job.ci.sql.eachRow("SELECT * FROM `job_history` WHERE `job_id` = ${job.id}") {
             def entry = new Entry()
             entries.add(entry)
@@ -27,16 +27,16 @@ class JobHistory {
         }
     }
 
-    def getEntries () {
+    def getEntries() {
         return entries
     }
 
-    def getLatestBuild () {
+    def getLatestBuild() {
         entries.isEmpty() ? null : entries.last()
     }
 
     @Override
-    String toString () {
+    String toString() {
         entries.join("\n")
     }
 

@@ -6,11 +6,11 @@ enum JobStatus {
     SUCCESS, FAILURE, NOT_STARTED, RUNNING, WAITING;
 
     @Override
-    String toString () {
+    String toString() {
         return this.name().toLowerCase().capitalize().replace('_', ' ')
     }
 
-    String getPanelClass () {
+    String getPanelClass() {
         switch (this) {
             case SUCCESS: return "panel-success"
             case FAILURE: return "panel-danger"
@@ -20,7 +20,7 @@ enum JobStatus {
         }
     }
 
-    String getIrcColor () {
+    String getIrcColor() {
         switch (this) {
             case SUCCESS: return Colors.GREEN
             case FAILURE: return Colors.RED
@@ -31,7 +31,7 @@ enum JobStatus {
         }
     }
 
-    String cssContextClass () {
+    String cssContextClass() {
         switch (this) {
             case SUCCESS:
                 return "success"
@@ -41,7 +41,7 @@ enum JobStatus {
         }
     }
 
-    static JobStatus parse (int id) {
+    static JobStatus parse(int id) {
         if (id < 0 || id >= values().size()) {
             return NOT_STARTED
         }

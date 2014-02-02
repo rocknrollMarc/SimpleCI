@@ -9,15 +9,15 @@ import javax.crypto.spec.SecretKeySpec
 class CISecurity {
     private CI ci
 
-    CISecurity (CI ci) {
+    CISecurity(CI ci) {
         this.ci = ci
     }
 
-    boolean isSecure () {
+    boolean isSecure() {
         return ci.config.securitySection()["enabled"].asBoolean()
     }
 
-    boolean register (String username, String password) {
+    boolean register(String username, String password) {
 
         if (!isSecure()) {
             return false
@@ -40,7 +40,7 @@ class CISecurity {
         return true
     }
 
-    boolean checkAccess (String username, String password) {
+    boolean checkAccess(String username, String password) {
 
         if (!isSecure()) {
             return true

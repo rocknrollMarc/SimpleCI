@@ -106,7 +106,7 @@ class CI {
     /**
      * Starts CI Server
      */
-    void start () {
+    void start() {
         init()
         loadJobs()
         vertxManager.setupWebServer()
@@ -116,14 +116,14 @@ class CI {
      * Starts the IRC Bot
      * <p><b>NOTICE:</b> Must be run on Main Thread</p>
      */
-    void startBot () {
+    void startBot() {
         ircBot.start(this)
     }
 
     /**
      * Initializes this CI Server
      */
-    private void init () {
+    private void init() {
         config.load()
         JavaLogger.getLogger("groovy.sql.Sql").setLevel(JavaLogLevel.OFF)
 
@@ -144,7 +144,7 @@ class CI {
     /**
      * Loads Jobs from Database and Job Files
      */
-    void loadJobs () {
+    void loadJobs() {
         def jobRoot = new File(configRoot, "jobs")
 
         if (!jobRoot.exists()) {
@@ -187,7 +187,7 @@ class CI {
      * Adds the Specified Job to the Queue
      * @param job Job to Add to Queue
      */
-    void runJob (Job job) {
+    void runJob(Job job) {
         Thread.start("Builder[${job.name}]") { ->
             def number = (job.history.latestBuild?.number ?: 0) + 1
             def lastStatus = number == 1 ? JobStatus.NOT_STARTED : job.status
@@ -308,7 +308,7 @@ class CI {
     /**
      * Updates all Jobs from the Database and parses Job Files
      */
-    def updateJobs () {
+    def updateJobs() {
         jobs.values()*.reload()
     }
 
@@ -316,7 +316,7 @@ class CI {
      * Gets where artifacts are stored
      * @return Artifact Directory
      */
-    def getArtifactDir () {
+    def getArtifactDir() {
         def dir = new File(configRoot, "artifacts")
         dir.mkdir()
         return dir

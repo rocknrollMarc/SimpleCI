@@ -14,17 +14,17 @@ class Job {
 
     int id
 
-    Job (CI ci, File file) {
+    Job(CI ci, File file) {
         this.ci = ci
         this.buildConfig = new BuildConfig(file)
         getBuildDir().mkdirs()
     }
 
-    def getName () {
+    def getName() {
         return buildConfig.name
     }
 
-    def getTasks () {
+    def getTasks() {
         def taskConfig = buildConfig.getTasks()
 
         List<TaskConfig> tasks = []
@@ -44,23 +44,23 @@ class Job {
         return tasks
     }
 
-    def getBuildDir () {
+    def getBuildDir() {
         return new File(ci.configRoot, "workspace/${name}")
     }
 
-    def getSCM () {
+    def getSCM() {
         return new SCMConfig(buildConfig.SCM['type'] as String, buildConfig.SCM['url'] as String)
     }
 
-    def getArtifactLocations () {
+    def getArtifactLocations() {
         return buildConfig.artifacts
     }
 
-    def getLogFile () {
+    def getLogFile() {
         return new File(ci.configRoot, "logs/${name}.log")
     }
 
-    def generateArtifactList () {
+    def generateArtifactList() {
         def text = []
         if (history.latestBuild == null) return "No builds yet."
         def number = history.latestBuild.number
@@ -74,36 +74,36 @@ class Job {
         return text.join('\n')
     }
 
-    void setStatus (JobStatus status) {
+    void setStatus(JobStatus status) {
         this.status = status
         ci.sql.update("UPDATE `jobs` SET  `status` =  '${status.ordinal()}' WHERE  `jobs`.`id` = ${id};")
     }
 
-    JobStatus getStatus () {
+    JobStatus getStatus() {
         return status
     }
 
-    void reload () {
+    void reload() {
         this.buildConfig = new BuildConfig(buildConfig.file)
 
         this.status = JobStatus.parse(ci.sql.firstRow("SELECT `status` FROM `jobs` WHERE `id` = ${id};").status as int)
     }
 
-    void forceStatus (JobStatus status) {
+    void forceStatus(JobStatus status) {
         this.status = status
     }
 
-    Changelog getChangelog () {
+    Changelog getChangelog() {
         return ci.scmTypes[SCM.type].changelog(this)
     }
 
-    def getHistory () {
+    def getHistory() {
         def history = new JobHistory(this)
         history.load()
         return history
     }
 
-    def getNotifications () {
+    def getNotifications() {
         return buildConfig.notify
     }
 }

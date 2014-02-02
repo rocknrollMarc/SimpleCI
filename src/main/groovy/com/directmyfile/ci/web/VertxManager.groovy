@@ -14,20 +14,20 @@ class VertxManager {
 
     WebServer webServer
 
-    VertxManager (CI ci) {
+    VertxManager(CI ci) {
         this.ci = ci
     }
 
-    void setupWebServer () {
+    void setupWebServer() {
         this.webServer = new WebServer(ci)
         webServer.start(ci.port, ci.host)
     }
 
-    void stopWebServer () {
+    void stopWebServer() {
         webServer.server.close()
     }
 
-    EventBus getEventBus () {
+    EventBus getEventBus() {
         return vertx.eventBus
     }
 
