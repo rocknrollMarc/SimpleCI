@@ -6,7 +6,7 @@ import javax.script.ScriptEngineManager
 
 class JSPluginProvider extends PluginProvider {
     @Override
-    void loadPlugins() {
+    void loadPlugins () {
         def manager = new ScriptEngineManager()
         def js = manager.getEngineByExtension("js")
         def pluginsDir = new File(ci.configRoot, "plugins")

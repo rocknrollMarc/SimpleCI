@@ -9,23 +9,25 @@ import javax.crypto.spec.SecretKeySpec
 class CISecurity {
     private CI ci
 
-    CISecurity(CI ci) {
+    CISecurity (CI ci) {
         this.ci = ci
     }
 
-    boolean isSecure() {
+    boolean isSecure () {
         return ci.config.securitySection()["enabled"].asBoolean()
     }
 
-    boolean register(String username, String password) {
+    boolean register (String username, String password) {
 
-        if (!isSecure())
+        if (!isSecure()) {
             return false
+        }
 
         def matchedUsers = ci.sql.rows("SELECT `username`, `password` FROM `users` WHERE `username`=`${username}`")
 
-        if (matchedUsers.size() != 0)
+        if (matchedUsers.size() != 0) {
             return false
+        }
         def salt = Utils.generateSalt(1024)
         def key = new SecretKeySpec(salt, "HmacSHA512")
         def mac = Mac.getInstance("HmacSHA512")
@@ -38,15 +40,17 @@ class CISecurity {
         return true
     }
 
-    boolean checkAccess(String username, String password) {
+    boolean checkAccess (String username, String password) {
 
-        if (!isSecure())
+        if (!isSecure()) {
             return true
+        }
 
         def matchedUsers = ci.sql.rows("SELECT `username`, `password` FROM `users` WHERE `username`=`${username}`")
 
-        if (matchedUsers.size() == 0)
+        if (matchedUsers.size() == 0) {
             return false
+        }
         def user = matchedUsers[0]
         def key = new SecretKeySpec((user.getProperty("salt") as String).decodeHex(), "HmacSHA512")
         def mac = Mac.getInstance("HmacSHA512")

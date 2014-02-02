@@ -10,14 +10,14 @@ class GitSCM extends SCM {
 
     private Map gitConfig
 
-    GitSCM(CI ci) {
+    GitSCM (CI ci) {
         this.gitConfig = ci.config.getProperty("git", [
                 logLength: 4
         ]) as Map
     }
 
     @Override
-    void clone(Job job) {
+    void clone (Job job) {
         def cmd = [findGit().absolutePath, "clone", "--recursive", job.getSCM().getUrl(), job.buildDir.absolutePath]
 
         def proc = execute(job, cmd)
@@ -31,13 +31,14 @@ class GitSCM extends SCM {
         log.flush()
         log.close()
         def exitCode = proc.waitFor()
-        if (exitCode != 0)
+        if (exitCode != 0) {
             throw new ToolException("Git failed to clone repository!")
+        }
         updateSubmodules(job)
     }
 
     @Override
-    void update(Job job) {
+    void update (Job job) {
         def cmd = [findGit().absolutePath, "pull", "--all"]
 
         updateSubmodules(job)
@@ -53,23 +54,25 @@ class GitSCM extends SCM {
         log.println()
         log.flush()
         log.close()
-        if (exitCode != 0)
+        if (exitCode != 0) {
             throw new ToolException("Git failed to pull changes!")
+        }
     }
 
     @Override
-    boolean exists(Job job) {
+    boolean exists (Job job) {
         def gitDir = new File(job.buildDir, ".git")
 
         return gitDir.exists()
     }
 
     @Override
-    Changelog changelog(Job job) {
+    Changelog changelog (Job job) {
         def changelog = new Changelog()
 
-        if (!exists(job))
+        if (!exists(job)) {
             clone(job)
+        }
 
         def proc = execute(job, [findGit().absolutePath, "log", "-${gitConfig['logLength'].toString()}".toString(), "--pretty=%H%n%an%n%s"])
 
@@ -104,7 +107,7 @@ class GitSCM extends SCM {
         return changelog
     }
 
-    public static File findGit() {
+    public static File findGit () {
         def gitCommand = Utils.findCommandOnPath("git")
         if (gitCommand == null) {
             throw new ToolException("Could not find Git on System!")
@@ -112,15 +115,15 @@ class GitSCM extends SCM {
         return gitCommand
     }
 
-    private static boolean detectSubmodules(File dir) {
+    private static boolean detectSubmodules (File dir) {
         return "${findGit().absolutePath} submodule status".execute([], dir) != ""
     }
 
-    static boolean updateSubmodules(Job job) {
+    static boolean updateSubmodules (Job job) {
         return execute(job, [findGit().absolutePath, "submodule", "update", "--init", "--recursive"]).waitFor() == 0
     }
 
-    private static Process execute(Job job, List<String> command) {
+    private static Process execute (Job job, List<String> command) {
         def builder = new ProcessBuilder(command)
         builder.directory(job.buildDir)
         builder.redirectErrorStream(true)

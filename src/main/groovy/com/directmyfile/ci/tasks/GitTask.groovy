@@ -5,12 +5,12 @@ import com.directmyfile.ci.scm.GitSCM
 
 class GitTask extends Task {
 
-    GitTask() {
+    GitTask () {
         name = "git"
     }
 
     @Override
-    boolean execute(Object params) {
+    boolean execute (Object params) {
         return new CommandTask().execute([
                 ci: params['ci'],
                 job: params['job'],

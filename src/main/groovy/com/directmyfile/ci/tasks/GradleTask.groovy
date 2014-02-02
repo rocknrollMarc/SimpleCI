@@ -9,7 +9,7 @@ import com.directmyfile.ci.utils.Utils
 
 class GradleTask extends Task {
     @Override
-    boolean execute(Object params) {
+    boolean execute (Object params) {
         def config = params as Map
 
         def ci = config['ci'] as CI
@@ -25,12 +25,15 @@ class GradleTask extends Task {
         def gradleCommand = "gradle"
 
         if (wrapper) {
-            if (!new File(job.buildDir, "gradlew").exists())
+            if (!new File(job.buildDir, "gradlew").exists()) {
                 throw new JobConfigurationException("Gradle Wrapper not found in Job: ${job.name}")
+            }
             gradleCommand = "sh gradlew"
         } else {
             def c = Utils.findCommandOnPath("gradle")
-            if (c == null) throw new ToolException("Gradle not found on this system.")
+            if (c == null) {
+                throw new ToolException("Gradle not found on this system.")
+            }
         }
 
         return new CommandTask().execute([

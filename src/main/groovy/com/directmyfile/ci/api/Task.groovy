@@ -13,7 +13,7 @@ abstract class Task {
      * Gets the Task Name
      * @return Task Name
      */
-    String getName() {
+    String getName () {
         return type
     }
 
@@ -21,7 +21,7 @@ abstract class Task {
      * Sets Task Name
      * @param name Task Name
      */
-    protected void setName(String name) {
+    protected void setName (String name) {
         this.type = name
     }
 
@@ -30,5 +30,5 @@ abstract class Task {
      * @param params The JSON object of this task - Includes two more types: job, and ci
      * @return
      */
-    abstract boolean execute(Object params);
+    abstract boolean execute (Object params);
 }

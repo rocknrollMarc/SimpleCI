@@ -71,11 +71,11 @@ final class NativeManager {
         nativesDir.deleteOnExit();
 
         String[] libs = {
-            "bot"
+                "bot"
         };
 
         String[] unrequired = {
-            "libphobos2.so.0.64"
+                "libphobos2.so.0.64"
         };
 
         for (String lib : libs)

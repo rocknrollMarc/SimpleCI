@@ -5,11 +5,11 @@ import groovy.io.FileType
 class FileMatcher {
     private File parent
 
-    FileMatcher(File parent) {
+    FileMatcher (File parent) {
         this.parent = parent
     }
 
-    List<File> recursive(FileType type = FileType.ANY) {
+    List<File> recursive (FileType type = FileType.ANY) {
         def files = []
 
         parent.eachFileRecurse(type) { file ->
@@ -19,13 +19,14 @@ class FileMatcher {
         return files
     }
 
-    void withExtension(String extension, Closure closure) {
+    void withExtension (String extension, Closure closure) {
         def allFiles = recursive(FileType.FILES)
         def matched = []
 
         allFiles.findAll { file ->
-            if (file.name.endsWith(".${extension}"))
+            if (file.name.endsWith(".${extension}")) {
                 matched += file
+            }
         }
 
         matched.each(closure)

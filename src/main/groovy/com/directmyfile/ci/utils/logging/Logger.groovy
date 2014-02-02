@@ -9,48 +9,49 @@ class Logger {
     private String name
     def level = LogLevel.DEBUG
 
-    Logger(String name) {
+    Logger (String name) {
         this.name = name
     }
 
-    static Logger getLogger(String name) {
-        if (loggers.containsKey(name))
+    static Logger getLogger (String name) {
+        if (loggers.containsKey(name)) {
             return loggers[name]
-        else
+        } else {
             return loggers[name] = new Logger(name)
+        }
     }
 
-    boolean canLog(LogLevel input) {
+    boolean canLog (LogLevel input) {
         return input == level || input == LogLevel.ERROR || input == LogLevel.INFO && level == LogLevel.DEBUG
     }
 
-    String getName() {
+    String getName () {
         return name
     }
 
-    void log(LogLevel level, String message) {
+    void log (LogLevel level, String message) {
         if (canLog(level)) {
             println "[${dateFormat.format(new Date())}][${name}][${level.name()}] ${message}"
         }
     }
 
-    void info(String message) {
+    void info (String message) {
         log(LogLevel.INFO, message)
     }
 
-    void warning(String message) {
+    void warning (String message) {
         log(LogLevel.WARNING, message)
     }
 
-    void debug(String message) {
+    void debug (String message) {
         log(LogLevel.DEBUG, message)
     }
 
-    void error(String message) {
+    void error (String message) {
         log(LogLevel.ERROR, message)
     }
 
-    void error(String message, Throwable e) {
+    void error (String message, Throwable e) {
         log(LogLevel.ERROR, message)
         e.printStackTrace()
     }

@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose
 class Changelog {
     List<Entry> entries = []
 
-    Entry newEntry() {
+    Entry newEntry () {
         def entry = new Entry()
         entries.add(entry)
         return entry

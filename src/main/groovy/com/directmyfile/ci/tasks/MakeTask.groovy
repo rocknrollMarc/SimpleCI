@@ -6,7 +6,7 @@ import com.directmyfile.ci.jobs.Job
 
 class MakeTask extends Task {
     @Override
-    boolean execute(Object params) {
+    boolean execute (Object params) {
         def config = params as Map
 
         def ci = config['ci'] as CI

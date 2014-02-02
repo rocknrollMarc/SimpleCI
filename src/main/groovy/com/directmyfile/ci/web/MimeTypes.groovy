@@ -9,21 +9,23 @@ class MimeTypes {
             "text/css": [".css"]
     ]
 
-    static String get(String fileName) {
+    static String get (String fileName) {
         def extension
 
         def split = fileName.tokenize("\\.")
 
-        if (split.size() == 1)
+        if (split.size() == 1) {
             extension = ""
-        else
+        } else {
             extension = ".${split.last()}"
+        }
 
         def type = "text/plain"
 
         for (entry in types) {
-            if (entry.value.contains(extension))
+            if (entry.value.contains(extension)) {
                 type = entry.key
+            }
         }
 
         return type

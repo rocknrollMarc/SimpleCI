@@ -8,7 +8,7 @@ class IRCBot {
     CI ci
     Object cfg
 
-    void start(CI ci) {
+    void start (CI ci) {
         this.ci = ci
         NativeManager.manager = new NativeManager(this)
 
@@ -60,32 +60,33 @@ class IRCBot {
             def job = ci.jobs[jobName]
 
             getNotifyChannels(job, channels).each { String channel ->
-                if (!NativeManager.isInChannel(channel))
+                if (!NativeManager.isInChannel(channel)) {
                     NativeManager.join(channel)
+                }
                 NativeManager.msg(channel, "> Build #${e['number']} for ${jobName} completed with status ${status.ircColor}${status}${Colors.NORMAL} taking ${time}")
             }
         }
         NativeManager.startLoop()
     }
 
-    static def getNotifyChannels(Job job, List<String> defaults) {
+    static def getNotifyChannels (Job job, List<String> defaults) {
         def irc = job.notifications['irc'] ?: [:]
         return irc['channels'] ?: defaults
     }
 
     /* JNI called methods */
 
-    void listJobs(String channel) {
+    void listJobs (String channel) {
         NativeManager.msg(channel, "> ${ci.jobs.keySet().join(', ')}")
     }
 
-    void loadJobs(String channel) {
+    void loadJobs (String channel) {
         NativeManager.msg(channel, "> Reloading Jobs")
         ci.loadJobs()
         NativeManager.msg(channel, "> Jobs Reloaded: CI has ${ci.jobs.size()} jobs")
     }
 
-    void build(String channel, String jobName) {
+    void build (String channel, String jobName) {
         if (jobName == null) {
             NativeManager.msg(channel, '> Usage: !build JOB')
             return
@@ -98,7 +99,7 @@ class IRCBot {
         ci.runJob(job)
     }
 
-    void status(String channel, String job) {
+    void status (String channel, String job) {
         def jobList = []
         if (job == null) {
             ci.jobs.values().each {
@@ -115,7 +116,7 @@ class IRCBot {
         NativeManager.msg(channel, "> ${jobList.join(', ')}")
     }
 
-    void onReady() {
+    void onReady () {
         def channels = cfg['channels'] as List<String>
         channels.each {
             NativeManager.join(it)

@@ -3,20 +3,27 @@ var jobName = window.location.pathname.replace("/job/", "");
 document.title = jobName + " - SimpleCI";
 $(".job-name").html(jobName);
 
-var parseStatus = function(id) {
+var parseStatus = function (id) {
     switch (id) {
-        case 0: return "Success";
-        case 1: return "Failure";
-        case 2: return "Not Started";
-        default: return "Unknown";
+        case 0:
+            return "Success";
+        case 1:
+            return "Failure";
+        case 2:
+            return "Not Started";
+        default:
+            return "Unknown";
     }
 };
 
-var getStatusClass = function(id) {
+var getStatusClass = function (id) {
     switch (id) {
-        case 0: return "success";
-        case 1: return "danger";
-        default: return "";
+        case 0:
+            return "success";
+        case 1:
+            return "danger";
+        default:
+            return "";
     }
 };
 
@@ -37,10 +44,10 @@ $(document).ready(function () {
         });
     });
 
-    $.getJSON("/api/changes/" + jobName, function(changes) {
+    $.getJSON("/api/changes/" + jobName, function (changes) {
         var $changes = $("#changelog");
 
-        changes.forEach(function(change) {
+        changes.forEach(function (change) {
             var rev = change["revision"];
             var msg = change["message"];
             var author = change["author"];
@@ -48,10 +55,10 @@ $(document).ready(function () {
         });
     });
 
-    $.getJSON("/api/history/" + jobName, function(history) {
+    $.getJSON("/api/history/" + jobName, function (history) {
         var $history = $("#history");
 
-        history["history"].forEach(function(entry) {
+        history["history"].forEach(function (entry) {
             var status = entry["status"];
             var number = entry["number"];
             var timestamp = entry["timestamp"];

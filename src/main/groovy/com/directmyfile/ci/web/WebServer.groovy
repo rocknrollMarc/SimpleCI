@@ -14,17 +14,17 @@ class WebServer {
     HttpServer server
     CI ci
 
-    WebServer(CI ci) {
+    WebServer (CI ci) {
         this.ci = ci
         server = ci.vertxManager.vertx.createHttpServer()
     }
 
-    def start(int port, String ip) {
+    def start (int port, String ip) {
         server.requestHandler(configure(new RouteMatcher()).asClosure())
         server.listen(port, ip)
     }
 
-    private def configure(RouteMatcher matcher) {
+    private def configure (RouteMatcher matcher) {
         matcher.get('/') { HttpServerRequest r ->
             writeResource(r, "index.html")
         }
@@ -208,7 +208,7 @@ class WebServer {
         }
     }
 
-    private def writeResource(HttpServerRequest r, String path) {
+    private def writeResource (HttpServerRequest r, String path) {
 
         def stream = getStream(path)
 
@@ -219,7 +219,7 @@ class WebServer {
         r.response.end(stream.text)
     }
 
-    private void writeImage(HttpServerRequest request, String path) {
+    private void writeImage (HttpServerRequest request, String path) {
         request.response.putHeader("content-type", "image/*")
 
         def stream = getStream(path)
@@ -232,7 +232,7 @@ class WebServer {
         }
     }
 
-    private def getStream(String path) {
+    private def getStream (String path) {
         def dir = new File(ci.configRoot, "www")
         InputStream stream
         if (!dir.exists()) {

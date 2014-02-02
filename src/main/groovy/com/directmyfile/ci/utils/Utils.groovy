@@ -12,14 +12,14 @@ class Utils {
 
     static def gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create()
 
-    static Process execute(List<String> command) {
+    static Process execute (List<String> command) {
         def builder = new ProcessBuilder()
         builder.command(command)
         return builder.start()
     }
 
     @Memoized(maxCacheSize = 10)
-    static File findCommandOnPath(String executableName) {
+    static File findCommandOnPath (String executableName) {
         def systemPath = System.getenv("PATH")
         def pathDirs = systemPath.split(File.pathSeparator)
 
@@ -34,7 +34,7 @@ class Utils {
         return executable
     }
 
-    static Script parseConfig(File file) {
+    static Script parseConfig (File file) {
         def cc = new CompilerConfiguration()
         def scc = new SecureASTCustomizer()
         scc.with {
@@ -69,46 +69,46 @@ class Utils {
         return new GroovyShell(cc).parse(file)
     }
 
-    static def resource(String path) {
+    static def resource (String path) {
         return Utils.class.classLoader.getResourceAsStream(path)
     }
 
     @Memoized(maxCacheSize = 15)
-    static def resourceToString(String path) {
+    static def resourceToString (String path) {
         return resource(path).text
     }
 
     @Memoized(maxCacheSize = 15)
-    static def decodeBase64(String input) {
+    static def decodeBase64 (String input) {
         return new String(input.decodeBase64())
     }
 
-    static def newProperties() {
+    static def newProperties () {
         return new Properties()
     }
 
-    static byte[] generateSalt(int size) {
+    static byte[] generateSalt (int size) {
         SecureRandom random = new SecureRandom()
         byte[] list = new byte[size]
         random.nextBytes(list)
         return list
     }
 
-    static String generateHash(byte[] input) {
+    static String generateHash (byte[] input) {
         def messageDigest = MessageDigest.getInstance("SHA-256")
         messageDigest.update(input)
         return new BigInteger(1, messageDigest.digest()).toString(16).padLeft(40, '0')
     }
 
-    static String toString(byte[] input) {
+    static String toString (byte[] input) {
         return new BigInteger(1, input).toString(16).padLeft(40, '0')
     }
 
-    static def encodeJSON(Object object) {
+    static def encodeJSON (Object object) {
         return gson.toJson(object)
     }
 
-    static def parseJSON(String text, Class<?> type) {
+    static def parseJSON (String text, Class<?> type) {
         return gson.fromJson(text, type)
     }
 }

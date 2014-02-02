@@ -13,7 +13,7 @@ class Main {
     private static logger = Logger.getLogger("Console")
 
     @SuppressWarnings("GroovyEmptyStatementBody")
-    static void main(String[] args) throws Exception {
+    static void main (String[] args) throws Exception {
 
         /* Configure log4j to fix warnings */
         Log4j.getRootLogger().setLevel(Log4jLevel.OFF)
@@ -39,7 +39,7 @@ class Main {
 
         def thread = new Thread(new Runnable() {
             @Override
-            void run() {
+            void run () {
                 def reader = System.in.newReader()
 
                 reader.eachLine {
@@ -77,11 +77,11 @@ class Main {
 
     /* Shut down & startup methods */
 
-    static boolean isRunning() {
+    static boolean isRunning () {
         return ciRunning
     }
 
-    static void setBotState(boolean running) {
+    static void setBotState (boolean running) {
         botRunning = running
     }
 }

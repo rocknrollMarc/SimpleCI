@@ -9,11 +9,11 @@ class SqlHelper {
     private Sql sql
     private Map config
 
-    SqlHelper(CI ci) {
+    SqlHelper (CI ci) {
         this.ci = ci
     }
 
-    void init() {
+    void init () {
         def url = "jdbc:mysql://${config['host']}:${config['port']}/${config['database']}"
         this.sql = Sql.newInstance(url, config['username'] as String, config['password'] as String)
         sql.cacheStatements = true
@@ -23,18 +23,18 @@ class SqlHelper {
         ci.logger.debug "Initialization Queries Complete"
     }
 
-    void setConfig(Map config) {
+    void setConfig (Map config) {
         this.config = config
     }
 
-    def getSql() {
+    def getSql () {
         if (sql.connection.closed) {
             init()
         }
         return sql
     }
 
-    def execute(String fullQuery) {
+    def execute (String fullQuery) {
         def success = true
         fullQuery.tokenize(";").each {
             def query = it.replaceAll("\n", "").trim()
@@ -46,40 +46,40 @@ class SqlHelper {
         return success
     }
 
-    def rows(String query) {
+    def rows (String query) {
         ci.logger.debug "Executing SQL: ${query}"
         return getSql().rows(query)
     }
 
-    def eachRow(String query, Closure closure) {
+    def eachRow (String query, Closure closure) {
         getSql().eachRow(query, closure)
     }
 
-    def dataSet(String table) {
+    def dataSet (String table) {
         return getSql().dataSet(table)
     }
 
-    def firstRow(String query) {
+    def firstRow (String query) {
         return getSql().firstRow(query)
     }
 
-    def query(String query, Closure closure) {
+    def query (String query, Closure closure) {
         getSql().query(query, closure)
     }
 
-    def insert(String query) {
+    def insert (String query) {
         return getSql().executeInsert(query)
     }
 
-    def update(String query) {
+    def update (String query) {
         return getSql().executeUpdate(query)
     }
 
-    boolean execute(InputStream stream) {
+    boolean execute (InputStream stream) {
         return execute(stream.text)
     }
 
-    boolean execute(File file) {
+    boolean execute (File file) {
         return execute(file.text)
     }
 }

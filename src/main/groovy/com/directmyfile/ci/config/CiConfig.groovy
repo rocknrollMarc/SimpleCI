@@ -5,7 +5,7 @@ import com.directmyfile.ci.core.CI
 class CiConfig extends GConfig {
     private CI ci
 
-    CiConfig(CI ci) {
+    CiConfig (CI ci) {
         super(new File(ci.configRoot, "config.groovy"))
         this.ci = ci
 
@@ -13,7 +13,7 @@ class CiConfig extends GConfig {
     }
 
     @Override
-    void load() {
+    void load () {
         super.load()
 
         def web = getProperty("web", [
@@ -33,19 +33,19 @@ class CiConfig extends GConfig {
         ]) as Map)
     }
 
-    Map ciSection() {
+    Map ciSection () {
         return getProperty("ci", [
                 queueSize: 2
         ]) as Map
     }
 
-    Map loggingSection() {
+    Map loggingSection () {
         return getProperty("logging", [
                 level: "INFO"
         ]) as Map
     }
 
-    Map securitySection() {
+    Map securitySection () {
         return getProperty("security", [
                 enabled: false
         ]) as Map

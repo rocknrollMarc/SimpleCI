@@ -8,12 +8,12 @@ import com.directmyfile.ci.jobs.Job
  */
 class CommandTask extends Task {
 
-    CommandTask() {
+    CommandTask () {
         type = 'command'
     }
 
     @Override
-    boolean execute(Object params) {
+    boolean execute (Object params) {
         def config = params as Map
 
         def job = config['job'] as Job
