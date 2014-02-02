@@ -5,7 +5,7 @@ import org.junit.Test
 
 class UtilsTest extends CITest {
     @Test
-    void testFindCommand () {
+    void testFindCommand() {
         def actual = Utils.findCommandOnPath("sh")
         assertFalse "Command was not found!", actual == null
     }

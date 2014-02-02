@@ -5,6 +5,6 @@
 
     <description>Ensures Code is Clean</description>
 
-    <ruleset-ref path="rulesets/imports.xml"></ruleset-ref>
-    <ruleset-ref path="rulesets/groovyism.xml"></ruleset-ref>
+    <ruleset-ref path="rulesets/imports.xml"/>
+    <ruleset-ref path="rulesets/groovyism.xml"/>
 </ruleset>
