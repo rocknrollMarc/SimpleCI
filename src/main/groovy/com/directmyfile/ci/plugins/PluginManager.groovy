@@ -8,6 +8,7 @@ class PluginManager {
     PluginManager(CI ci) {
         this.ci = ci
         providers.add(new GroovyPluginProvider())
+        providers.add(new JSPluginProvider())
     }
 
     void loadPlugins() {
