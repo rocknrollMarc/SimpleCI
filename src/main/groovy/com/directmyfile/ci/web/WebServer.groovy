@@ -71,7 +71,7 @@ class WebServer {
 
             if (!ci.jobs.containsKey(jobName)) {
                 it.response.end(new JsonBuilder([
-                    error: "Job does not exist!"
+                        error: "Job does not exist!"
                 ]).toPrettyString())
             }
 

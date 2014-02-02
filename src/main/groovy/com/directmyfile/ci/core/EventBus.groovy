@@ -12,7 +12,9 @@ class EventBus {
      * @param handler Event Handler
      */
     void on(String name, Closure handler) {
-        if (!handlers.containsKey(name)) {handlers[name] = []}
+        if (!handlers.containsKey(name)) {
+            handlers[name] = []
+        }
         handlers[name].add(handler)
     }
 

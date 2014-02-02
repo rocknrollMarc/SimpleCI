@@ -1,4 +1,5 @@
 package com.directmyfile.ci.plugins
+
 import com.directmyfile.ci.core.CI
 
 class PluginManager {

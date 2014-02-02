@@ -32,7 +32,7 @@ enum JobStatus {
     }
 
     String cssContextClass() {
-        switch(this) {
+        switch (this) {
             case SUCCESS:
                 return "success"
             case FAILURE:
