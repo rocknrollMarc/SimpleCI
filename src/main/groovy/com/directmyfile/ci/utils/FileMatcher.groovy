@@ -1,6 +1,8 @@
 package com.directmyfile.ci.utils
 
 import groovy.io.FileType
+import groovy.transform.stc.ClosureParams
+import groovy.transform.stc.SimpleType
 
 class FileMatcher {
     private File parent
@@ -19,10 +21,9 @@ class FileMatcher {
         return files
     }
 
-    void withExtension(String extension, Closure closure) {
+    void withExtension(String extension, @ClosureParams(value = SimpleType, options =  "java.util.File" ) Closure closure) {
         def allFiles = recursive(FileType.FILES)
-        def matched = []
-
+        List<File> matched = []
         allFiles.findAll { file ->
             if (file.name.endsWith(".${extension}")) {
                 matched += file
@@ -30,5 +31,15 @@ class FileMatcher {
         }
 
         matched.each(closure)
+    }
+
+    List<File> extension(String extension) {
+        def files = []
+
+        withExtension(extension) { file ->
+            files += file
+        }
+
+        return files
     }
 }

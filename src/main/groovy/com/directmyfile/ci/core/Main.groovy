@@ -1,6 +1,6 @@
 package com.directmyfile.ci.core
 
-import com.directmyfile.ci.utils.logging.Logger
+import com.directmyfile.ci.logging.Logger
 import org.apache.log4j.Level as Log4jLevel
 import org.apache.log4j.Logger as Log4j
 

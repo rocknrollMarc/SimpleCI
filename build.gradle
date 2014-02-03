@@ -13,7 +13,7 @@ buildscript {
 }
 
 ext {
-    groovyVersion = '2.2.1:indy'
+    groovyVersion = '2.3.0-SNAPSHOT:indy'
     jdkHome = "${System.getProperty("java.home")}/../"
     version = "0.2.7"
 }
@@ -23,6 +23,10 @@ repositories {
 
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+
+    maven {
+        url 'http://snapshots.repository.codehaus.org/'
     }
 }
 

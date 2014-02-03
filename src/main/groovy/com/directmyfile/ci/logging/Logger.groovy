@@ -1,4 +1,4 @@
-package com.directmyfile.ci.utils.logging
+package com.directmyfile.ci.logging
 
 import java.text.SimpleDateFormat
 
@@ -22,7 +22,7 @@ class Logger {
     }
 
     boolean canLog(LogLevel input) {
-        return input == level || input == LogLevel.ERROR || input == LogLevel.INFO && level == LogLevel.DEBUG
+        return level != LogLevel.DISABLED && input == level || input == LogLevel.ERROR || input == LogLevel.INFO && level == LogLevel.DEBUG
     }
 
     String getName() {

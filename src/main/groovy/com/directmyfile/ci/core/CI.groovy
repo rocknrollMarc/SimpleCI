@@ -13,9 +13,11 @@ import com.directmyfile.ci.security.CISecurity
 import com.directmyfile.ci.tasks.CommandTask
 import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
-import com.directmyfile.ci.utils.db.SqlHelper
-import com.directmyfile.ci.utils.logging.LogLevel
-import com.directmyfile.ci.utils.logging.Logger
+import com.directmyfile.ci.db.SqlHelper
+import com.directmyfile.ci.logging.LogLevel
+import com.directmyfile.ci.logging.Logger
+import com.directmyfile.ci.utils.FileMatcher
+import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.web.VertxManager
 
 import java.util.concurrent.LinkedBlockingQueue
@@ -47,7 +49,7 @@ class CI {
     /**
      * Plugin Manager
      */
-    def pluginManager = new PluginManager(this)
+    final pluginManager = new PluginManager(this)
 
     /**
      * CI Configuration
@@ -57,7 +59,7 @@ class CI {
     /**
      * SQL Functionality Provider
      */
-    def sql = new SqlHelper(this)
+    final sql = new SqlHelper(this)
 
     /**
      * CI IRC Bot
@@ -96,12 +98,12 @@ class CI {
     /**
      * Vert.x Manager for managing Vert.x related systems
      */
-    def vertxManager = new VertxManager(this)
+    final vertxManager = new VertxManager(this)
 
     /**
      * CI Event Bus
      */
-    def eventBus = new EventBus()
+    final eventBus = new EventBus()
 
     /**
      * Starts CI Server
@@ -165,12 +167,8 @@ class CI {
             job.forceStatus(JobStatus.parse(it['status'] as int))
         }
 
-        jobRoot.eachFile {
-            if (it.isDirectory() || !it.name.endsWith(".json")) {
-                return
-            }
-
-            def job = new Job(this, it)
+        new FileMatcher(jobRoot).withExtension("json") { File file ->
+            def job = new Job(this, file)
 
             if (!jobs.containsKey(job.name)) { // This Job Config isn't in the Database yet.
                 def r = sql.insert("INSERT INTO `jobs` (`id`, `name`, `status`, `lastRevision`) VALUES (NULL, '${job.name}', '${JobStatus.NOT_STARTED.ordinal()}', '');")
@@ -195,8 +193,6 @@ class CI {
 
             logger.debug "Job '${job.name}' has been queued"
 
-
-
             jobQueue.put(job)
 
             def checkJobInQueue = {
@@ -204,6 +200,7 @@ class CI {
                     it.name == job.name
                 } != 1
             }
+
             while (checkJobInQueue()) {
                 switch (job.status) {
                     case JobStatus.SUCCESS || JobStatus.FAILURE: break
@@ -297,7 +294,7 @@ class CI {
 
             def log = job.logFile.text
 
-            def base64Log = log.bytes.encodeBase64().writeTo(new StringWriter()).toString()
+            def base64Log = Utils.encodeBase64(log)
 
             sql.insert("INSERT INTO `job_history` (`id`, `job_id`, `status`, `log`, `logged`, `number`) VALUES (NULL, ${job.id}, ${job.status.ordinal()}, '${base64Log}', CURRENT_TIMESTAMP, ${number});")
             jobQueue.remove(job)

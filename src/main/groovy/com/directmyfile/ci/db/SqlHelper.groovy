@@ -1,4 +1,4 @@
-package com.directmyfile.ci.utils.db
+package com.directmyfile.ci.db
 
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.utils.Utils

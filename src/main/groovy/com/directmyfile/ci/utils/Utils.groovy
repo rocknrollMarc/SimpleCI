@@ -79,6 +79,11 @@ class Utils {
     }
 
     @Memoized(maxCacheSize = 15)
+    static def encodeBase64(String input) {
+        return input.bytes.encodeBase64().writeTo(new StringWriter()).toString()
+    }
+
+    @Memoized(maxCacheSize = 15)
     static def decodeBase64(String input) {
         return new String(input.decodeBase64())
     }
