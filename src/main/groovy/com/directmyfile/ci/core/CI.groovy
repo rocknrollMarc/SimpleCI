@@ -9,6 +9,7 @@ import com.directmyfile.ci.jobs.JobStatus
 import com.directmyfile.ci.notify.IRCBot
 import com.directmyfile.ci.plugins.PluginManager
 import com.directmyfile.ci.scm.GitSCM
+import com.directmyfile.ci.scm.NoneSCM
 import com.directmyfile.ci.security.CISecurity
 import com.directmyfile.ci.tasks.CommandTask
 import com.directmyfile.ci.tasks.GradleTask
@@ -141,6 +142,7 @@ class CI {
         eventBus.dispatch(name: "ci/init", time: System.currentTimeMillis())
 
         scmTypes['git'] = new GitSCM(this)
+        scmTypes['none'] = new NoneSCM()
     }
 
     /**

@@ -49,7 +49,7 @@ class Job {
     }
 
     def getSCM() {
-        return new SCMConfig(buildConfig.SCM['type'] as String, buildConfig.SCM['url'] as String)
+        return new SCMConfig(buildConfig.SCM['type'] as String, buildConfig.SCM['url'] ? buildConfig.SCM['url'] as String : "")
     }
 
     def getArtifactLocations() {
