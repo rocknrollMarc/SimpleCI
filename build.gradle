@@ -15,7 +15,7 @@ buildscript {
 ext {
     groovyVersion = '2.3.0-SNAPSHOT:indy'
     jdkHome = "${System.getProperty("java.home")}/../"
-    version = "0.2.7"
+    version = "0.9.0"
 }
 
 repositories {
