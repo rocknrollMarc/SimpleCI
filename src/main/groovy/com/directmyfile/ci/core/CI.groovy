@@ -159,7 +159,7 @@ class CI {
             def jobCfg = new File(jobRoot, "${it['name']}.json")
 
             if (!jobCfg.exists()) {
-                logger.info "Job Configuration File '${jobCfg.name}' does not exist. Skipping."
+                logger.warning "Job Configuration File '${jobCfg.name}' does not exist. Skipping."
                 return
             }
 
@@ -169,7 +169,7 @@ class CI {
             job.forceStatus(JobStatus.parse(it['status'] as int))
         }
 
-        new FileMatcher(jobRoot).withExtension("json") { File file ->
+        FileMatcher.create(jobRoot).withExtension("json") { File file ->
             def job = new Job(this, file)
 
             if (!jobs.containsKey(job.name)) { // This Job Config isn't in the Database yet.
@@ -307,7 +307,7 @@ class CI {
     /**
      * Updates all Jobs from the Database and parses Job Files
      */
-    def updateJobs() {
+    void updateJobs() {
         jobs.values()*.reload()
     }
 

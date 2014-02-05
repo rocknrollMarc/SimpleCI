@@ -4,6 +4,8 @@ import groovy.io.FileType
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.SimpleType
 
+import java.util.regex.Pattern
+
 /**
  * Find files in a directory.
  */
@@ -16,6 +18,14 @@ class FileMatcher {
      */
     FileMatcher(File parent) {
         this.parent = parent
+    }
+
+    /**
+     * Create a File Matcher looking in the specified parent directory.
+     * @param parent parent directory
+     */
+    FileMatcher(String parentPath) {
+        this.parent = new File(parentPath)
     }
 
     /**
@@ -38,7 +48,7 @@ class FileMatcher {
      * @param extension file extension
      * @param closure closure to call
      */
-    void withExtension(String extension, @ClosureParams(value = SimpleType, options =  "java.util.File" ) Closure closure) {
+    void withExtension(String extension, @ClosureParams(value = SimpleType, options =  "java.util.File") Closure closure) {
         def allFiles = recursive(FileType.FILES)
         List<File> matched = []
         allFiles.findAll { file ->
@@ -63,5 +73,24 @@ class FileMatcher {
         }
 
         return files
+    }
+
+    /**
+     * Gets a list of files matching the specified pattern
+     * @param pattern Regular Expression
+     * @return list of files
+     */
+    List<File> matching(Pattern pattern) {
+        recursive(FileType.FILES).findAll {
+            it.name.matches(pattern)
+        }
+    }
+
+    static FileMatcher create(File parent) {
+        return new FileMatcher(parent)
+    }
+
+    static FileMatcher create(String parent) {
+        return new FileMatcher(parent)
     }
 }

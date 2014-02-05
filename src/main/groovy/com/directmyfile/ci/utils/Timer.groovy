@@ -7,7 +7,7 @@ class Timer {
     private long startTime
     private long stopTime
 
-    void start() {
+    long start() {
         this.startTime = System.currentTimeMillis()
     }
 

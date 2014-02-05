@@ -7,14 +7,14 @@ class Logger {
     private static final dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     private String name
-    def level = LogLevel.DEBUG
+    def level = LogLevel.INFO
 
     Logger(String name) {
         this.name = name
     }
 
     static Logger getLogger(String name) {
-        if (loggers.containsKey(name)) {
+        if (name in loggers) {
             return loggers[name]
         } else {
             return loggers[name] = new Logger(name)
