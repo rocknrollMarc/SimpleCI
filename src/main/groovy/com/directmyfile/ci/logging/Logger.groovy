@@ -30,9 +30,8 @@ class Logger {
     }
 
     void log(LogLevel level, String message) {
-        if (canLog(level)) {
+        if (canLog(level))
             println "[${dateFormat.format(new Date())}][${name}][${level.name()}] ${message}"
-        }
     }
 
     void info(String message) {

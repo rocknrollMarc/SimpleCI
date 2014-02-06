@@ -16,7 +16,7 @@ class Main {
     static void main(String[] args) throws Exception {
 
         /* Configure log4j to fix warnings */
-        Log4j.getRootLogger().setLevel(Log4jLevel.OFF)
+        Log4j.rootLogger.level = Log4jLevel.OFF
 
         Thread.defaultUncaughtExceptionHandler = [
                 uncaughtException: { Thread thread, Throwable e ->
@@ -42,13 +42,19 @@ class Main {
             void run() {
                 def reader = System.in.newReader()
 
-                reader.eachLine {
-                    def split = it.tokenize(' ')
+                reader.eachLine { line ->
+                    def split = line.tokenize(' ')
 
-                    if (split[0] == 'run') {
+                    if (split[0] == 'build') {
+
+                        if (split.size() == 1) {
+                            println "Usage: build <job>"
+                            return
+                        }
+
                         def jobName = split[1]
 
-                        def job = ci.jobs.get(jobName)
+                        def job = ci.jobs[jobName]
 
                         if (job == null) {
                             println "No Such Job: ${jobName}"
@@ -63,11 +69,27 @@ class Main {
                         ci.start()
                     } else if (split[0] == 'stop') {
                         System.exit(0)
+                    } else if (split[0] == 'clean') {
+                        if (split.size() == 1) {
+                            println "Usage: clean <job>"
+                            return
+                        }
+
+                        def jobName = split[1]
+
+                        def job = ci.jobs[jobName]
+
+                        if (job == null) {
+                            println "No Such Job: ${jobName}"
+                        } else {
+                            ci.logger.info "Cleaning Workspace for Job '${jobName}'"
+                            job.buildDir.deleteDir()
+                        }
                     }
                 }
             }
         })
-        thread.setDaemon(false)
+        thread.daemon = false
         thread.start()
 
         // Must run on the main thread

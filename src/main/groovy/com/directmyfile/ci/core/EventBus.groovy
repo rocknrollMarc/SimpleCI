@@ -65,6 +65,6 @@ class EventBus {
      * @return Handlers
      */
     List<Closure<?>> handlers(String name) {
-        return handlers().get(name)
+        return handlers()[name]
     }
 }

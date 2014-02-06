@@ -5,5 +5,6 @@ package com.directmyfile.ci.api
  */
 abstract class ToolInstaller {
     abstract boolean install();
+
     abstract boolean remove();
 }

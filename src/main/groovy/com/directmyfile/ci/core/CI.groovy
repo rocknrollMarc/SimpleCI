@@ -3,9 +3,12 @@ package com.directmyfile.ci.core
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
 import com.directmyfile.ci.config.CiConfig
+import com.directmyfile.ci.db.SqlHelper
 import com.directmyfile.ci.exception.CIException
 import com.directmyfile.ci.jobs.Job
 import com.directmyfile.ci.jobs.JobStatus
+import com.directmyfile.ci.logging.LogLevel
+import com.directmyfile.ci.logging.Logger
 import com.directmyfile.ci.notify.IRCBot
 import com.directmyfile.ci.plugins.PluginManager
 import com.directmyfile.ci.scm.GitSCM
@@ -14,9 +17,6 @@ import com.directmyfile.ci.security.CISecurity
 import com.directmyfile.ci.tasks.CommandTask
 import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
-import com.directmyfile.ci.db.SqlHelper
-import com.directmyfile.ci.logging.LogLevel
-import com.directmyfile.ci.logging.Logger
 import com.directmyfile.ci.utils.FileMatcher
 import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.web.VertxManager
@@ -128,10 +128,10 @@ class CI {
      */
     private void init() {
         config.load()
-        JavaLogger.getLogger("groovy.sql.Sql").setLevel(JavaLogLevel.OFF)
+        JavaLogger.getLogger("groovy.sql.Sql").level = JavaLogLevel.OFF
 
         def logLevel = LogLevel.parse(config.loggingSection().level.toString().toUpperCase())
-        logger.setLevel(logLevel)
+        logger.level = logLevel
 
         jobQueue = new LinkedBlockingQueue<Job>(config.ciSection()['queueSize'] as int)
         sql.init()
@@ -198,12 +198,13 @@ class CI {
             jobQueue.put(job)
 
             def checkJobInQueue = {
-                return jobQueue.count {
+                jobQueue.count {
                     it.name == job.name
                 } != 1
             }
 
             while (checkJobInQueue()) {
+                //noinspection GroovySwitchStatementWithNoDefault
                 switch (job.status) {
                     case JobStatus.SUCCESS || JobStatus.FAILURE: break
                 }
@@ -225,8 +226,11 @@ class CI {
             job.status = JobStatus.RUNNING
             logger.info "Job '${job.name}' is Running"
 
+            if (!job.buildDir.exists())
+                job.buildDir.mkdirs()
+
             if (scmShouldRun) {
-                def scmConfig = job.getSCM()
+                def scmConfig = job.SCM
 
                 if (!scmTypes.containsKey(scmConfig.type)) {
                     logger.error "Job '${job.name}' is attempting to use a non-existant SCM Type '${scmConfig.type}!'"
@@ -257,7 +261,7 @@ class CI {
                     logger.info "Running Task ${id} of ${job.tasks.size()} for Job '${job.name}'"
 
                     try {
-                        def taskSuccess = taskConfig.getTask().execute(taskConfig.params)
+                        def taskSuccess = taskConfig.task.execute(taskConfig.params)
 
                         if (!taskSuccess) {
                             success = false
