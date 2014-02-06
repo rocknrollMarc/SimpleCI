@@ -16,7 +16,7 @@
 - Document all public methods
 
 ## IRC
-- Get Ubuntu support up-to-par
+- Get Ubuntu support up-to-par (The bundled natives don't like Ubuntu)
 
 ## Job Configuration
 - Make a Job Configuration generator
