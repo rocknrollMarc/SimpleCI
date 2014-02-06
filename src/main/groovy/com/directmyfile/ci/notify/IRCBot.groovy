@@ -88,7 +88,7 @@ class IRCBot {
 
     void build(String channel, String jobName) {
         if (jobName == null) {
-            NativeManager.msg(channel, '> Usage: !build JOB')
+            NativeManager.msg(channel, "> Usage: ${cfg["commandPrefix"]}build JOB")
             return
         }
         def job = ci.jobs[jobName]

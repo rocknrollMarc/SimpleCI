@@ -9,7 +9,7 @@ class GroovyPluginProvider extends PluginProvider {
     void loadPlugins() {
         shell.setVariable("ci", ci)
         def pluginsDir = new File(ci.configRoot, "plugins")
-        new FileMatcher(pluginsDir).withExtension("groovy") { File file ->
+        FileMatcher.create(pluginsDir).withExtension("groovy") { File file ->
             try {
                 def script = shell.parse(file)
                 script.run()
