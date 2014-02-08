@@ -2,6 +2,7 @@ package com.directmyfile.ci.core
 
 import com.directmyfile.ci.api.SCM
 import com.directmyfile.ci.api.Task
+import com.directmyfile.ci.api.ToolInstaller
 import com.directmyfile.ci.config.CiConfig
 import com.directmyfile.ci.db.SqlHelper
 import com.directmyfile.ci.exception.CIException
@@ -35,7 +36,7 @@ class CI {
     /**
      * Configuration Root
      */
-    def configRoot = new File(".")
+    File configRoot = new File(".")
 
     /**
      * CI Server Web Port
@@ -55,7 +56,7 @@ class CI {
     /**
      * CI Configuration
      */
-    def config = new CiConfig(this)
+    final config = new CiConfig(this)
 
     /**
      * SQL Functionality Provider
@@ -65,17 +66,17 @@ class CI {
     /**
      * CI IRC Bot
      */
-    def ircBot = new IRCBot()
+    final ircBot = new IRCBot()
 
     /**
      * CI Security
      */
-    def security = new CISecurity(this)
+    final security = new CISecurity(this)
 
     /**
      * CI Task Types
      */
-    Map<String, Task> taskTypes = [
+    final Map<String, Task> taskTypes = [
             command: new CommandTask(),
             gradle: new GradleTask(),
             make: new MakeTask()
@@ -84,12 +85,12 @@ class CI {
     /**
      * Source Code Manager Types
      */
-    Map<String, SCM> scmTypes = [:]
+    final Map<String, SCM> scmTypes = [:]
 
     /**
      * CI Jobs
      */
-    Map<String, Job> jobs = [:]
+    final Map<String, Job> jobs = [:]
 
     /**
      * Job Queue System
@@ -105,6 +106,11 @@ class CI {
      * CI Event Bus
      */
     final eventBus = new EventBus()
+
+    /**
+     * CI Tool Installers
+     */
+    final Map<String, ToolInstaller> tools = [:]
 
     /**
      * Starts CI Server

@@ -38,4 +38,8 @@ class BuildConfig {
     def getNotify() {
         return json['notify'] ?: [:]
     }
+
+    def getRequirements() {
+        return json['requirements'] ?: [:]
+    }
 }

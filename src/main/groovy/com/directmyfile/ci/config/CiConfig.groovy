@@ -9,7 +9,7 @@ class CiConfig extends GConfig {
         super(new File(ci.configRoot, "config.groovy"))
         this.ci = ci
 
-        setDefaultConfig(this.class.classLoader.getResourceAsStream("defaultConfig.groovy").text)
+        defaultConfig = this.class.classLoader.getResourceAsStream("defaultConfig.groovy").text
     }
 
     @Override
@@ -24,13 +24,13 @@ class CiConfig extends GConfig {
         ci.host = web['host'] as String
         ci.port = web['port'] as int
 
-        ci.sql.setConfig(getProperty("sql", [
+        ci.sql.config = getProperty("sql", [
                 host: "localhost",
                 port: "3306",
                 username: "root",
                 password: "changeme",
                 database: "ci"
-        ]) as Map)
+        ]) as Map
     }
 
     Map ciSection() {

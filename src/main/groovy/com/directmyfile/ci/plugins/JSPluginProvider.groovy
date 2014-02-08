@@ -12,7 +12,7 @@ class JSPluginProvider extends PluginProvider {
         def pluginsDir = new File(ci.configRoot, "plugins")
         js.put("ci", ci)
         js.put("logger", ci.logger)
-        new FileMatcher(pluginsDir).withExtension("js") { File file ->
+        FileMatcher.create(pluginsDir).withExtension("js") { File file ->
             try {
                 js.eval(file.newReader())
             } catch (e) {
