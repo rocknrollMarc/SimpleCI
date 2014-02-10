@@ -26,7 +26,7 @@ repositories {
     }
 
     maven {
-        url 'http://snapshots.repository.codehaus.org/'
+        url 'https://oss.jfrog.org/oss-snapshot-local/'
     }
 }
 
