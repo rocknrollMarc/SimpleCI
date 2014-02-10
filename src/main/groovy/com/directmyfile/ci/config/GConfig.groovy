@@ -16,9 +16,8 @@ class GConfig {
     }
 
     void load() {
-        if (!configFile.exists()) {
+        if (!configFile.exists())
             configFile.write(defaultConfig)
-        }
         def configScript = Utils.parseConfig(configFile)
 
         configScript.run()
@@ -28,27 +27,30 @@ class GConfig {
 
     @Override
     Object getProperty(String key) {
-        if (metaClass.hasProperty(key)) {
-            return metaClass.getMetaProperty(key).getProperty(this)
-        }
-        return config.getVariable(key)
+        if (metaClass.hasProperty(key))
+            return metaClass.getProperty(this, key)
+        else
+            return config.getVariable(key)
     }
 
     Object getProperty(String key, Object defaultValue) {
-        if (!hasProperty(key)) {
+        if (!hasProperty(key))
             return defaultValue
-        } else {
+        else
             return getProperty(key)
-        }
     }
 
     @Override
     void setProperty(String key, Object value) {
-        this.config.setVariable(key, value)
+        if (metaClass.hasProperty(this, key)) {
+            metaClass.setProperty(this, key, value)
+        } else {
+            this.config.setVariable(key, value)
+        }
     }
 
     @Override
     boolean hasProperty(String key) {
-        return config.hasVariable(key)
+        return metaClass.hasProperty(this, key) || config.hasVariable(key)
     }
 }

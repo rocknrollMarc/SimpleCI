@@ -5,7 +5,7 @@ apply plugin: 'github-pages'
 
 defaultTasks 'jar'
 
-import org.ajoberstar.gradle.git.tasks.*
+import org.ajoberstar.gradle.git.tasks.GitTag
 
 buildscript {
     repositories { mavenCentral() }
@@ -62,12 +62,12 @@ task release {
 }
 
 githubPages {
-  repoUri = 'git@github.com:DirectMyFile/SimpleCI.git'
-  pages {
-    from(groovydoc.outputs.files) {
-      into 'docs/groovydoc'
+    repoUri = 'git@github.com:DirectMyFile/SimpleCI.git'
+    pages {
+        from(groovydoc.outputs.files) {
+            into 'docs/groovydoc'
+        }
     }
-  }
 }
 
 tasks.withType(GroovyCompile) {
