@@ -23,23 +23,27 @@ class EventBus {
      * @param data Event Data
      * @param useThread Threaded Execution
      */
-    void dispatch(Map<String, Object> data, boolean useThread) {
-        if (!data.containsKey('name')) {
-            throw new IllegalArgumentException("Dispatching event requires the 'name' parameter to specify event name.")
-        }
-
-        if (!handlers.containsKey(data['name'])) {
+    void dispatch(data, useThread = false) {
+        def name = data['name'] as String
+        if (name == null || !handlers.containsKey(name)) {
             return
         }
-
-        for (c in handlers[data['name'] as String]) {
-            if (useThread) {
-                Thread.startDaemon("${data['name']}[Executor]") {
-                    c(data)
-                }
-            } else {
-                c(data)
+        def handlers = handlers[name] as List<Closure>
+        def execute = { ->
+            handlers.each { Closure handler ->
+                handler.call(data)
             }
+        }
+        if (useThread) {
+            def thread = Thread.startDaemon("EventExecutor[${name}]", execute)
+            thread.uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
+                @Override
+                void uncaughtException(Thread t, Throwable e) {
+                    e.printStackTrace()
+                }
+            }
+        } else {
+            execute()
         }
     }
 
