@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:${ext.groovyVersion}"
+    compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     compile('io.vertx:vertx-core:2.1M3') {
         exclude group: "com.hazelcast", module: "hazelcast"
     }
@@ -110,5 +110,5 @@ jar {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "1.10"
+    gradleVersion = "1.11"
 }
