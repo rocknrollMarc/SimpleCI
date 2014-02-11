@@ -203,6 +203,7 @@ class CI {
 
             jobQueue.put(job)
 
+
             def checkJobInQueue = {
                 jobQueue.count {
                     it.name == job.name

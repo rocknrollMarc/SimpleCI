@@ -93,7 +93,7 @@ jar {
     }
 
     // Pack Dependencies
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    from configurations.compile.collect { it.directory ? it : zipTree(it) }
 
     // Pack Natives
     into("natives") {

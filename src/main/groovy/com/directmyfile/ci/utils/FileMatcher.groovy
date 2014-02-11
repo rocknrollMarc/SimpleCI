@@ -62,6 +62,18 @@ class FileMatcher {
     }
 
     /**
+     * Calls the closure for files with the specified extensions
+     * @param extensions file extensions
+     * @param closure closure to call
+     */
+    void withExtensions(List<String> extensions,
+                        @ClosureParams(value = SimpleType, options = "java.util.File") Closure closure) {
+        extensions.each { extension ->
+            withExtension(extension, closure)
+        }
+    }
+
+    /**
      * Gets a list of files with the specified extension
      * @param extension file extension
      * @return list of files
