@@ -2,11 +2,11 @@ package com.directmyfile.ci.web
 
 class MimeTypes {
     static Map<String, List<String>> types = [
-            "font/x-woff": [".woff"],
-            "text/html": [".html", ".htm"],
-            "application/json": [".json"],
+            "font/x-woff"           : [".woff"],
+            "text/html"             : [".html", ".htm"],
+            "application/json"      : [".json"],
             "application/javascript": [".js"],
-            "text/css": [".css"]
+            "text/css"              : [".css"]
     ]
 
     static String get(String fileName) {

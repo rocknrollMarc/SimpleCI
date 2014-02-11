@@ -16,8 +16,9 @@ class JarPluginProvider extends PluginProvider {
             if ("Plugin" in manifest.keySet()) { // A Class that extends Plugin
                 def className = manifest.getValue("Plugin")
                 def clazz = Class.forName(className)
-                if (!clazz.isAssignableFrom(Plugin))
+                if (!clazz.isAssignableFrom(Plugin)) {
                     throw new CIException("Plugin Jar's Class is not an instance of ${Plugin.class.name}")
+                }
                 def instance = clazz.newInstance() as Plugin
                 instance.apply(ci)
             }

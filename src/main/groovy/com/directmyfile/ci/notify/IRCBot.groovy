@@ -14,12 +14,12 @@ class IRCBot {
 
         def ciConfig = ci.config
         cfg = ciConfig.getProperty("irc", [
-                enabled: false,
-                host: "irc.esper.net",
-                port: 6667,
-                nickname: "SimpleCI",
-                username: "SimpleCI",
-                channels: [
+                enabled      : false,
+                host         : "irc.esper.net",
+                port         : 6667,
+                nickname     : "SimpleCI",
+                username     : "SimpleCI",
+                channels     : [
                         "#DirectMyFile"
                 ],
                 commandPrefix: "!"

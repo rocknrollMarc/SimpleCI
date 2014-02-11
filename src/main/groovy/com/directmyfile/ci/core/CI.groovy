@@ -78,8 +78,8 @@ class CI {
      */
     final Map<String, Task> taskTypes = [
             command: new CommandTask(),
-            gradle: new GradleTask(),
-            make: new MakeTask()
+            gradle : new GradleTask(),
+            make   : new MakeTask()
     ]
 
     /**
@@ -233,8 +233,9 @@ class CI {
             job.status = JobStatus.RUNNING
             logger.info "Job '${job.name}' is Running"
 
-            if (!job.buildDir.exists())
+            if (!job.buildDir.exists()) {
                 job.buildDir.mkdirs()
+            }
 
             if (scmShouldRun) {
                 def scmConfig = job.SCM

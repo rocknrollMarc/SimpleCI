@@ -37,8 +37,8 @@ class GradleTask extends Task {
         }
 
         return new CommandTask().execute([
-                ci: ci,
-                job: job,
+                ci     : ci,
+                job    : job,
                 command: "${gradleCommand} ${opts.join(' ')} ${tasks.join(' ')}"
         ])
     }

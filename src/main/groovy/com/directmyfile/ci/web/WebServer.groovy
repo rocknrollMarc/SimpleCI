@@ -112,7 +112,7 @@ class WebServer {
 
             ci.jobs.values().each { job ->
                 jobInfo += [
-                        name: job.name,
+                        name  : job.name,
                         status: job.status.ordinal()
                 ]
             }
@@ -168,10 +168,10 @@ class WebServer {
 
             history.entries.each { entry ->
                 histories.add([
-                        id: entry.id,
-                        number: entry.number,
-                        status: entry.status,
-                        log: entry.log,
+                        id       : entry.id,
+                        number   : entry.number,
+                        status   : entry.status,
+                        log      : entry.log,
                         timestamp: (entry.logTime as Timestamp)
                 ])
             }

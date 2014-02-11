@@ -17,8 +17,8 @@ class MakeTask extends Task {
         def targets = config['targets'] as List<String>
 
         return new CommandTask().execute([
-                ci: ci,
-                job: job,
+                ci     : ci,
+                job    : job,
                 command: "make ${targets.join(' ')}"
         ])
     }

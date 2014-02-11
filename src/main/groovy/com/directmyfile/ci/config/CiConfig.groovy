@@ -25,8 +25,8 @@ class CiConfig extends GConfig {
         ci.port = web['port'] as int
 
         ci.sql.config = getProperty("sql", [
-                host: "localhost",
-                port: "3306",
+                host    : "localhost",
+                port    : "3306",
                 username: "root",
                 password: "changeme",
                 database: "ci"

@@ -28,8 +28,9 @@ class SqlHelper {
     }
 
     def getSql() {
-        if (sql.connection.closed)
+        if (sql.connection.closed) {
             init()
+        }
         return sql
     }
 
@@ -38,8 +39,9 @@ class SqlHelper {
         fullQuery.tokenize(";").each { line ->
             def query = line.replaceAll("\n", "").trim()
             ci.logger.debug "Executing SQL: ${query}"
-            if (!getSql().execute(query))
+            if (!getSql().execute(query)) {
                 success = false
+            }
         }
         return success
     }
