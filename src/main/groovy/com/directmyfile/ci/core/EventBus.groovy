@@ -1,10 +1,15 @@
 package com.directmyfile.ci.core
 
+import com.directmyfile.ci.utils.MultiMap
+import jpower.core.Task as PowerTask
+import jpower.core.WorkerPool
+
 /**
- * The Groovy Event Bus.
+ * A Groovy Event Bus that uses JPower's Worker Pool
  */
 class EventBus {
-    private Map<String, List<Closure<?>>> handlers = [:]
+    private MultiMap<Closure<?>> handlers = new MultiMap<Closure<?>>()
+    private WorkerPool workerPool = new WorkerPool(4)
 
     /**
      * Hook into an Event
@@ -12,54 +17,33 @@ class EventBus {
      * @param handler Event Handler
      */
     void on(String name, Closure handler) {
-        if (!handlers.containsKey(name)) {
-            handlers[name] = []
-        }
         handlers[name].add(handler)
     }
 
     /**
      * Dispatch an Event
      * @param data Event Data
-     * @param useThread Threaded Execution
      */
-    void dispatch(data, useThread = false) {
-        def name = data['name'] as String
-        if (name == null || !handlers.containsKey(name)) {
+    void dispatch(String eventName, Map<String, Object> options = [:]) {
+        def eventHandlers = handlers[eventName]
+        if (eventHandlers.empty) { // No Event Handlers to call
             return
         }
-        def handlers = handlers[name] as List<Closure>
-        def execute = { ->
-            handlers.each { Closure handler ->
-                handler.call(data)
-            }
-        }
-        if (useThread) {
-            def thread = Thread.startDaemon("EventExecutor[${name}]", execute)
-            thread.uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
-                @Override
-                void uncaughtException(Thread t, Throwable e) {
-                    e.printStackTrace()
+        workerPool.submit(new PowerTask() {
+            @Override
+            void execute() {
+                eventHandlers.each { Closure handler ->
+                    handler(options)
                 }
             }
-        } else {
-            execute()
-        }
-    }
-
-    /**
-     * Dispatch an Event - Threaded
-     * @param data Event Data
-     */
-    void dispatch(Map<String, Object> data) {
-        dispatch(data, true)
+        })
     }
 
     /**
      * Get all Handlers
      * @return Handlers
      */
-    Map<String, List<Closure<?>>> handlers() {
+    MultiMap<Closure<?>> handlers() {
         return handlers
     }
 

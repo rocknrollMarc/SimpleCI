@@ -118,8 +118,8 @@ class IRCBot {
 
     void onReady() {
         def channels = cfg['channels'] as List<String>
-        channels.each {
-            NativeManager.join(it)
+        channels.each { channel ->
+            NativeManager.join(channel)
         }
         ci.eventBus.dispatch(name: "irc/ready", time: System.currentTimeMillis())
     }

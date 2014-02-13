@@ -1,13 +1,17 @@
 package com.directmyfile.ci.logging
 
+import com.directmyfile.ci.core.EventBus
+
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 class Logger {
     private static final Map<String, Logger> loggers = [:]
-    private static final dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-    private String name
-    def level = LogLevel.INFO
+    final String name
+    private final eventBus = new EventBus()
+    LogLevel currentLevel = LogLevel.INFO
 
     Logger(String name) {
         this.name = name
@@ -22,16 +26,31 @@ class Logger {
     }
 
     boolean canLog(LogLevel input) {
-        return level != LogLevel.DISABLED && input == level || input == LogLevel.ERROR || input == LogLevel.INFO && level == LogLevel.DEBUG
+        return currentLevel != LogLevel.DISABLED && input == currentLevel || input == LogLevel.ERROR || input == LogLevel.INFO && currentLevel == LogLevel.DEBUG
     }
 
-    String getName() {
-        return name
-    }
-
-    void log(LogLevel level, String message) {
+    void log(LogLevel level, String message, Throwable e = null) {
         if (canLog(level)) {
-            println "[${dateFormat.format(new Date())}][${name}][${level.name()}] ${message}"
+            def timestamp = dateFormat.format(new Date())
+            def complete = "[${timestamp}][${name}][${level.name()}] ${message}"
+            def cancelled = false
+            eventBus.dispatch("log", [
+                    level    : level,
+                    message  : message,
+                    exception: e,
+                    timestamp: timestamp,
+                    complete : complete,
+                    cancel   : { boolean cancel = true ->
+                        cancelled = cancel
+                    }
+            ])
+            sleep(10)
+            if (!cancelled) {
+                println complete
+                if (e) {
+                    e.printStackTrace()
+                }
+            }
         }
     }
 
@@ -52,7 +71,22 @@ class Logger {
     }
 
     void error(String message, Throwable e) {
-        log(LogLevel.ERROR, message)
+        log(LogLevel.ERROR, message, e)
         e.printStackTrace()
+    }
+
+    void logTo(File file) {
+        eventBus.on('log') { Map event ->
+            def message = event.complete as String
+            def exception = event.exception
+            file.append("${message}\n")
+            if (exception) {
+                (exception as Throwable).printStackTrace(file.newPrintWriter())
+            }
+        }
+    }
+
+    void on(String eventName, Closure handler) {
+        eventBus.on(eventName, handler)
     }
 }

@@ -83,6 +83,7 @@ class GitSCM extends SCM {
         def current = changelog.newEntry()
         def type = 1
         for (entry in log) {
+            //noinspection GroovySwitchStatementWithNoDefault
             switch (type) {
                 case 1:
                     type++

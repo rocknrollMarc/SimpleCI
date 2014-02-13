@@ -19,7 +19,7 @@ class CISecurity {
 
     boolean register(String username, String password) {
 
-        if (!isSecure()) {
+        if (!secure) {
             return false
         }
 
@@ -42,7 +42,7 @@ class CISecurity {
 
     boolean checkAccess(String username, String password) {
 
-        if (!isSecure()) {
+        if (!secure) {
             return true
         }
 

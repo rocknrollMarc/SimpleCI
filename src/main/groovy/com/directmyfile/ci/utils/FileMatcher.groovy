@@ -37,7 +37,7 @@ class FileMatcher {
         def files = []
 
         parent.eachFileRecurse(type) { file ->
-            files += file
+            files.add(file)
         }
 
         return files
@@ -52,9 +52,9 @@ class FileMatcher {
                        @ClosureParams(value = SimpleType, options = "java.util.File") Closure closure) {
         def allFiles = recursive(FileType.FILES)
         List<File> matched = []
-        allFiles.findAll { file ->
+        allFiles.findAll { File file ->
             if (file.name.endsWith(".${extension}")) {
-                matched += file
+                matched.add(file)
             }
         }
 
@@ -68,7 +68,7 @@ class FileMatcher {
      */
     void withExtensions(List<String> extensions,
                         @ClosureParams(value = SimpleType, options = "java.util.File") Closure closure) {
-        extensions.each { extension ->
+        extensions.each { String extension ->
             withExtension(extension, closure)
         }
     }
@@ -82,7 +82,7 @@ class FileMatcher {
         def files = []
 
         withExtension(extension) { file ->
-            files += file
+            files.add(file)
         }
 
         return files
@@ -94,8 +94,8 @@ class FileMatcher {
      * @return list of files
      */
     List<File> matching(Pattern pattern) {
-        recursive(FileType.FILES).findAll {
-            it.name.matches(pattern)
+        recursive(FileType.FILES).findAll { File file ->
+            file.name.matches(pattern)
         }
     }
 

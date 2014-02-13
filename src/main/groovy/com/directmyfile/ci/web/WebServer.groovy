@@ -164,7 +164,7 @@ class WebServer {
 
             out["length"] = history.entries.size()
 
-            def histories = new ArrayList<Map<String, Object>>(history.latestBuild.number)
+            def histories = new ArrayList<Map<String, Object>>(history.latestBuild?.number ?: 0)
 
             history.entries.each { entry ->
                 histories.add([

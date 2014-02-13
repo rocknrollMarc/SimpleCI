@@ -1,6 +1,7 @@
 package com.directmyfile.ci.core
 
 import com.directmyfile.ci.logging.Logger
+import com.directmyfile.ci.utils.ConsoleHandler
 import org.apache.log4j.Level as Log4jLevel
 import org.apache.log4j.Logger as Log4j
 
@@ -13,7 +14,7 @@ class Main {
     private static logger = Logger.getLogger("Console")
 
     @SuppressWarnings("GroovyEmptyStatementBody")
-    static void main(String[] args) throws Exception {
+    static void main(String[] consoleArgs) throws Exception {
 
         /* Configure log4j to fix warnings */
         Log4j.rootLogger.level = Log4jLevel.OFF
@@ -37,64 +38,52 @@ class Main {
         def ci = new CI()
         ci.start()
 
-        def thread = new Thread(new Runnable() {
-            @Override
-            void run() {
-                def reader = System.in.newReader()
+        ConsoleHandler.loop { String command, List<String> args ->
+            if (command == 'build') {
 
-                reader.eachLine { line ->
-                    def split = line.tokenize(' ')
+                if (args.size() == 0) {
+                    println "Usage: build <job>"
+                    return
+                }
 
-                    if (split[0] == 'build') {
+                def jobName = args[0]
 
-                        if (split.size() == 1) {
-                            println "Usage: build <job>"
-                            return
-                        }
+                def job = ci.jobs[jobName]
 
-                        def jobName = split[1]
+                if (job == null) {
+                    println "No Such Job: ${jobName}"
+                } else {
+                    ci.runJob(job)
+                }
+            } else if (command == 'restart') {
+                ci.vertxManager.stopWebServer()
+                ci = null
+                System.gc()
+                ci = new CI()
+                ci.start()
+            } else if (command == 'stop') {
+                System.exit(0)
+            } else if (command == 'clean') {
+                if (args.size() == 0) {
+                    println "Usage: clean <job>"
+                    return
+                }
 
-                        def job = ci.jobs[jobName]
+                def jobName = args[0]
 
-                        if (job == null) {
-                            println "No Such Job: ${jobName}"
-                        } else {
-                            ci.runJob(job)
-                        }
-                    } else if (split[0] == 'restart') {
-                        ci.vertxManager.stopWebServer()
-                        ci = null
-                        System.gc()
-                        ci = new CI()
-                        ci.start()
-                    } else if (split[0] == 'stop') {
-                        System.exit(0)
-                    } else if (split[0] == 'clean') {
-                        if (split.size() == 1) {
-                            println "Usage: clean <job>"
-                            return
-                        }
+                def job = ci.jobs[jobName]
 
-                        def jobName = split[1]
-
-                        def job = ci.jobs[jobName]
-
-                        if (job == null) {
-                            println "No Such Job: ${jobName}"
-                        } else {
-                            ci.logger.info "Cleaning Workspace for Job '${jobName}'"
-                            job.buildDir.deleteDir()
-                        }
-                    }
+                if (job == null) {
+                    println "No Such Job: ${jobName}"
+                } else {
+                    ci.logger.info "Cleaning Workspace for Job '${jobName}'"
+                    job.buildDir.deleteDir()
                 }
             }
-        })
-        thread.daemon = false
-        thread.start()
+        }
 
         // Must run on the main thread
         ci.startBot()
-
     }
 
     /* Shut down & startup methods */
