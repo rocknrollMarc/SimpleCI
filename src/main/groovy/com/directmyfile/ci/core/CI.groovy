@@ -145,7 +145,9 @@ class CI {
         new File(configRoot, 'logs').mkdirs()
         pluginManager.loadPlugins()
 
-        eventBus.dispatch(name: "ci/init", time: System.currentTimeMillis())
+        eventBus.dispatch("ci.init", [
+                time: System.currentTimeMillis()
+        ])
 
         scmTypes['git'] = new GitSCM(this)
         scmTypes['none'] = new NoneSCM()
@@ -187,6 +189,8 @@ class CI {
         }
 
         logger.info "Loaded ${jobs.size()} jobs."
+
+        eventBus.dispatch("ci.jobs.loaded")
     }
 
     /**
@@ -220,7 +224,11 @@ class CI {
             // Update Number
             number = (job.history.latestBuild?.number ?: 0) + 1
 
-            eventBus.dispatch(name: "ci/job-running", jobName: job.name, lastStatus: lastStatus, number: number)
+            eventBus.dispatch("ci.job.running", [
+                    jobName: job.name,
+                    lastStatus: lastStatus,
+                    number: number
+            ])
 
             def timer = new com.directmyfile.ci.utils.Timer()
 
@@ -304,7 +312,7 @@ class CI {
                 job.status = JobStatus.SUCCESS
             }
 
-            eventBus.dispatch("ci/job-done", [
+            eventBus.dispatch("ci.job.done", [
                     jobName: job.name,
                     status: job.status,
                     buildTime: buildTime,

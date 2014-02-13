@@ -40,7 +40,7 @@ class IRCBot {
             NativeManager.addAdmin(it)
         }
 
-        ci.eventBus.on("ci/job-running") { Map<String, Object> e ->
+        ci.eventBus.on("ci.job.running") { Map<String, Object> e ->
             def jobName = e.jobName as String
             def job = ci.jobs[jobName]
             def status = e['lastStatus'] as JobStatus
@@ -53,7 +53,7 @@ class IRCBot {
             }
         }
 
-        ci.eventBus.on("ci/job-done") { Map<String, Object> e ->
+        ci.eventBus.on("ci.job.done") { Map<String, Object> e ->
             def jobName = e.jobName as String
             def status = e.status as JobStatus
             def time = e.timeString as String
@@ -121,6 +121,8 @@ class IRCBot {
         channels.each { channel ->
             NativeManager.join(channel)
         }
-        ci.eventBus.dispatch(name: "irc/ready", time: System.currentTimeMillis())
+        ci.eventBus.dispatch("irc.ready", [
+                time: System.currentTimeMillis()
+        ])
     }
 }
