@@ -55,7 +55,7 @@ compileGroovy {
 }
 
 tasks.withType(CodeNarc) {
-    configFile = file("gradle/CodeNarc.xml")
+    configFile = file("gradle/CodeNarc.groovy")
     reports {
         html.enabled = true
         xml.enabled = true

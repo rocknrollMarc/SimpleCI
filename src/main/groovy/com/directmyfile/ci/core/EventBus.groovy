@@ -8,21 +8,15 @@ import jpower.core.WorkerPool
  * A Groovy Event Bus that uses JPower's Worker Pool
  */
 class EventBus {
-    private MultiMap<Closure<?>> handlers = new MultiMap<Closure<?>>()
-    private WorkerPool workerPool = new WorkerPool(4)
-    private CI ci
-
-    EventBus(CI ci) {
-        this.ci = ci
-    }
+    private final MultiMap<Closure<?>> handlers = new MultiMap<Closure<?>>()
+    private final WorkerPool workerPool = new WorkerPool(4)
 
     /**
      * Hook into an Event
      * @param name Event Name
      * @param handler Event Handler
      */
-    void on(String name, @DelegatesTo(CI) Closure handler) {
-        handler.delegate = ci
+    void on(String name, Closure handler) {
         handlers[name].add(handler)
     }
 

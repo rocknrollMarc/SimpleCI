@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 
 class Logger {
     private static final Map<String, Logger> loggers = [:]
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.default)
 
     final String name
     private final eventBus = new EventBus()

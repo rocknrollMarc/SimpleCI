@@ -5,7 +5,7 @@ import com.directmyfile.ci.utils.Utils
 import groovy.sql.Sql
 
 class SqlHelper {
-    private CI ci
+    private final CI ci
     private Sql sql
     private Map config
 

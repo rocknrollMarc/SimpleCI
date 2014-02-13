@@ -7,7 +7,7 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 class CISecurity {
-    private CI ci
+    private final CI ci
 
     CISecurity(CI ci) {
         this.ci = ci

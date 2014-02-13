@@ -10,7 +10,7 @@ import java.util.regex.Pattern
  * Find files in a directory.
  */
 class FileMatcher {
-    private File parent
+    private final File parent
 
     /**
      * Create a File Matcher looking in the specified parent directory.

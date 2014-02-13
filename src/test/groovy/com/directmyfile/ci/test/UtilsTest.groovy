@@ -4,6 +4,7 @@ import com.directmyfile.ci.utils.Utils
 import org.junit.Test
 
 class UtilsTest extends CITest {
+
     @Test
     void testFindCommand() {
         def actual = Utils.findCommandOnPath("sh")

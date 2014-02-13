@@ -3,7 +3,7 @@ package com.directmyfile.ci.config
 import com.directmyfile.ci.utils.Utils
 
 class GConfig {
-    private File configFile
+    private final File configFile
     private Binding config
     private String defaultConfig
 

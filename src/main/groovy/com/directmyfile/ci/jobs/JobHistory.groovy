@@ -6,8 +6,8 @@ import groovy.transform.ToString
 import java.sql.Timestamp
 
 class JobHistory {
-    private List<Entry> entries = []
-    private Job job
+    private final List<Entry> entries = []
+    private final Job job
 
     JobHistory(Job job) {
         this.job = job

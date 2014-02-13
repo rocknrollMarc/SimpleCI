@@ -22,6 +22,7 @@ import com.directmyfile.ci.utils.FileMatcher
 import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.web.VertxManager
 
+import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.logging.Level as JavaLogLevel
 import java.util.logging.Logger as JavaLogger
@@ -95,7 +96,7 @@ class CI {
     /**
      * Job Queue System
      */
-    LinkedBlockingQueue<Job> jobQueue
+    BlockingQueue<Job> jobQueue
 
     /**
      * Vert.x Manager for managing Vert.x related systems
@@ -105,7 +106,7 @@ class CI {
     /**
      * CI Event Bus
      */
-    final eventBus = new EventBus(this)
+    final eventBus = new EventBus()
 
     /**
      * CI Tool Installers

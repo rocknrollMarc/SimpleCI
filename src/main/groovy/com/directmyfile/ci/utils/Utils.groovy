@@ -102,7 +102,7 @@ class Utils {
     static String generateHash(byte[] input) {
         def messageDigest = MessageDigest.getInstance("SHA-256")
         messageDigest.update(input)
-        return new BigInteger(1, messageDigest.digest()).toString(16).padLeft(40, '0')
+        return toString(messageDigest.digest())
     }
 
     static String toString(byte[] input) {

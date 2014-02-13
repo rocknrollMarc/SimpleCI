@@ -3,7 +3,7 @@ package com.directmyfile.ci.config
 import com.directmyfile.ci.core.CI
 
 class CiConfig extends GConfig {
-    private CI ci
+    private final CI ci
 
     CiConfig(CI ci) {
         super(new File(ci.configRoot, "config.groovy"))

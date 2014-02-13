@@ -1,7 +1,7 @@
 package com.directmyfile.ci.utils
 
 class MultiMap<V> {
-    private Map<String, List<V>> delegate = [:]
+    private final Map<String, List<V>> delegate = [:]
 
     @Override
     List<V> getAt(String key) {

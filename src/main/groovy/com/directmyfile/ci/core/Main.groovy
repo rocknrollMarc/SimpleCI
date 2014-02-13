@@ -11,7 +11,7 @@ class Main {
     private static def ciRunning = true
     private static def botRunning = false
 
-    private static logger = Logger.getLogger("Console")
+    private static final logger = Logger.getLogger("Console")
 
     @SuppressWarnings("GroovyEmptyStatementBody")
     static void main(String[] consoleArgs) throws Exception {
@@ -58,7 +58,7 @@ class Main {
             } else if (command == 'restart') {
                 ci.vertxManager.stopWebServer()
                 ci = null
-                System.gc()
+                sleep(200)
                 ci = new CI()
                 ci.start()
             } else if (command == 'stop') {
