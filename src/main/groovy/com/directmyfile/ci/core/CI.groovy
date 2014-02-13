@@ -304,7 +304,13 @@ class CI {
                 job.status = JobStatus.SUCCESS
             }
 
-            eventBus.dispatch(name: "ci/job-done", jobName: job.name, status: job.status, buildTime: buildTime, timeString: timer.toString(), number: number)
+            eventBus.dispatch("ci/job-done", [
+                    jobName: job.name,
+                    status: job.status,
+                    buildTime: buildTime,
+                    timeString: timer.toString(),
+                    number: number
+            ])
 
             def log = job.logFile.text
 

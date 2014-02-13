@@ -1,0 +1,31 @@
+project.ext.mavenPom = pom {
+    groupId = rootProject.group
+    artifactId = "SimpleCI"
+    version = "${project.versionInfo.maven}"
+    project {
+        name = project.name as String
+        packaging = 'jar'
+        description = project.description as String
+        inceptionYear = '2013'
+        url = 'http://www.directmyfile.com/'
+
+        scm {
+            url = 'https://github.com/DirectMyFile/JPower/'
+            connection = 'scm:git:git://github.com/DirectMyFile/JPower.git'
+            developerConnection = 'scm:git:git@github.com:DirectMyFile/JPower.git'
+        }
+
+        issueManagement {
+            system = 'jira'
+            url 'https://directmyfile.atlassian.net/'
+        }
+
+        licenses {
+            license {
+                name = 'GNU Lesser General Public License (LGPL), Version 3'
+                url = 'http://www.gnu.org/licenses/lgpl.txt'
+                distribution = 'repo'
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+distributions {
+    main {
+        baseName = 'SimpleCI'
+        contents {
+            from("${buildDir}/libs/SimpleCI-${version}.jar") {
+                into("lib")
+                rename("SimpleCI-${version}.jar", "CI.jar")
+            }
+        }
+    }
+}
+
+tasks.getByName("distZip").dependsOn("jar")
+tasks.getByName("distTar").dependsOn("jar")
+
+task dist(dependsOn: [ "distZip", "distTar" ]) {}

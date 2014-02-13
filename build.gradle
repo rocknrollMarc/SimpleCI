@@ -1,21 +1,17 @@
 apply plugin: 'groovy'
 apply plugin: 'build-dashboard'
 apply plugin: 'codenarc'
-apply plugin: 'github-pages'
+apply plugin: 'maven'
+apply plugin: 'distribution'
 
 defaultTasks 'jar'
 
-import org.ajoberstar.gradle.git.tasks.GitTag
-
-buildscript {
-    repositories { mavenCentral() }
-    dependencies { classpath 'org.ajoberstar:gradle-git:0.6.3' }
-}
+version = "0.9.0"
+group = "com.directmyfile"
 
 ext {
     groovyVersion = '2.3.0-SNAPSHOT:indy'
     jdkHome = "${System.getProperty("java.home")}/../"
-    version = "0.9.0"
 }
 
 repositories {
@@ -39,6 +35,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'mysql:mysql-connector-java:5.1.28'
     compile 'com.directmyfile.jpower:jpower-core:1.2.1-SNAPSHOT'
+
     testCompile 'junit:junit:4.11'
 
     codenarc 'org.codenarc:CodeNarc:0.20'
@@ -53,31 +50,16 @@ task makeDBot(type: Exec) {
     commandLine "./gradle/dbot.sh", jdkHome
 }
 
-task tagRelease(type: GitTag) {
-    tagName = "v${version}"
-    message = "Release of v${version}"
-}
-
-task release {
-    dependsOn "jar", "publishGhPages", "tagRelease"
-}
-
-githubPages {
-    repoUri = 'git@github.com:DirectMyFile/SimpleCI.git'
-    pages {
-        from(groovydoc.outputs.files) {
-            into 'docs/groovydoc'
-        }
-    }
-}
-
-tasks.withType(GroovyCompile) {
+compileGroovy {
     groovyOptions.optimizationOptions.indy = true
 }
 
 tasks.withType(CodeNarc) {
     configFile = file("gradle/CodeNarc.xml")
-    reportFormat = "html"
+    reports {
+        html.enabled = true
+        xml.enabled = true
+    }
 }
 
 // Compile Java code with the Groovy compiler
@@ -114,3 +96,8 @@ jar {
 task wrapper(type: Wrapper) {
     gradleVersion = "1.11"
 }
+
+apply from: 'gradle/version.gradle'
+apply from: 'gradle/pom.gradle'
+apply from: 'gradle/upload.gradle'
+apply from: 'gradle/dist.gradle'
