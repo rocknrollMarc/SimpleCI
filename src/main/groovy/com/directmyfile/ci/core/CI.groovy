@@ -105,7 +105,7 @@ class CI {
     /**
      * CI Event Bus
      */
-    final eventBus = new EventBus()
+    final eventBus = new EventBus(this)
 
     /**
      * CI Tool Installers

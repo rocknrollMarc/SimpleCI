@@ -10,13 +10,19 @@ import jpower.core.WorkerPool
 class EventBus {
     private MultiMap<Closure<?>> handlers = new MultiMap<Closure<?>>()
     private WorkerPool workerPool = new WorkerPool(4)
+    private CI ci
+
+    EventBus(CI ci) {
+        this.ci = ci
+    }
 
     /**
      * Hook into an Event
      * @param name Event Name
      * @param handler Event Handler
      */
-    void on(String name, Closure handler) {
+    void on(String name, @DelegatesTo(CI) Closure handler) {
+        handler.delegate = ci
         handlers[name].add(handler)
     }
 

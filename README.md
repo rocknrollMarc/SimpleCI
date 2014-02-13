@@ -6,7 +6,8 @@ SimpleCI is a Continuous Integration Server written in [Groovy](http://groovy.co
 
 ## Links
 
-[Issue Tracker](https://directmyfile.atlassian.net/browse/CI)
+[Wiki](https://github.com/DirectMyFile/SimpleCI/wiki)
+[Issues](https://github.com/DirectMyFile/SimpleCI/issues)
 
 ## Features
 
