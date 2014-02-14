@@ -16,6 +16,7 @@ import com.directmyfile.ci.scm.GitSCM
 import com.directmyfile.ci.scm.NoneSCM
 import com.directmyfile.ci.security.CISecurity
 import com.directmyfile.ci.tasks.CommandTask
+import com.directmyfile.ci.tasks.GitTask
 import com.directmyfile.ci.tasks.GradleTask
 import com.directmyfile.ci.tasks.MakeTask
 import com.directmyfile.ci.utils.FileMatcher
@@ -80,7 +81,8 @@ class CI {
     final Map<String, Task> taskTypes = [
             command: new CommandTask(),
             gradle : new GradleTask(),
-            make   : new MakeTask()
+            make: new MakeTask(),
+            git : new GitTask()
     ]
 
     /**
