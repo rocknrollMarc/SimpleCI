@@ -1,29 +1,32 @@
 package com.directmyfile.ci.utils
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import groovy.transform.CompileStatic
 import groovy.transform.Memoized
 import org.codehaus.groovy.control.CompilerConfiguration
-import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 
 import java.security.MessageDigest
 import java.security.SecureRandom
 
 class Utils {
 
-    static def gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create()
+    static Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create()
 
+    @CompileStatic
     static Process execute(List<String> command) {
         def builder = new ProcessBuilder()
         builder.command(command)
         return builder.start()
     }
 
+    @CompileStatic
     @Memoized(maxCacheSize = 10)
     static File findCommandOnPath(String executableName) {
         def systemPath = System.getenv("PATH")
         def pathDirs = systemPath.split(File.pathSeparator)
 
-        def executable = null
+        File executable = null
         for (pathDir in pathDirs) {
             def file = new File(pathDir, executableName)
             if (file.file && file.canExecute()) {
@@ -34,85 +37,67 @@ class Utils {
         return executable
     }
 
+    @CompileStatic
     static Script parseConfig(File file) {
         def cc = new CompilerConfiguration()
-        def scc = new SecureASTCustomizer()
-        scc.with {
-            closuresAllowed = false
-            methodDefinitionAllowed = false
-            importsWhitelist = []
-            staticImportsWhitelist = []
-            starImportsWhitelist = []
-            constantTypesClassesWhiteList = [
-                    Integer,
-                    GString,
-                    String,
-                    Float,
-                    Double,
-                    Long,
-                    Float.TYPE,
-                    Double.TYPE,
-                    Long.TYPE,
-                    int,
-                    long,
-                    float,
-                    double,
-                    Object,
-                    Boolean.TYPE,
-                    Boolean,
-                    boolean
-            ].asImmutable()
-        }
-
-        cc.addCompilationCustomizers(scc)
 
         return new GroovyShell(cc).parse(file)
     }
 
-    static def resource(String path) {
+    @CompileStatic
+    static InputStream resource(String path) {
         return Utils.class.classLoader.getResourceAsStream(path)
     }
 
+    @CompileStatic
     @Memoized(maxCacheSize = 15)
     static def resourceToString(String path) {
         return resource(path).text
     }
 
+    @CompileStatic
     @Memoized(maxCacheSize = 15)
     static def encodeBase64(String input) {
         return input.bytes.encodeBase64().writeTo(new StringWriter()).toString()
     }
 
+    @CompileStatic
     @Memoized(maxCacheSize = 15)
     static def decodeBase64(String input) {
         return new String(input.decodeBase64())
     }
 
+    @CompileStatic
     static def newProperties() {
         return new Properties()
     }
 
+    @CompileStatic
     static byte[] generateSalt(int size) {
-        SecureRandom random = new SecureRandom()
+        def random = new SecureRandom()
         byte[] list = new byte[size]
         random.nextBytes(list)
         return list
     }
 
+    @CompileStatic
     static String generateHash(byte[] input) {
         def messageDigest = MessageDigest.getInstance("SHA-256")
         messageDigest.update(input)
         return toString(messageDigest.digest())
     }
 
+    @CompileStatic
     static String toString(byte[] input) {
         return new BigInteger(1, input).toString(16).padLeft(40, '0')
     }
 
+    @CompileStatic
     static def encodeJSON(Object object) {
         return gson.toJson(object)
     }
 
+    @CompileStatic
     static def parseJSON(String text, Class<?> type) {
         return gson.fromJson(text, type)
     }

@@ -81,8 +81,8 @@ class CI {
     final Map<String, Task> taskTypes = [
             command: new CommandTask(),
             gradle : new GradleTask(),
-            make: new MakeTask(),
-            git : new GitTask()
+            make   : new MakeTask(),
+            git    : new GitTask()
     ]
 
     /**
@@ -140,7 +140,7 @@ class CI {
         JavaLogger.getLogger("groovy.sql.Sql").level = JavaLogLevel.OFF
 
         def logLevel = LogLevel.parse(config.loggingSection().level.toString().toUpperCase())
-        logger.level = logLevel
+        logger.currentLevel = logLevel
 
         jobQueue = new LinkedBlockingQueue<Job>(config.ciSection()['queueSize'] as int)
         sql.init()
@@ -228,9 +228,9 @@ class CI {
             number = (job.history.latestBuild?.number ?: 0) + 1
 
             eventBus.dispatch("ci.job.running", [
-                    jobName: job.name,
+                    jobName   : job.name,
                     lastStatus: lastStatus,
-                    number: number
+                    number    : number
             ])
 
             def timer = new com.directmyfile.ci.utils.Timer()
@@ -316,11 +316,11 @@ class CI {
             }
 
             eventBus.dispatch("ci.job.done", [
-                    jobName: job.name,
-                    status: job.status,
-                    buildTime: buildTime,
+                    jobName   : job.name,
+                    status    : job.status,
+                    buildTime : buildTime,
                     timeString: timer.toString(),
-                    number: number
+                    number    : number
             ])
 
             def log = job.logFile.text

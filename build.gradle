@@ -4,6 +4,7 @@ apply plugin: 'codenarc'
 apply plugin: 'maven'
 apply plugin: 'distribution'
 
+
 defaultTasks 'jar'
 
 version = "0.9.0"
@@ -34,7 +35,7 @@ dependencies {
     compile 'io.vertx:lang-groovy:2.0.0-final'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'mysql:mysql-connector-java:5.1.28'
-    compile 'com.directmyfile.jpower:jpower-core:1.2.1-SNAPSHOT'
+    compile 'com.directmyfile.jpower:jpower-core:1.3.0-SNAPSHOT'
 
     testCompile 'junit:junit:4.11'
 
@@ -43,6 +44,7 @@ dependencies {
 
 check.dependsOn 'jar'
 
+/* TODO: Port dbot.sh script to Gradle */
 task makeDBot(type: Exec) {
     inputs.dir file("src/main/c")
     inputs.dir file("src/main/d")
