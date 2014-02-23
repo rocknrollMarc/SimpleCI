@@ -1,8 +1,7 @@
 package com.directmyfile.ci.jobs
 
 import com.directmyfile.ci.config.BuildConfig
-import com.directmyfile.ci.config.SCMConfig
-import com.directmyfile.ci.config.TaskConfig
+
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.scm.Changelog
 
@@ -17,7 +16,7 @@ class Job {
     Job(CI ci, File file) {
         this.ci = ci
         this.buildConfig = new BuildConfig(file)
-        getBuildDir().mkdirs()
+        buildDir.mkdirs()
     }
 
     def getName() {
@@ -25,9 +24,9 @@ class Job {
     }
 
     def getTasks() {
-        def taskConfig = buildConfig.getTasks()
+        def taskConfig = buildConfig.tasks
 
-        List<TaskConfig> tasks = []
+        List<Map<String, Object>> tasks = []
 
         taskConfig.each {
             def type = it['type'] as String
@@ -38,7 +37,7 @@ class Job {
             it['ci'] = ci
             it['job'] = this
 
-            tasks.add(new TaskConfig(ci.taskTypes.get(type), it))
+            tasks.add(it as Map<String, Object>)
         }
 
         return tasks
@@ -49,7 +48,7 @@ class Job {
     }
 
     def getSCM() {
-        return new SCMConfig(buildConfig.SCM['type'] as String, buildConfig.SCM['url'] ? buildConfig.SCM['url'] as String : "")
+        return buildConfig["scm"] as Map<String, String>
     }
 
     def getArtifactLocations() {

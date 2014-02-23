@@ -32,7 +32,7 @@ class JobHistory {
     }
 
     def getLatestBuild() {
-        entries.isEmpty() ? null : entries.last()
+        entries.empty ? null : entries.last()
     }
 
     @Override

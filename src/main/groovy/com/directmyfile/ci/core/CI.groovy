@@ -16,6 +16,7 @@ import com.directmyfile.ci.scm.GitSCM
 import com.directmyfile.ci.scm.NoneSCM
 import com.directmyfile.ci.security.CISecurity
 import com.directmyfile.ci.tasks.*
+import com.directmyfile.ci.utils.ExecutionTimer
 import com.directmyfile.ci.utils.FileMatcher
 import com.directmyfile.ci.utils.Utils
 import com.directmyfile.ci.web.VertxManager
@@ -50,27 +51,27 @@ class CI {
     /**
      * Plugin Manager
      */
-    final pluginManager = new PluginManager(this)
+    final PluginManager pluginManager = new PluginManager(this)
 
     /**
      * CI Configuration
      */
-    final config = new CiConfig(this)
+    final CiConfig config = new CiConfig(this)
 
     /**
      * SQL Functionality Provider
      */
-    final sql = new SqlHelper(this)
+    final SqlHelper sql = new SqlHelper(this)
 
     /**
      * CI IRC Bot
      */
-    final ircBot = new IRCBot()
+    final IRCBot ircBot = new IRCBot()
 
     /**
      * CI Security
      */
-    final security = new CISecurity(this)
+    final CISecurity security = new CISecurity(this)
 
     /**
      * CI Task Types
@@ -101,12 +102,12 @@ class CI {
     /**
      * Vert.x Manager for managing Vert.x related systems
      */
-    final vertxManager = new VertxManager(this)
+    final VertxManager vertxManager = new VertxManager(this)
 
     /**
      * CI Event Bus
      */
-    final eventBus = new EventBus()
+    final EventBus eventBus = new EventBus()
 
     /**
      * CI Tool Installers
@@ -231,7 +232,7 @@ class CI {
                     number    : number
             ])
 
-            def timer = new com.directmyfile.ci.utils.Timer()
+            def timer = new ExecutionTimer()
 
             timer.start()
 
@@ -255,7 +256,7 @@ class CI {
                     tasksShouldRun = false
                 }
 
-                def scm = scmTypes[scmConfig.type]
+                def scm = scmTypes[scmConfig.type as String]
 
                 try {
                     if (scm.exists(job)) {

@@ -2,7 +2,7 @@ package com.directmyfile.ci.utils
 
 import java.util.concurrent.TimeUnit
 
-class Timer {
+class ExecutionTimer {
     long time
     private long startTime
     private long stopTime

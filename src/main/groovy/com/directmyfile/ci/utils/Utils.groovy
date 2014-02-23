@@ -1,7 +1,7 @@
 package com.directmyfile.ci.utils
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
 import org.codehaus.groovy.control.CompilerConfiguration
@@ -11,7 +11,7 @@ import java.security.SecureRandom
 
 class Utils {
 
-    static Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create()
+    static JsonSlurper jsonSlurper = new JsonSlurper()
 
     @CompileStatic
     static Process execute(List<String> command) {
@@ -68,11 +68,6 @@ class Utils {
     }
 
     @CompileStatic
-    static def newProperties() {
-        return new Properties()
-    }
-
-    @CompileStatic
     static byte[] generateSalt(int size) {
         def random = new SecureRandom()
         byte[] list = new byte[size]
@@ -94,11 +89,11 @@ class Utils {
 
     @CompileStatic
     static def encodeJSON(Object object) {
-        return gson.toJson(object)
+        return new JsonBuilder(object).toPrettyString()
     }
 
     @CompileStatic
-    static def parseJSON(String text, Class<?> type) {
-        return gson.fromJson(text, type)
+    static def parseJSON(String text) {
+        return jsonSlurper.parseText(text)
     }
 }

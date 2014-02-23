@@ -56,7 +56,7 @@ class WebServer {
                 writeResource(request, "404.html"); return
             }
 
-            def job = ci.jobs.get(jobName)
+            def job = ci.jobs[jobName]
 
             if (!job.logFile.exists()) {
                 writeResource(request, "404.html")

@@ -10,16 +10,6 @@ enum JobStatus {
         return this.name().toLowerCase().capitalize().replace('_', ' ')
     }
 
-    String getPanelClass() {
-        switch (this) {
-            case SUCCESS: return "panel-success"
-            case FAILURE: return "panel-danger"
-            case NOT_STARTED: return "panel-default"
-            case RUNNING: return "panel-info"
-            default: return "panel-default"
-        }
-    }
-
     String getIrcColor() {
         switch (this) {
             case SUCCESS: return Colors.GREEN
@@ -28,16 +18,6 @@ enum JobStatus {
             case RUNNING: return Colors.BLUE
             case WAITING: return Colors.DARK_BLUE
             default: Colors.NORMAL
-        }
-    }
-
-    String cssContextClass() {
-        switch (this) {
-            case SUCCESS:
-                return "success"
-            case FAILURE:
-                return "danger"
-            default: return ""
         }
     }
 

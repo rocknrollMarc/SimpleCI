@@ -1,7 +1,5 @@
 package com.directmyfile.ci.scm
 
-import com.google.gson.annotations.Expose
-
 class Changelog {
     List<Entry> entries = []
 
@@ -12,11 +10,8 @@ class Changelog {
     }
 
     static class Entry {
-        @Expose
         String revision
-        @Expose
         String message
-        @Expose
         String author
     }
 }

@@ -1,7 +1,9 @@
 package com.directmyfile.ci.config
 
 import com.directmyfile.ci.core.CI
+import groovy.transform.CompileStatic
 
+@CompileStatic
 class CiConfig extends GConfig {
     private final CI ci
 
@@ -19,7 +21,7 @@ class CiConfig extends GConfig {
         def web = getProperty("web", [
                 host: "0.0.0.0",
                 port: 8080
-        ])
+        ]) as Map<String, Object>
 
         ci.host = web['host'] as String
         ci.port = web['port'] as int
@@ -30,24 +32,24 @@ class CiConfig extends GConfig {
                 username: "root",
                 password: "changeme",
                 database: "ci"
-        ]) as Map
+        ]) as Map<String, Object>
     }
 
-    Map ciSection() {
+    Map<String, Object> ciSection() {
         return getProperty("ci", [
                 queueSize: 2
-        ]) as Map
+        ]) as Map<String, Object>
     }
 
-    Map loggingSection() {
+    Map<String, Object> loggingSection() {
         return getProperty("logging", [
                 level: "INFO"
-        ]) as Map
+        ]) as Map<String, Object>
     }
 
-    Map securitySection() {
+    Map<String, Object> securitySection() {
         return getProperty("security", [
                 enabled: false
-        ]) as Map
+        ]) as Map<String, Object>
     }
 }

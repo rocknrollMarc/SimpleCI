@@ -5,7 +5,7 @@ import groovy.json.JsonSlurper
 
 class BuildConfig {
 
-    private final json
+    private Object json
     File file
 
     BuildConfig(File file) {
@@ -23,12 +23,12 @@ class BuildConfig {
         return json['name']
     }
 
-    Object[] getTasks() {
-        return json['tasks']
+    List<Object> getTasks() {
+        return json['tasks'] as List<Object>
     }
 
     def getSCM() {
-        return json['scm']
+        return json['scm'] as Map<String, Object>
     }
 
     def getArtifacts() {
