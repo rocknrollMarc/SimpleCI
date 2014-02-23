@@ -1,3 +1,7 @@
+version = "0.9.0"
+
+ext.versionInfo = new Version(version)
+
 class Version {
     String version
     int major
@@ -49,15 +53,11 @@ class Version {
         return minor % 5 == 0
     }
 
-    String getMaven() {
+    String getMavenVersion() {
         if (release) {
             return toString()
         } else {
             return "${toString()}-SNAPSHOT"
         }
     }
-}
-
-project.ext {
-    versionInfo = new Version(project.version as String)
 }

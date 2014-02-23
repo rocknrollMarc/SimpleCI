@@ -1,7 +1,7 @@
 project.ext.mavenPom = pom {
     groupId = rootProject.group
     artifactId = "SimpleCI"
-    version = "${project.versionInfo.maven}"
+    version = "${project.versionInfo.mavenVersion}"
     project {
         name = project.name as String
         packaging = 'jar'
