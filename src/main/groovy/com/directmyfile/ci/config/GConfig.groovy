@@ -50,7 +50,6 @@ class GConfig {
         }
     }
 
-    @Override
     boolean hasProperty(String key) {
         return metaClass.hasProperty(this, key) || config.hasVariable(key)
     }
