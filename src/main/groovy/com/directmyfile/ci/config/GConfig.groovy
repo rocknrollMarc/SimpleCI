@@ -26,7 +26,6 @@ class GConfig {
         this.config = configScript.binding
     }
 
-    @Override
     Object getProperty(String key) {
         if (metaClass.hasProperty(key)) {
             return metaClass.getProperty(this, key)
@@ -43,7 +42,6 @@ class GConfig {
         }
     }
 
-    @Override
     void setProperty(String key, Object value) {
         if (metaClass.hasProperty(this, key)) {
             metaClass.setProperty(this, key, value)
@@ -52,7 +50,6 @@ class GConfig {
         }
     }
 
-    @Override
     boolean hasProperty(String key) {
         return metaClass.hasProperty(this, key) || config.hasVariable(key)
     }
