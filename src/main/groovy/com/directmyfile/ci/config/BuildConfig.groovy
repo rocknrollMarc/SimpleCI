@@ -5,7 +5,7 @@ import groovy.json.JsonSlurper
 
 class BuildConfig {
 
-    private Object json
+    private final Object json
     File file
 
     BuildConfig(File file) {
