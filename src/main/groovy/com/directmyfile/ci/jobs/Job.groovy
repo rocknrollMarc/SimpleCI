@@ -1,7 +1,6 @@
 package com.directmyfile.ci.jobs
 
 import com.directmyfile.ci.config.BuildConfig
-
 import com.directmyfile.ci.core.CI
 import com.directmyfile.ci.scm.Changelog
 
@@ -48,7 +47,7 @@ class Job {
     }
 
     def getSCM() {
-        return buildConfig["scm"] as Map<String, String>
+        return buildConfig.getSCM()
     }
 
     def getArtifactLocations() {
